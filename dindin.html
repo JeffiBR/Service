@@ -1,0 +1,1066 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dindin pra Receber</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --black-900: #000000;
+      --black-800: #0a0a0b;
+      --black-700: #111113;
+      --black-600: #18181b;
+      --black-500: #1f1f23;
+      --black-400: #27272a;
+      --white: #fafafa;
+      --white-800: #e4e4e7;
+      --white-600: #a1a1aa;
+      --accent-gold: #fbbf24;
+      --accent-gold-light: #fcd34d;
+      --accent-gold-dark: #d97706;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+      --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+      --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black-900);
+      color: var(--white);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(10, 10, 11, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-gold);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--black-900);
+      box-shadow: var(--glow-gold);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+      transform: translateX(-100%);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      color: var(--white-600);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--white-600);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      color: var(--white-600);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 4px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--black-900);
+      background: var(--gradient-gold);
+      box-shadow: var(--glow-gold);
+    }
+
+    .nav-item i { width: 20px; font-size: 1.1rem; }
+    .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+    .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .status-info { font-size: 0.75rem; color: var(--white-600); }
+    .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 20px 32px;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .page-title span {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-date {
+      color: var(--white-600);
+      font-size: 0.9rem;
+    }
+
+    .main-content { padding: 32px; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i { color: var(--accent-gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .form-container { padding: 24px; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-weight: 600;
+      color: var(--white-800);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-with-icon { position: relative; }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--white-600);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      font-size: 14px;
+      transition: var(--transition);
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--white);
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      padding-left: 14px;
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--white-600); }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .summary {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px dashed rgba(251, 191, 36, 0.4);
+      background: rgba(251, 191, 36, 0.06);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .summary { grid-template-columns: 1fr; }
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--white-600);
+    }
+
+    .summary-item strong {
+      color: var(--white);
+      font-size: 1.05rem;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 700;
+      transition: var(--transition);
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--black-900);
+      box-shadow: var(--glow-gold);
+    }
+
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white-800);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-outline:hover { border-color: var(--accent-gold); color: var(--white); }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--white-600);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .badge-open { background: rgba(251, 191, 36, 0.14); color: var(--accent-gold); }
+    .badge-paid { background: rgba(34, 197, 94, 0.16); color: var(--success); }
+
+    .table-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .table-actions button {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--white-800);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .table-actions button:hover { border-color: var(--accent-gold); color: var(--white); }
+
+    .empty-state {
+      padding: 20px 24px;
+      color: var(--white-600);
+      font-size: 0.95rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .note {
+      color: var(--white-600);
+      font-size: 0.85rem;
+    }
+
+    .muted { color: var(--white-600); font-size: 0.85rem; }
+
+    .obs {
+      max-width: 220px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 24px;
+    }
+
+    .chart-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 280px;
+    }
+
+    @media (max-width: 900px) {
+      .charts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+          <i class="fas fa-users"></i>
+          <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+          <i class="fas fa-user-tie"></i>
+          <span>Revendedores</span>
+        </a>
+        <a class="nav-item" href="servidores.html">
+          <i class="fas fa-server"></i>
+          <span>Servidores</span>
+        </a>
+        <a class="nav-item" href="mensagens.html">
+          <i class="fas fa-message"></i>
+          <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+          <i class="fas fa-calculator"></i>
+          <span>Precificação</span>
+        </a>
+        <a class="nav-item" href="recebiveis.html">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item active" href="dindin.html">
+          <i class="fas fa-sack-dollar"></i>
+          <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item" href="produtos-atelie.html">
+          <i class="fas fa-box"></i>
+          <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Histórico</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div>
+            <div class="status-info">Servidor</div>
+            <div class="status-value">Online</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="main-header">
+        <div>
+          <div class="page-title">Dindin pra <span>Receber</span></div>
+          <div class="header-date" id="headerDate"></div>
+        </div>
+        <div class="badge badge-open"><i class="fa-solid fa-sack-dollar"></i> Controle do Dindin</div>
+      </header>
+
+      <main class="main-content">
+      <div class="container">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-receipt"></i> Novo registro</div>
+            <div class="note">Cadastre recebidos e a receber com a data marcada.</div>
+          </div>
+          <div class="form-container">
+            <form id="dindinForm">
+              <div class="grid">
+                <div class="form-group">
+                  <label for="nomeEncomenda"><i class="fa-solid fa-box"></i> Nome da encomenda</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-box input-icon"></i>
+                    <input id="nomeEncomenda" name="nomeEncomenda" type="text" placeholder="Ex: Kit festa" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="comprador"><i class="fa-solid fa-user"></i> Quem comprou</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    <input id="comprador" name="comprador" type="text" placeholder="Nome do comprador" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="deQuem"><i class="fa-solid fa-store"></i> De quem</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-store input-icon"></i>
+                    <input id="deQuem" name="deQuem" type="text" placeholder="Quem recebeu o pedido" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="valorTotal"><i class="fa-solid fa-coins"></i> Valor</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-coins input-icon"></i>
+                    <input id="valorTotal" name="valorTotal" type="text" placeholder="Ex: 150,00" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="dataMarcada"><i class="fa-solid fa-calendar-check"></i> Dia marcado pra receber</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-calendar-check input-icon"></i>
+                    <input id="dataMarcada" name="dataMarcada" type="date" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="status"><i class="fa-solid fa-flag"></i> Status</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-flag input-icon"></i>
+                    <select id="status" name="status">
+                      <option value="a_receber">A receber</option>
+                      <option value="recebido">Recebido</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="dataRecebido"><i class="fa-solid fa-calendar-day"></i> Dia que recebeu</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-calendar-day input-icon"></i>
+                    <input id="dataRecebido" name="dataRecebido" type="date" />
+                  </div>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label for="observacoes"><i class="fa-solid fa-note-sticky"></i> Observações</label>
+                  <textarea id="observacoes" name="observacoes" placeholder="Detalhes, combinados, observacoes..."></textarea>
+                </div>
+              </div>
+
+              <div class="summary" id="resumo">
+                <div class="summary-item">
+                  <span>Total a receber</span>
+                  <strong id="totalReceber">R$ 0,00</strong>
+                </div>
+                <div class="summary-item">
+                  <span>Total recebido</span>
+                  <strong id="totalRecebido">R$ 0,00</strong>
+                </div>
+                <div class="summary-item">
+                  <span>Total geral</span>
+                  <strong id="totalGeral">R$ 0,00</strong>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> Salvar</button>
+                <button class="btn btn-outline" type="reset"><i class="fa-solid fa-rotate-left"></i> Limpar</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-chart-simple"></i> Gráficos detalhados</div>
+            <div class="note">Visão geral do dindin pra receber.</div>
+          </div>
+          <div class="charts">
+            <div class="chart-card">
+              <canvas id="chartStatus"></canvas>
+            </div>
+            <div class="chart-card">
+              <canvas id="chartMes"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-list"></i> Recebidos e a receber</div>
+            <div class="note">Clique em receber para marcar como recebido.</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Encomenda</th>
+                  <th>Comprador</th>
+                  <th>De quem</th>
+                  <th>Valor</th>
+                  <th>Dia marcado</th>
+                  <th>Dia recebido</th>
+                  <th>Status</th>
+                  <th>Obs.</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="dindinBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="emptyState">Nenhum registro cadastrado ainda.</div>
+        </section>
+      </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const headerDate = document.getElementById('headerDate');
+    const nomeEncomendaInput = document.getElementById('nomeEncomenda');
+    const compradorInput = document.getElementById('comprador');
+    const deQuemInput = document.getElementById('deQuem');
+    const valorTotalInput = document.getElementById('valorTotal');
+    const dataMarcadaInput = document.getElementById('dataMarcada');
+    const statusInput = document.getElementById('status');
+    const dataRecebidoInput = document.getElementById('dataRecebido');
+    const observacoesInput = document.getElementById('observacoes');
+    const totalReceberEl = document.getElementById('totalReceber');
+    const totalRecebidoEl = document.getElementById('totalRecebido');
+    const totalGeralEl = document.getElementById('totalGeral');
+    const dindinBody = document.getElementById('dindinBody');
+    const emptyState = document.getElementById('emptyState');
+    const dindinForm = document.getElementById('dindinForm');
+
+    const API_BASE = `${window.API_BASE}/recebiveis`;
+
+    const moneyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+
+    let chartStatus;
+    let chartMes;
+
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return '';
+      return text
+        .toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const [year, month, day] = dateStr.split('-');
+      if (!year || !month || !day) return dateStr;
+      return `${day}/${month}/${year}`;
+    }
+
+    function parseMoney(value) {
+      if (!value) return 0;
+      const cleaned = value
+        .toString()
+        .replace(/\./g, '')
+        .replace(/,/g, '.')
+        .replace(/[^0-9.-]/g, '');
+      const parsed = parseFloat(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function normalizeStatus(status) {
+      if (status === 'recebido' || status === 'pago') return 'recebido';
+      return 'a_receber';
+    }
+
+    async function apiRequest(path = '', options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        ...options
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data.success === false) {
+        throw new Error(data.error || 'Erro ao acessar o servidor');
+      }
+      return data;
+    }
+
+    async function loadItens() {
+      const res = await apiRequest('');
+      return res.data || [];
+    }
+
+    async function createItem(payload) {
+      const res = await apiRequest('', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      return res.data;
+    }
+
+    async function updateItem(id, updates) {
+      const res = await apiRequest(`/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updates)
+      });
+      return res.data;
+    }
+
+    async function deleteItem(id) {
+      await apiRequest(`/${id}`, { method: 'DELETE' });
+    }
+
+    function calcularTotais(items) {
+      let receber = 0;
+      let recebido = 0;
+      items.forEach((item) => {
+        const valor = Number(item.total || 0);
+        if (normalizeStatus(item.status) === 'recebido') {
+          recebido += valor;
+        } else {
+          receber += valor;
+        }
+      });
+      return { receber, recebido, geral: receber + recebido };
+    }
+
+    function prepararDadosMes(items) {
+      const map = new Map();
+      items.forEach((item) => {
+        const data = item.data_acerto || item.data_marcada;
+        if (!data) return;
+        const [year, month] = data.split('-');
+        if (!year || !month) return;
+        const key = `${month}/${year}`;
+        const atual = map.get(key) || { receber: 0, recebido: 0 };
+        const valor = Number(item.total || 0);
+        if (normalizeStatus(item.status) === 'recebido') {
+          atual.recebido += valor;
+        } else {
+          atual.receber += valor;
+        }
+        map.set(key, atual);
+      });
+      const labels = Array.from(map.keys());
+      const receber = labels.map(label => map.get(label).receber);
+      const recebido = labels.map(label => map.get(label).recebido);
+      return { labels, receber, recebido };
+    }
+
+    function atualizarResumo(items) {
+      const { receber, recebido, geral } = calcularTotais(items);
+      totalReceberEl.textContent = moneyFormatter.format(receber);
+      totalRecebidoEl.textContent = moneyFormatter.format(recebido);
+      totalGeralEl.textContent = moneyFormatter.format(geral);
+    }
+
+    function renderCharts(items) {
+      const { receber, recebido } = calcularTotais(items);
+      const statusCtx = document.getElementById('chartStatus');
+      const mesCtx = document.getElementById('chartMes');
+
+      if (chartStatus) chartStatus.destroy();
+      if (chartMes) chartMes.destroy();
+
+      chartStatus = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['A receber', 'Recebido'],
+          datasets: [{
+            data: [receber, recebido],
+            backgroundColor: ['#fbbf24', '#22c55e'],
+            borderColor: '#111113',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e4e4e7' } }
+          }
+        }
+      });
+
+      const mesData = prepararDadosMes(items);
+      chartMes = new Chart(mesCtx, {
+        type: 'bar',
+        data: {
+          labels: mesData.labels,
+          datasets: [
+            {
+              label: 'A receber',
+              data: mesData.receber,
+              backgroundColor: 'rgba(251, 191, 36, 0.6)'
+            },
+            {
+              label: 'Recebido',
+              data: mesData.recebido,
+              backgroundColor: 'rgba(34, 197, 94, 0.7)'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#e4e4e7' } }
+          },
+          scales: {
+            x: { ticks: { color: '#a1a1aa' } },
+            y: { ticks: { color: '#a1a1aa' } }
+          }
+        }
+      });
+    }
+
+    async function renderTabela() {
+      dindinBody.innerHTML = '';
+      try {
+        const items = await loadItens();
+        if (!items.length) {
+          emptyState.style.display = 'block';
+          atualizarResumo([]);
+          renderCharts([]);
+          return;
+        }
+        emptyState.style.display = 'none';
+        atualizarResumo(items);
+        renderCharts(items);
+        items.forEach((item) => {
+          const tr = document.createElement('tr');
+          const statusNorm = normalizeStatus(item.status);
+          const badgeClass = statusNorm === 'recebido' ? 'badge-paid' : 'badge-open';
+          const badgeText = statusNorm === 'recebido' ? 'Recebido' : 'A receber';
+          const observacoes = escapeHtml(item.observacoes || '-');
+          tr.innerHTML = `
+            <td>${escapeHtml(item.nome_encomenda || '-')}</td>
+            <td>${escapeHtml(item.comprador || '-')}</td>
+            <td>${escapeHtml(item.de_quem || item.vendedor || '-')}</td>
+            <td>${moneyFormatter.format(item.total || 0)}</td>
+            <td>${formatDate(item.data_acerto || item.data_marcada)}</td>
+            <td>${formatDate(item.data_recebido)}</td>
+            <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+            <td title="${observacoes}"><span class="obs">${observacoes}</span></td>
+            <td>
+              <div class="table-actions">
+                <button type="button" data-action="toggle" data-id="${item.id}">
+                  <i class="fa-solid fa-check"></i> Receber
+                </button>
+                <button type="button" data-action="remove" data-id="${item.id}">
+                  <i class="fa-solid fa-trash"></i> Remover
+                </button>
+              </div>
+            </td>
+          `;
+          dindinBody.appendChild(tr);
+        });
+      } catch (error) {
+        emptyState.style.display = 'block';
+        emptyState.textContent = 'Erro ao carregar dados. Verifique o servidor.';
+      }
+    }
+
+    function setHeaderDate() {
+      const now = new Date();
+      headerDate.textContent = now.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+
+    dindinForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const nomeEncomenda = nomeEncomendaInput.value.trim();
+      const comprador = compradorInput.value.trim();
+      const deQuem = deQuemInput.value.trim();
+      const total = parseMoney(valorTotalInput.value);
+      const dataMarcada = dataMarcadaInput.value;
+      const status = statusInput.value;
+      const dataRecebido = dataRecebidoInput.value;
+      const observacoes = observacoesInput.value.trim();
+
+      if (!nomeEncomenda || !comprador || !deQuem || !total || !dataMarcada) return;
+
+      try {
+        await createItem({
+          nome_encomenda: nomeEncomenda,
+          comprador,
+          de_quem: deQuem,
+          total,
+          data_marcada: dataMarcada,
+          data_acerto: dataMarcada,
+          data_recebido: dataRecebido || null,
+          status: status,
+          observacoes
+        });
+        dindinForm.reset();
+        renderTabela();
+      } catch (error) {
+        alert(error.message || 'Erro ao salvar');
+      }
+    });
+
+    dindinForm.addEventListener('reset', () => {
+      setTimeout(() => {}, 0);
+    });
+
+    dindinBody.addEventListener('click', async (event) => {
+      const btn = event.target.closest('button');
+      if (!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if (!id) return;
+
+      try {
+        if (action === 'remove') {
+          await deleteItem(id);
+        }
+
+        if (action === 'toggle') {
+          const row = btn.closest('tr');
+          const badge = row ? row.querySelector('.badge') : null;
+          const isRecebido = badge && badge.textContent.trim().toLowerCase() === 'recebido';
+          await updateItem(id, {
+            status: isRecebido ? 'a_receber' : 'recebido',
+            data_recebido: isRecebido ? null : new Date().toISOString().split('T')[0]
+          });
+        }
+
+        renderTabela();
+      } catch (error) {
+        alert(error.message || 'Erro ao atualizar');
+      }
+    });
+
+    setHeaderDate();
+    renderTabela();
+  </script>
+</body>
+</html>
+
+
+
+
+

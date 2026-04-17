@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso - Preço Certo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #151821;
+      --accent: #fbbf24;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 430px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 8px;
+    }
+
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .tab {
+      flex: 1;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: transparent;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0;
+      width: auto;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #111;
+      border-color: transparent;
+    }
+
+    .status {
+      min-height: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .status.error { color: var(--danger); }
+
+    #clerkRoot {
+      min-height: 380px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px;
+      background: #10131c;
+    }
+
+    .hint {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Entrar</h1>
+    <p>Crie sua conta ou faca login com Google, Apple e Facebook.</p>
+
+    <div class="tabs" id="tabs">
+      <button type="button" id="tabSignIn" class="tab">Entrar</button>
+      <button type="button" id="tabSignUp" class="tab">Criar conta</button>
+    </div>
+
+    <div id="status" class="status">Carregando autenticacao...</div>
+    <div id="clerkRoot"></div>
+
+    <div class="hint">As opcoes sociais aparecem automaticamente conforme configuradas no Clerk.</div>
+  </div>
+
+  <script>
+    (function () {
+      if (window.AUTH_DISABLED === true) {
+        window.location.replace('index.html');
+        return;
+      }
+
+      if (!window.authIsClerkEnabled || !window.authIsClerkEnabled()) {
+        const status = document.getElementById('status');
+        status.textContent = 'Clerk nao configurado. Defina CLERK_PUBLISHABLE_KEY em public/config.js.';
+        status.className = 'status error';
+        return;
+      }
+
+      const next = (window.authGetNext && window.authGetNext()) || 'index.html';
+      if (window.authIsLoggedIn && window.authIsLoggedIn()) {
+        window.location.replace(next);
+        return;
+      }
+
+      const status = document.getElementById('status');
+      const params = new URLSearchParams(window.location.search || '');
+      const mode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+
+      function setActiveTab(currentMode) {
+        document.getElementById('tabSignIn').classList.toggle('active', currentMode === 'signin');
+        document.getElementById('tabSignUp').classList.toggle('active', currentMode === 'signup');
+      }
+
+      function modeUrl(nextMode) {
+        return 'login.html?mode=' + nextMode + '&next=' + encodeURIComponent(next);
+      }
+
+      function getUserEmail(user) {
+        if (!user) return null;
+        if (user.primaryEmailAddress && user.primaryEmailAddress.emailAddress) return user.primaryEmailAddress.emailAddress;
+        if (Array.isArray(user.emailAddresses) && user.emailAddresses.length > 0) return user.emailAddresses[0].emailAddress || null;
+        return null;
+      }
+
+      function getUserGroup(user) {
+        if (!user) return 'Usuario';
+        const sources = [
+          user.publicMetadata || {},
+          user.unsafeMetadata || {},
+          user.privateMetadata || {}
+        ];
+        for (const source of sources) {
+          const value = source.grupo || source.group || source.role || source.permissao;
+          if (typeof value === 'string' && value.trim()) return value.trim();
+        }
+        return 'Usuario';
+      }
+
+      function getUserImage(user) {
+        if (!user) return null;
+        return user.imageUrl || user.profileImageUrl || null;
+      }
+
+      function loadClerkScript() {
+        return new Promise(function (resolve, reject) {
+          if (window.Clerk) return resolve();
+
+          const existing = document.querySelector('script[data-tp-clerk="1"]');
+          if (existing) {
+            existing.addEventListener('load', function () { resolve(); }, { once: true });
+            existing.addEventListener('error', function () { reject(new Error('Falha ao carregar Clerk')); }, { once: true });
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.async = true;
+          script.setAttribute('data-tp-clerk', '1');
+          script.setAttribute('crossorigin', 'anonymous');
+          script.setAttribute('data-clerk-publishable-key', window.CLERK_PUBLISHABLE_KEY || '');
+          script.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+          script.onload = function () { resolve(); };
+          script.onerror = function () { reject(new Error('Falha ao carregar Clerk')); };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function init() {
+        try {
+          setActiveTab(mode);
+
+          document.getElementById('tabSignIn').addEventListener('click', function () {
+            window.location.replace(modeUrl('signin'));
+          });
+
+          document.getElementById('tabSignUp').addEventListener('click', function () {
+            window.location.replace(modeUrl('signup'));
+          });
+
+          await loadClerkScript();
+          await window.Clerk.load({ publishableKey: window.CLERK_PUBLISHABLE_KEY || '' });
+
+          if (window.Clerk.user && window.authSetClerkSession) {
+            window.authSetClerkSession({
+              userId: window.Clerk.user.id,
+              email: getUserEmail(window.Clerk.user),
+              firstName: window.Clerk.user.firstName || null,
+              lastName: window.Clerk.user.lastName || null,
+              imageUrl: getUserImage(window.Clerk.user),
+              group: getUserGroup(window.Clerk.user)
+            });
+            window.location.replace(next);
+            return;
+          }
+
+          const common = {
+            signInUrl: modeUrl('signin'),
+            signUpUrl: modeUrl('signup'),
+            afterSignInUrl: next,
+            afterSignUpUrl: next,
+            afterSignInForceRedirectUrl: next,
+            afterSignUpForceRedirectUrl: next
+          };
+
+          if (mode === 'signup') {
+            window.Clerk.mountSignUp(document.getElementById('clerkRoot'), common);
+          } else {
+            window.Clerk.mountSignIn(document.getElementById('clerkRoot'), common);
+          }
+
+          if (typeof window.Clerk.addListener === 'function') {
+            window.Clerk.addListener(function () {
+              if (window.Clerk.user && window.authSetClerkSession) {
+                window.authSetClerkSession({
+                  userId: window.Clerk.user.id,
+                  email: getUserEmail(window.Clerk.user),
+                  firstName: window.Clerk.user.firstName || null,
+                  lastName: window.Clerk.user.lastName || null,
+                  imageUrl: getUserImage(window.Clerk.user),
+                  group: getUserGroup(window.Clerk.user)
+                });
+                window.location.replace(next);
+              }
+            });
+          }
+
+          status.textContent = '';
+        } catch (err) {
+          status.textContent = err && err.message ? err.message : 'Falha ao iniciar login Clerk';
+          status.className = 'status error';
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
+
+
+
+

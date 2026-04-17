@@ -1,0 +1,1341 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens - Preço Certo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIVEIS GLOBAIS ===== */
+        :root {
+            --black-900: #000000;
+            --black-800: #0a0a0b;
+            --black-700: #111113;
+            --black-600: #18181b;
+            --black-500: #1f1f23;
+            --black-400: #27272a;
+            --black-300: #3f3f46;
+            --white: #fafafa;
+            --white-800: #e4e4e7;
+            --white-600: #a1a1aa;
+            --accent-gold: #fbbf24;
+            --accent-gold-light: #fcd34d;
+            --accent-gold-dark: #d97706;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-orange: #f97316;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+            --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black-900);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Fundo com gradientes e grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black-800); }
+        ::-webkit-scrollbar-thumb { background: var(--black-400); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--black-300); }
+
+        /* ===== LAYOUT PRINCIPAL ===== */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--black-900);
+            background: var(--gradient-gold);
+            box-shadow: var(--glow-gold);
+        }
+
+        .nav-item i { width: 20px; font-size: 1.1rem; }
+        .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+        .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.waking { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .status-info { font-size: 0.75rem; color: var(--white-600); }
+        .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+        /* ===== MAIN ===== */
+        .main { flex: 1; margin-left: 260px; min-height: 100vh; }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
+        .page-title span { background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .main-content { padding: 32px; }
+
+        /* ===== BOTES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+        }
+
+        .btn-gold:hover {
+            box-shadow: var(--glow-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-dark:hover { border-color: var(--accent-gold); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-sm { padding: 10px 16px; font-size: 0.8rem; }
+        /* emoji picker items */
+        .emoji-picker span { font-size: 1.2rem; margin: 2px; cursor: pointer; display: inline-block; }
+
+        /* ===== CARDS DE ESTATSTICAS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .section {
+            margin-bottom: 28px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .section-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(251, 191, 36, 0.12);
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .profile-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .profile-btn {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--white);
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-btn:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .profile-btn.active {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+            border-color: transparent;
+            box-shadow: var(--glow-gold);
+        }
+
+        .table-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            text-align: left;
+            color: var(--white-600);
+            font-weight: 600;
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.gold::before { background: var(--gradient-gold); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+        .stat-card.purple::before { background: linear-gradient(90deg, #a855f7, #8b5cf6); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card.gold .stat-icon { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); }
+        .stat-card.green .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--white-600);
+        }
+
+        /* ===== CARDS DE SERVIDORES ===== */
+        .revendedores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .revendedor-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .revendedor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-gold);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .revendedor-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .revendedor-card:hover::before { opacity: 1; }
+
+        .revendedor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .revendedor-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--black-900);
+        }
+
+        .revendedor-status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .revendedor-status-badge.ativo { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .revendedor-status-badge.inativo { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        .revendedor-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .revendedor-info {
+            font-size: 0.85rem;
+            color: var(--white-600);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .revendedor-info i { color: var(--accent-gold); font-size: 0.8rem; }
+
+        .revendedor-desc {
+            font-size: 0.85rem;
+            color: var(--white-600);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .revendedor-stats {
+            display: flex;
+            gap: 20px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .revendedor-stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .revendedor-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .revendedor-stat-label {
+            font-size: 0.75rem;
+            color: var(--white-600);
+        }
+
+        .revendedor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--black-700);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-title-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black-900);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* ===== FORMULRIOS ===== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white-600);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-select option,
+        select.form-input option {
+            background: var(--black-700);
+            color: var(--white);
+        }
+
+        .form-select,
+        select.form-input {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--accent-gold) 50%),
+                linear-gradient(135deg, var(--accent-gold) 50%, transparent 50%);
+            background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 36px;
+        }
+
+        .form-select:hover,
+        select.form-input:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.12);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--black-600);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+        }
+
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--white-600);
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 1rem; }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .revendedores-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operao realizada!</span>
+    </div>
+
+    <!-- App -->
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
+            </div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-users"></i>
+            <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+            <i class="fas fa-user-tie"></i>
+            <span>Revendedores</span>
+        </a>
+        <a class="nav-item" href="servidores.html">
+            <i class="fas fa-server"></i>
+            <span>Servidores</span>
+        </a>
+        <a class="nav-item active" href="mensagens.html">
+            <i class="fas fa-message"></i>
+            <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+            <i class="fas fa-calculator"></i>
+            <span>Precificação</span>
+        </a>
+        <a class="nav-item" href="recebiveis.html">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item" href="dindin.html">
+            <i class="fas fa-sack-dollar"></i>
+            <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item" href="produtos-atelie.html">
+            <i class="fas fa-box"></i>
+            <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Histórico</span>
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="server-status">
+            <div class="status-dot" id="statusDot"></div>
+            <div>
+                <div class="status-info">Servidor</div>
+                <div class="status-value" id="statusText">Verificando...</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="main-header">
+                <h1 class="page-title"><span>Mensagens de Cobrança</span></h1>
+                <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                    <button class="btn btn-gold" onclick="saveTemplate()">
+                        <i class="fas fa-save"></i> Salvar Mensagem
+                    </button>
+                </div>
+            </header>
+
+            <div class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                        <div class="stat-value" id="statD3">0</div>
+                        <div class="stat-label">Aviso D-3</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-calendar-minus"></i></div>
+                        <div class="stat-value" id="statD2">0</div>
+                        <div class="stat-label">Aviso D-2</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                        <div class="stat-value" id="statD1">0</div>
+                        <div class="stat-label">Aviso D-1</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-value" id="statD0">0</div>
+                        <div class="stat-label">Vencimento Hoje</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fas fa-calendar-xmark"></i></div>
+                        <div class="stat-value" id="statDplus1">0</div>
+                        <div class="stat-label">Expirado (D+1)</div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total de Clientes</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Perfis de Aviso</h2>
+                        <span class="section-badge">Selecione o perfil</span>
+                    </div>
+                    <div class="profile-toolbar" id="profileToolbar">
+                        <button class="profile-btn" data-regra="D-3">D-3</button>
+                        <button class="profile-btn" data-regra="D-2">D-2</button>
+                        <button class="profile-btn" data-regra="D-1">D-1</button>
+                        <button class="profile-btn" data-regra="D0">D0</button>
+                        <button class="profile-btn" data-regra="D+1">D+1</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Template Selecionado</h2>
+                        <span class="section-badge" id="templateBadge">D-3</span>
+                    </div>
+                    <div class="table-card">
+                        <div class="form-group">
+                            <label class="form-label">Mensagem (placeholders: {nome}, {vencimento}, {dias}, {valor}, {servidor}, {revendedor})</label>
+<small style="color:var(--white-600);">Use <code>*texto*</code> para **negrito**, <code>_texto_</code> para <em>itálico</em> e insira emojis (&#128512;&#128513;&#128514;&#129315;&#128515;&#128516;) a pré-visualização mostrar o efeito e o WhatsApp interpretar ao colar.</small>
+<div class="emoji-toolbar" style="margin-top:8px; position:relative; display:inline-block;">
+    <button type="button" id="btnBold" class="btn btn-sm btn-dark" title="Negrito"><i class="fas fa-bold"></i></button>
+    <button type="button" id="btnItalic" class="btn btn-sm btn-dark" title="Itlico"><i class="fas fa-italic"></i></button>
+    <button type="button" id="btnEmoji" class="btn btn-sm btn-dark" title="Emoji">&#128512;</button>
+    <div id="emojiPicker" class="emoji-picker" style="display:none; position:absolute; top:36px; left:0; background:var(--black-800); padding:6px; border:1px solid rgba(255,255,255,0.1); border-radius:8px; max-width:240px; max-height:120px; overflow:auto; z-index:1000;">
+</div>
+</div>
+                            <textarea class="form-textarea" id="templateText" style="min-height:120px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pré-visualização</label>
+                            <div class="form-input" id="templatePreview" style="min-height:80px; white-space:pre-wrap;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Cobrança D-3</h2>
+                        <span class="section-badge" id="badgeD3">0</span>
+                    </div>
+                    <div class="table-card">
+                        <table class="data-table" id="tableD3">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Vencimento</th>
+                                    <th>Mensagem</th>
+                                    <th>Ao</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyD3" style="display:none;">
+                            <i class="fas fa-calendar-day"></i>
+                            <p>Nenhum cliente para D-3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Cobrança D-2</h2>
+                        <span class="section-badge" id="badgeD2">0</span>
+                    </div>
+                    <div class="table-card">
+                        <table class="data-table" id="tableD2">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Vencimento</th>
+                                    <th>Mensagem</th>
+                                    <th>Ao</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyD2" style="display:none;">
+                            <i class="fas fa-calendar-minus"></i>
+                            <p>Nenhum cliente para D-2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Cobrança D-1</h2>
+                        <span class="section-badge" id="badgeD1">0</span>
+                    </div>
+                    <div class="table-card">
+                        <table class="data-table" id="tableD1">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Vencimento</th>
+                                    <th>Mensagem</th>
+                                    <th>Ao</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyD1" style="display:none;">
+                            <i class="fas fa-calendar"></i>
+                            <p>Nenhum cliente para D-1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Cobrança D0 (Hoje)</h2>
+                        <span class="section-badge" id="badgeD0">0</span>
+                    </div>
+                    <div class="table-card">
+                        <table class="data-table" id="tableD0">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Vencimento</th>
+                                    <th>Mensagem</th>
+                                    <th>Ao</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyD0" style="display:none;">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>Nenhum cliente para D0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Cobrança D+1 (Expirado)</h2>
+                        <span class="section-badge" id="badgeDplus1">0</span>
+                    </div>
+                    <div class="table-card">
+                        <table class="data-table" id="tableDplus1">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Telefone</th>
+                                    <th>Vencimento</th>
+                                    <th>Mensagem</th>
+                                    <th>Ao</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="empty-state" id="emptyDplus1" style="display:none;">
+                            <i class="fas fa-calendar-xmark"></i>
+                            <p>Nenhum cliente para D+1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    const API_URL = (window.API_BASE || (window.location.origin + '/api'));
+    let templates = [];
+    let clientes = [];
+    let selectedTemplate = null;
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastMessage').textContent = message;
+        toast.className = 'toast ' + type;
+        toast.classList.add('active');
+        setTimeout(() => toast.classList.remove('active'), 3000);
+    }
+
+    function updateServerStatus(online) {
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
+        if (online) {
+            dot.className = 'status-dot';
+            text.textContent = 'Online';
+        } else {
+            dot.className = 'status-dot offline';
+            text.textContent = 'Offline';
+        }
+    }
+
+    async function apiGet(endpoint) {
+        try {
+            const res = await fetch(API_URL + endpoint);
+            const data = await res.json();
+            updateServerStatus(true);
+            return data;
+        } catch (error) {
+            updateServerStatus(false);
+            return { success: false, data: [] };
+        }
+    }
+
+    async function apiPatch(endpoint, body) {
+        try {
+            const res = await fetch(API_URL + endpoint, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            updateServerStatus(true);
+            return data;
+        } catch (error) {
+            updateServerStatus(false);
+            return { success: false };
+        }
+    }
+
+    function formatarData(dataIso) {
+        if (!dataIso) return '-';
+        const [ano, mes, dia] = dataIso.split('T')[0].split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarValor(valor) {
+        const num = parseFloat(valor) || 0;
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
+    }
+
+    function diffDias(dataIso) {
+        if (!dataIso) return null;
+        const hoje = new Date();
+        const base = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+        const [ano, mes, dia] = dataIso.split('T')[0].split('-').map(Number);
+        const alvo = new Date(ano, mes - 1, dia);
+        const diffMs = alvo - base;
+        return Math.round(diffMs / (1000 * 60 * 60 * 24));
+    }
+
+    function applyTemplate(texto, cliente, dias) {
+        const map = {
+            nome: cliente.nome || '-',
+            vencimento: formatarData(cliente.data_vencimento),
+            dias: Math.abs(dias),
+            valor: formatarValor(cliente.valor_plano),
+            servidor: cliente.servidor || '-',
+            revendedor: cliente.revendedor || '-'
+        };
+        return texto.replace(/\{(\w+)\}/g, (m, key) => map[key] !== undefined ? map[key] : m);
+    }
+
+    async function loadData() {
+        const [templatesRes, clientesRes] = await Promise.all([
+            apiGet('/mensagens'),
+            apiGet('/clientes')
+        ]);
+
+        if (templatesRes.success) templates = templatesRes.data;
+        if (clientesRes.success) clientes = clientesRes.data;
+
+        setupTemplates();
+        renderStatsAndTables();
+    }
+
+    function setupTemplates() {
+        // order rules so presentation stays consistent
+        const order = ['D-3', 'D-2', 'D-1', 'D0', 'D+1'];
+        templates.sort((a, b) => {
+            const ia = order.indexOf(a.regra);
+            const ib = order.indexOf(b.regra);
+            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+        });
+
+        selectedTemplate = templates[0] || null;
+        if (selectedTemplate) {
+            setSelectedTemplate(selectedTemplate);
+        }
+    }
+
+    function setSelectedTemplate(template) {
+        selectedTemplate = template;
+        if (!selectedTemplate) return;
+        document.getElementById('templateBadge').textContent = selectedTemplate.regra || '-';
+        document.getElementById('templateText').value = selectedTemplate.texto || '';
+        updatePreview();
+        updateProfileButtons();
+    }
+
+    function updateProfileButtons() {
+        const buttons = document.querySelectorAll('#profileToolbar .profile-btn');
+        buttons.forEach(btn => {
+            const regra = btn.getAttribute('data-regra');
+            const isActive = selectedTemplate && selectedTemplate.regra === regra;
+            btn.classList.toggle('active', isActive);
+        });
+    }
+
+function formatForPreview(text) {
+            // negrito *x* e itlico _x_
+            let t = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+            t = t.replace(/_(.*?)_/g, '<em>$1</em>');
+            return t;
+        }
+
+    function updatePreview() {
+        const preview = document.getElementById('templatePreview');
+        const exemplo = clientes[0] || { nome: 'Cliente', data_vencimento: new Date().toISOString().split('T')[0], valor_plano: 0, servidor: '-', revendedor: '-' };
+        const dias = diffDias(exemplo.data_vencimento) ?? 0;
+        const texto = document.getElementById('templateText').value || '';
+        const result = applyTemplate(texto, exemplo, dias);
+        preview.innerHTML = formatForPreview(result);
+    }
+
+    function renderStatsAndTables() {
+        const d3 = clientes.filter(c => diffDias(c.data_vencimento) === 3);
+        const d2 = clientes.filter(c => diffDias(c.data_vencimento) === 2);
+        const d1 = clientes.filter(c => diffDias(c.data_vencimento) === 1);
+        const d0 = clientes.filter(c => diffDias(c.data_vencimento) === 0);
+        const dPlus1 = clientes.filter(c => diffDias(c.data_vencimento) === -1);
+
+        document.getElementById('statD3').textContent = d3.length;
+        document.getElementById('statD2').textContent = d2.length;
+        document.getElementById('statD1').textContent = d1.length;
+        document.getElementById('statD0').textContent = d0.length;
+        document.getElementById('statDplus1').textContent = dPlus1.length;
+        document.getElementById('statTotal').textContent = clientes.length;
+
+        renderTable('tableD3', 'emptyD3', 'badgeD3', d3, 'D-3');
+        renderTable('tableD2', 'emptyD2', 'badgeD2', d2, 'D-2');
+        renderTable('tableD1', 'emptyD1', 'badgeD1', d1, 'D-1');
+        renderTable('tableD0', 'emptyD0', 'badgeD0', d0, 'D0');
+        renderTable('tableDplus1', 'emptyDplus1', 'badgeDplus1', dPlus1, 'D+1');
+    }
+
+    function getTemplateByRegra(regra) {
+        return templates.find(t => t.regra === regra) || templates[0];
+    }
+
+    function renderTable(tableId, emptyId, badgeId, lista, regra) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        const empty = document.getElementById(emptyId);
+        const badge = document.getElementById(badgeId);
+        badge.textContent = lista.length;
+
+        if (lista.length === 0) {
+            tbody.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
+
+        empty.style.display = 'none';
+        const template = getTemplateByRegra(regra);
+        const textoTemplate = template ? template.texto : '';
+
+        tbody.innerHTML = lista.map(c => {
+            const dias = diffDias(c.data_vencimento) ?? 0;
+            let msg = applyTemplate(textoTemplate, c, dias);
+            // mostrar negrito na tabela usando *asteriscos*
+            msg = msg.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+            return `
+                <tr>
+                    <td>${c.nome || '-'}</td>
+                    <td>${c.telefone || '-'}</td>
+                    <td>${formatarData(c.data_vencimento)}</td>
+                    <td style="max-width:420px; white-space:pre-wrap;">${msg}</td>
+                    <td><button class="btn btn-sm btn-dark" onclick="copyMessage(${c.id || 0}, '${regra}')"><i class="fas fa-copy"></i> Copiar</button></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    async function copyMessage(clienteId, regra) {
+        const cliente = clientes.find(c => c.id === clienteId);
+        if (!cliente) return;
+        const template = getTemplateByRegra(regra);
+        if (!template) return;
+        const dias = diffDias(cliente.data_vencimento) ?? 0;
+        const msg = applyTemplate(template.texto || '', cliente, dias);
+        try {
+            await navigator.clipboard.writeText(msg);
+            showToast('Mensagem copiada!');
+        } catch (err) {
+            showToast('Falha ao copiar', 'error');
+        }
+    }
+
+    async function saveTemplate() {
+        if (!selectedTemplate) return;
+        const texto = document.getElementById('templateText').value.trim();
+        const res = await apiPatch('/mensagens/' + selectedTemplate.id, { texto });
+        if (res.success) {
+            showToast('Mensagem salva!');
+            const idx = templates.findIndex(t => t.id === selectedTemplate.id);
+            if (idx >= 0) templates[idx] = res.data;
+            updatePreview();
+            renderStatsAndTables();
+        } else {
+            showToast('Erro ao salvar', 'error');
+        }
+    }
+
+
+    document.getElementById('profileToolbar').addEventListener('click', (e) => {
+        const btn = e.target.closest('.profile-btn');
+        if (!btn) return;
+        const regra = btn.getAttribute('data-regra');
+        const template = templates.find(t => t.regra === regra) || templates[0];
+        if (!template) return;
+        setSelectedTemplate(template);
+    });
+
+    document.getElementById('templateText').addEventListener('input', updatePreview);
+
+    // toolbar buttons
+    function insertAtCursor(field, value) {
+        const start = field.selectionStart;
+        const end = field.selectionEnd;
+        const text = field.value;
+        field.value = text.slice(0, start) + value + text.slice(end);
+        field.selectionStart = field.selectionEnd = start + value.length;
+        field.focus();
+        updatePreview();
+    }
+
+    document.getElementById('btnBold').addEventListener('click', () => {
+        const ta = document.getElementById('templateText');
+        const sel = ta.value.substring(ta.selectionStart, ta.selectionEnd) || 'texto';
+        insertAtCursor(ta, `*${sel}*`);
+    });
+    document.getElementById('btnItalic').addEventListener('click', () => {
+        const ta = document.getElementById('templateText');
+        const sel = ta.value.substring(ta.selectionStart, ta.selectionEnd) || 'texto';
+        insertAtCursor(ta, `_${sel}_`);
+    });
+
+    const emojiPicker = document.getElementById('emojiPicker');
+    const emojis = ['\\u{1F600}','\\u{1F601}','\\u{1F602}','\\u{1F923}','\\u{1F603}','\\u{1F604}','\\u{1F606}','\\u{1F609}','\\u{1F60D}','\\u{1F618}','\\u{1F61C}','\\u{1F60E}','\\u{1F622}','\\u{1F62D}','\\u{1F642}'];
+    emojis.forEach(e => {
+        const span = document.createElement('span');
+        span.textContent = e;
+        span.style.cursor = 'pointer';
+        span.style.padding = '4px';
+        span.addEventListener('click', () => {
+            insertAtCursor(document.getElementById('templateText'), e);
+            emojiPicker.style.display = 'none';
+        });
+        emojiPicker.appendChild(span);
+    });
+    document.getElementById('btnEmoji').addEventListener('click', () => {
+        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('emojiPicker').contains(e.target) && e.target.id !== 'btnEmoji') {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

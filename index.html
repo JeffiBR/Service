@@ -1,0 +1,2129 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Preço Certo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIVEIS GLOBAIS (padronizadas) ===== */
+        :root {
+            --black-900: #000000;
+            --black-800: #0a0a0b;
+            --black-700: #111113;
+            --black-600: #18181b;
+            --black-500: #1f1f23;
+            --black-400: #27272a;
+            --black-300: #3f3f46;
+            --white: #fafafa;
+            --white-800: #e4e4e7;
+            --white-600: #a1a1aa;
+            --accent-gold: #fbbf24;
+            --accent-gold-light: #fcd34d;
+            --accent-gold-dark: #d97706;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-orange: #f97316;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+            --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black-900);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Fundo com gradientes e grid (igual ao dashboard) */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black-800); }
+        ::-webkit-scrollbar-thumb { background: var(--black-400); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--black-300); }
+
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(251, 191, 36, 0.08), transparent 40%),
+                        radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.08), transparent 45%),
+                        var(--black-900);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .loading-screen.active { opacity: 1; visibility: visible; }
+
+        .loading-orbit {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+
+        .loading-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.08);
+            border-top-color: var(--accent-gold);
+            animation: spin 1.2s linear infinite;
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+        }
+
+        .loading-ring.ring-2 {
+            inset: 12px;
+            border-top-color: var(--accent-blue);
+            animation-duration: 1.6s;
+            opacity: 0.8;
+        }
+
+        .loading-ring.ring-3 {
+            inset: 24px;
+            border-top-color: var(--accent-rose);
+            animation-duration: 2s;
+            opacity: 0.7;
+        }
+
+        .loading-logo {
+            width: 54px;
+            height: 54px;
+            background: var(--gradient-gold);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            color: var(--white-600);
+            font-size: 0.8rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        /* ===== LAYOUT PRINCIPAL ===== */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== SIDEBAR (igual ao dashboard) ===== */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--black-900);
+            background: var(--gradient-gold);
+            box-shadow: var(--glow-gold);
+        }
+
+        .nav-item i { width: 20px; font-size: 1.1rem; }
+        .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+        .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.waking { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .status-info { font-size: 0.75rem; color: var(--white-600); }
+        .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .page-title span {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-date {
+            color: var(--white-600);
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            padding: 32px;
+        }
+
+        /* ===== BOTES PADRO ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+        }
+
+        .btn-gold:hover {
+            box-shadow: var(--glow-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-dark:hover { border-color: var(--accent-gold); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-sm { padding: 10px 16px; font-size: 0.8rem; }
+        .btn-icon { width: 40px; height: 40px; padding: 0; }
+
+        /* ===== FILTROS E BUSCA ===== */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--white-600);
+        }
+
+        .filter-select {
+            padding: 14px 40px 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2371717a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .filter-select option { background: var(--black-700); color: var(--white); }
+
+        /* ===== CARDS DE ESTATSTICAS (iguais ao dashboard) ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.gold::before { background: var(--gradient-gold); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.yellow::before { background: linear-gradient(90deg, #eab308, #f59e0b); }
+        .stat-card.red::before { background: linear-gradient(90deg, #ef4444, #f43f5e); }
+        .stat-card.purple::before { background: linear-gradient(90deg, #a855f7, #8b5cf6); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card.gold .stat-icon { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); }
+        .stat-card.green .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .stat-card.yellow .stat-icon { background: rgba(234, 179, 8, 0.1); color: var(--warning); }
+        .stat-card.red .stat-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+        .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--white-600);
+        }
+
+        /* ===== CARD DA TABELA ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i { color: var(--accent-gold); }
+
+        .table-wrapper { overflow-x: auto; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white-600);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        /* ===== BADGES (mantidos os mesmos nomes do original) ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .badge-warning { background: rgba(234, 179, 8, 0.15); color: var(--warning); }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .badge-gold { background: rgba(251, 191, 36, 0.15); color: var(--accent-gold); }
+
+        .days-badge {
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .days-badge.positive { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .days-badge.warning { background: rgba(234, 179, 8, 0.1); color: var(--warning); }
+        .days-badge.negative { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+        /* ===== AES ===== */
+        .actions-cell { display: flex; gap: 6px; }
+
+        /* ===== TABS (caso existam) ===== */
+        .tabs-container { margin-bottom: 24px; }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            color: var(--white-600);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab:hover { color: var(--white); }
+
+        .tab.active {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ===== MODAL PADRO ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--black-700);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-title-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black-900);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* ===== FORMULRIOS ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .form-group.full { grid-column: span 2; }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white-600);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-input.voice-enabled {
+            padding-right: 46px;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--accent-gold);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+            line-height: 1;
+            z-index: 2;
+        }
+
+        .voice-btn i {
+            font-size: 0.95rem;
+            line-height: 1;
+            display: block;
+        }
+
+        .voice-btn:hover {
+            background: rgba(251, 191, 36, 0.15);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+        }
+
+        .voice-btn.active {
+            color: var(--success);
+            border-color: rgba(34, 197, 94, 0.6);
+            background: rgba(34, 197, 94, 0.12);
+        }
+
+        .form-select,
+        select.form-input {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--accent-gold) 50%),
+                linear-gradient(135deg, var(--accent-gold) 50%, transparent 50%);
+            background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 36px;
+        }
+
+        .form-select:hover,
+        select.form-input:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.12);
+        }
+
+        .form-select option {
+            background: var(--black-700);
+            color: var(--white);
+        }
+
+        .form-select option:checked {
+            background: var(--accent-gold);
+            color: var(--black-900);
+        }
+
+        .form-select option:hover {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--white);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        /* ===== PLANOS GRID ===== */
+        .planos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .plano-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .plano-card:hover {
+            border-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .plano-card.selected {
+            border-color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .plano-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .plano-nome { font-weight: 600; }
+        .plano-preco { font-weight: 800; color: var(--accent-gold); font-family: 'JetBrains Mono', monospace; }
+        .plano-dias { font-size: 0.8rem; color: var(--white-600); margin-top: 4px; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--black-600);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+        }
+
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: var(--white-600);
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full { grid-column: span 1; }
+        }
+    </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-orbit">
+            <div class="loading-ring"></div>
+            <div class="loading-ring ring-2"></div>
+            <div class="loading-ring ring-3"></div>
+            <div class="loading-logo">
+                <i class="fas fa-bolt"></i>
+            </div>
+        </div>
+        <p class="loading-text">Carregando...</p>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operao realizada!</span>
+    </div>
+
+    <!-- App -->
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <div class="brand-name">Preço Certo</div>
+                        <div class="brand-tag">PREÇO CERTO</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Menu</div>
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="revendedores.html" class="nav-item">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Revendedores</span>
+                </a>
+                <a href="servidores.html" class="nav-item">
+                    <i class="fas fa-server"></i>
+                    <span>Servidores</span>
+                </a>
+                <a href="mensagens.html" class="nav-item">
+                    <i class="fas fa-message"></i>
+                    <span>Mensagens</span>
+                </a>
+                <a href="precificacao.html" class="nav-item">
+                    <i class="fas fa-calculator"></i>
+                    <span>Precificação</span>
+                </a>
+                <a href="recebiveis.html" class="nav-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Recebíveis Ateli</span>
+                </a>
+                <a href="dindin.html" class="nav-item">
+                    <i class="fas fa-sack-dollar"></i>
+                    <span>Dindin pra Receber</span>
+                </a>
+                <a href="produtos-atelie.html" class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>Produtos Registrados</span>
+                </a>
+
+                <a href="historico-renovacoes.html" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Histórico</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="server-status">
+                    <div class="status-dot" id="statusDot"></div>
+                    <div>
+                        <div class="status-info">Servidor</div>
+                        <div class="status-value" id="statusText">Verificando...</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="main-header">
+                <h1 class="page-title"><span>Clientes</span></h1>
+                <div class="header-actions"></div>
+            </header>
+
+            <div class="main-content">
+                <!-- Stats Cards (padronizados) -->
+                <div class="stats-grid">
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total de Clientes</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-value" id="statAtivos">0</div>
+                        <div class="stat-label">Clientes Ativos</div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value" id="statPendentes">0</div>
+                        <div class="stat-label">Vencendo em 7 Dias</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-value" id="statExpirados">0</div>
+                        <div class="stat-label">Expirados</div>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="searchClientes" placeholder="Buscar cliente...">
+                    </div>
+                    <select class="filter-select" id="filterStatus">
+                        <option value="">Todos os Status</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="pendente">Pendentes</option>
+                        <option value="expirado">Expirados</option>
+                    </select>
+                    <button class="btn btn-gold" onclick="openClienteModal()">
+                        <i class="fas fa-plus"></i> Novo Cliente
+                    </button>
+                </div>
+
+                <!-- Tabela de Clientes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-users"></i> Lista de Clientes</h3>
+                        <span id="totalClientes">0 clientes</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>Plano</th>
+                                    <th>Valor</th>
+                                    <th>Servidor</th>
+                                    <th>Vencimento</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Cliente -->
+    <div class="modal-overlay" id="clienteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-user"></i></div>
+                    <span id="clienteModalTitle">Novo Cliente</span>
+                </h3>
+                <button class="modal-close" onclick="closeClienteModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="clienteForm">
+                    <input type="hidden" id="clienteId">
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label class="form-label">Nome do Cliente *</label>
+                            <input type="text" class="form-input" id="clienteNome" required placeholder="Nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefone *</label>
+                            <input type="tel" class="form-input" id="clienteTelefone" required placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ID Servidor</label>
+                            <input type="text" class="form-input" id="clienteIdServidor" placeholder="Ex: 10045">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Cliente</label>
+                            <select class="form-select" id="clienteTipo">
+                                <option value="direto">Direto</option>
+                                <option value="revenda">Revenda</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Revendedor</label>
+                            <select class="form-select" id="clienteRevendedor"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Servidor</label>
+                            <select class="form-select" id="clienteServidor"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Data de Vencimento</label>
+                            <input type="date" class="form-input" id="clienteDataVencimento">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Plano</label>
+                            <div class="planos-grid" id="planosGrid"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Valor (R$)</label>
+                            <input type="text" class="form-input" id="clienteValor" placeholder="0,00">
+                        </div>
+                        <div class="form-group full">
+                            <label class="form-label">Observações</label>
+                            <textarea class="form-textarea" id="clienteObs" placeholder="Observaes..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeClienteModal()">Cancelar</button>
+                <button class="btn btn-gold" onclick="saveCliente()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Renovao -->
+    <div class="modal-overlay" id="renovacaoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-sync"></i></div>
+                    <span>Renovar Cliente</span>
+                </h3>
+                <button class="modal-close" onclick="closeRenovacaoModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="renovacaoInfo"></div>
+                <input type="hidden" id="renovacaoClienteId">
+                <div class="form-grid" style="margin-top: 20px;">
+                    <div class="form-group full">
+                        <label class="form-label">Novo Plano</label>
+                        <div class="planos-grid" id="planosRenovacaoGrid"></div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Valor da Renovação (R$)</label>
+                        <input type="text" class="form-input" id="renovacaoValor" placeholder="0,00">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeRenovacaoModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="executarRenovacao()">
+                    <i class="fas fa-check"></i> Confirmar Renovação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Migrar Servidor -->
+    <div class="modal-overlay" id="migrarModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-server"></i></div>
+                    <span>Migrar Servidor</span>
+                </h3>
+                <button class="modal-close" onclick="closeMigrarModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="migrarClienteId">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label class="form-label">Servidor</label>
+                        <select class="form-select" id="migrarServidor"></select>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">ID Servidor</label>
+                        <input type="text" class="form-input" id="migrarIdServidor" placeholder="Ex: 10045">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeMigrarModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="executarMigracao()">
+                    <i class="fas fa-check"></i> Confirmar Migração
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mudar Plano -->
+    <div class="modal-overlay" id="mudarPlanoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-layer-group"></i></div>
+                    <span>Mudar Plano</span>
+                </h3>
+                <button class="modal-close" onclick="closeMudarPlanoModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="mudarPlanoClienteId">
+                <div class="form-grid" style="margin-top: 12px;">
+                    <div class="form-group full">
+                        <label class="form-label">Novo Plano</label>
+                        <div class="planos-grid" id="planosMudancaGrid"></div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Valor do Plano (R$)</label>
+                        <input type="text" class="form-input" id="mudarPlanoValor" placeholder="0,00">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeMudarPlanoModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="executarMudancaPlano()">
+                    <i class="fas fa-check"></i> Confirmar Mudan?a
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal WhatsApp -->
+    <div class="modal-overlay" id="whatsappModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fab fa-whatsapp"></i></div>
+                    <span>Enviar WhatsApp</span>
+                </h3>
+                <button class="modal-close" onclick="closeWhatsappModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Perfil da Mensagem</label>
+                        <select class="form-select" id="whatsappTemplateSelect"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" class="form-input" id="whatsappClienteNome" disabled>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Pré-visualização</label>
+                        <div class="form-input" id="whatsappPreview" style="min-height:120px; white-space:pre-wrap;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeWhatsappModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="sendWhatsappMensagem()">
+                    <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_URL = (window.API_BASE || (window.location.origin + '/api'));
+
+        // Planos disponveis
+        const PLANOS = [
+            { id: '1_mes_sem_adultos', nome: '1 Ms (Sem Adultos)', valor: 20, dias: 30 },
+            { id: '1_mes_com_adultos', nome: '1 Ms (Com Adultos)', valor: 20, dias: 30 },
+            { id: '2_mes_sem_adultos', nome: '2 Meses (Sem Adultos)', valor: 35, dias: 60 },
+            { id: '2_mes_com_adultos', nome: '2 Meses (Com Adultos)', valor: 35, dias: 60 },
+            { id: '3_mes_sem_adultos', nome: '3 Meses (Sem Adultos)', valor: 50, dias: 90 },
+            { id: '3_mes_com_adultos', nome: '3 Meses (Com Adultos)', valor: 50, dias: 90 },
+            { id: '6_mes_sem_adultos', nome: '6 Meses (Sem Adultos)', valor: 90, dias: 180 },
+            { id: '6_mes_com_adultos', nome: '6 Meses (Com Adultos)', valor: 90, dias: 180 },
+            { id: '1_ano_sem_adultos', nome: '1 Ano (Sem Adultos)', valor: 200, dias: 365 },
+            { id: '1_ano_com_adultos', nome: '1 Ano (Com Adultos)', valor: 200, dias: 365 }
+        ];
+
+        // Dados
+        let clientes = [];
+        let servidores = [];
+        let revendedores = [];
+        let renovacoes = [];
+        let planoSelecionado = null;
+        let planoRenovacaoSelecionado = null;
+        let planoMudancaSelecionado = null;
+        let mensagensTemplates = [];
+        let whatsappCliente = null;
+
+        // Loading
+        let loadingTimeout;
+        function showLoading() {
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('active');
+            }, 1000);
+        }
+
+        function hideLoading() {
+            clearTimeout(loadingTimeout);
+            document.getElementById('loadingScreen').classList.remove('active');
+        }
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        // Formatao
+        function formatarTelefone(valor) {
+            valor = valor.replace(/\D/g, '');
+            if (valor.length <= 11) {
+                valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
+                valor = valor.replace(/(\d)(\d{4})$/, '$1-$2');
+            }
+            return valor;
+        }
+
+        function formatarValor(valor) {
+            valor = valor.replace(/\D/g, '');
+            valor = (parseInt(valor) / 100).toFixed(2);
+            valor = valor.replace('.', ',');
+            return valor;
+        }
+
+        function parseValor(valor) {
+            if (!valor) return 0;
+            return parseFloat(valor.replace(',', '.')) || 0;
+        }
+
+        function formatarData(dataIso) {
+            if (!dataIso) return '-';
+            const [ano, mes, dia] = dataIso.split('T')[0].split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function formatarValorMoeda(valor) {
+            const num = parseFloat(valor) || 0;
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(num);
+        }
+
+        function diffDias(dataIso) {
+            if (!dataIso) return null;
+            const hoje = new Date();
+            const base = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+            const [ano, mes, dia] = dataIso.split('T')[0].split('-').map(Number);
+            const alvo = new Date(ano, mes - 1, dia);
+            const diffMs = alvo - base;
+            return Math.round(diffMs / (1000 * 60 * 60 * 24));
+        }
+
+        function applyTemplate(texto, cliente, dias) {
+            const map = {
+                nome: cliente.nome || '-',
+                vencimento: formatarData(cliente.data_vencimento),
+                dias: Math.abs(dias ?? 0),
+                valor: formatarValorMoeda(cliente.valor_plano),
+                servidor: cliente.servidor || '-',
+                revendedor: cliente.revendedor || '-'
+            };
+            return (texto || '').replace(/\{(\w+)\}/g, (m, key) => map[key] !== undefined ? map[key] : m);
+        }
+
+        // API calls
+        async function apiGet(endpoint) {
+            showLoading();
+            try {
+                const res = await fetch(API_URL + endpoint);
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                console.error('API Error:', error);
+                return { success: false, error: error.message };
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function apiPost(endpoint, body) {
+            showLoading();
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                console.error('API Error:', error);
+                return { success: false, error: error.message };
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function apiPatch(endpoint, body) {
+            showLoading();
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false, error: error.message };
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function apiDelete(endpoint) {
+            showLoading();
+            try {
+                const res = await fetch(API_URL + endpoint, { method: 'DELETE' });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false, error: error.message };
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Server Status
+        function updateServerStatus(online) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            if (online) {
+                dot.className = 'status-dot';
+                text.textContent = 'Online';
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        // Load Data
+        async function loadData() {
+            // Clientes
+            const clientesRes = await apiGet('/clientes');
+            if (clientesRes.success) {
+                clientes = clientesRes.data;
+                renderClientes();
+                renderStats();
+            }
+
+            // Servidores
+            const servidoresRes = await apiGet('/servidores');
+            if (servidoresRes.success) {
+                servidores = servidoresRes.data;
+                updateServidorSelect();
+            }
+
+            // Revendedores
+            const revendedoresRes = await apiGet('/revendedores');
+            if (revendedoresRes.success) {
+                revendedores = revendedoresRes.data || [];
+                updateRevendedorSelect();
+            }
+
+            // Mensagens (templates)
+            const mensagensRes = await apiGet('/mensagens');
+            if (mensagensRes.success) {
+                mensagensTemplates = mensagensRes.data || [];
+                setupWhatsappTemplates();
+            }
+        }
+
+        // Stats (cards superiores)
+        function renderStats() {
+            const ativos = clientes.filter(c => c.status === 'ativo').length;
+            const pendentes = clientes.filter(c => c.status === 'pendente').length;
+            const expirados = clientes.filter(c => c.status === 'expirado').length;
+
+            document.getElementById('statTotal').textContent = clientes.length;
+            document.getElementById('statAtivos').textContent = ativos;
+            document.getElementById('statPendentes').textContent = pendentes;
+            document.getElementById('statExpirados').textContent = expirados;
+        }
+
+        // Clientes
+        function renderClientes(filter = '') {
+            let filtered = clientes;
+            
+            if (filter) {
+                filtered = clientes.filter(c => c.status === filter);
+            }
+
+            const search = document.getElementById('searchClientes').value.toLowerCase();
+            if (search) {
+                filtered = filtered.filter(c => 
+                    (c.nome || '').toLowerCase().includes(search) ||
+                    (c.telefone || '').includes(search)
+                );
+            }
+
+            document.getElementById('totalClientes').textContent = filtered.length + ' clientes';
+
+            const tbody = document.getElementById('clientesTable');
+            tbody.innerHTML = filtered.map(c => `
+                <tr>
+                    <td><strong>${c.id_servidor || c.id}</strong></td>
+                    <td>${c.nome || '-'}</td>
+                    <td>${c.telefone || '-'}</td>
+                    <td>${getPlanoNome(c.tipo_plano)}</td>
+                    <td>R$ ${(c.valor_plano || 0).toFixed(2)}</td>
+                    <td>${c.servidor || '-'}</td>
+                    <td>${c.data_vencimento_formatada || '-'}</td>
+                    <td>${getStatusBadge(c.status)}</td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-sm btn-icon btn-dark" onclick="editCliente(${c.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon btn-dark" onclick="openMigrarModal(${c.id})" title="Migrar Servidor">
+                                <i class="fas fa-server"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon btn-dark" onclick="openMudarPlanoModal(${c.id})" title="Mudar Plano">
+                                <i class="fas fa-layer-group"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon btn-success" onclick="openRenovacaoModal(${c.id})" title="Renovar">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon" style="background: #25D366; color: white;" onclick="openWhatsappModal(${c.id})" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn btn-sm btn-icon btn-danger" onclick="deleteCliente(${c.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function setupWhatsappTemplates() {
+            const select = document.getElementById('whatsappTemplateSelect');
+            if (!select) return;
+            const order = ['D-3', 'D-2', 'D-1', 'D0', 'D+1'];
+            const sorted = [...mensagensTemplates].sort((a, b) => {
+                const ia = order.indexOf(a.regra);
+                const ib = order.indexOf(b.regra);
+                return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            });
+            select.innerHTML = sorted.map(t => `<option value="${t.id}">${t.nome} (${t.regra})</option>`).join('');
+        }
+
+        function getTemplateById(id) {
+            return mensagensTemplates.find(t => t.id === id);
+        }
+
+        function updateWhatsappPreview() {
+            const preview = document.getElementById('whatsappPreview');
+            const select = document.getElementById('whatsappTemplateSelect');
+            if (!preview || !select || !whatsappCliente) return;
+            const template = getTemplateById(select.value) || mensagensTemplates[0];
+            const dias = diffDias(whatsappCliente.data_vencimento) ?? 0;
+            preview.textContent = applyTemplate(template ? template.texto : '', whatsappCliente, dias);
+        }
+
+        function openWhatsappModal(clienteId) {
+            whatsappCliente = clientes.find(c => c.id === clienteId);
+            if (!whatsappCliente) return;
+            document.getElementById('whatsappClienteNome').value = whatsappCliente.nome || '-';
+            setupWhatsappTemplates();
+            updateWhatsappPreview();
+            document.getElementById('whatsappModal').classList.add('active');
+        }
+
+        function closeWhatsappModal() {
+            document.getElementById('whatsappModal').classList.remove('active');
+        }
+
+        function sendWhatsappMensagem() {
+            if (!whatsappCliente) return;
+            const select = document.getElementById('whatsappTemplateSelect');
+            const template = getTemplateById(select.value) || mensagensTemplates[0];
+            const dias = diffDias(whatsappCliente.data_vencimento) ?? 0;
+            const msg = applyTemplate(template ? template.texto : '', whatsappCliente, dias);
+            const phone = (whatsappCliente.telefone || '').replace(/\D/g, '');
+            if (!phone) {
+                showToast('Telefone invlido', 'error');
+                return;
+            }
+            const url = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+            closeWhatsappModal();
+        }
+
+        function getPlanoNome(plano) {
+            if (!plano) return '-';
+            const p = PLANOS.find(x => x.id === plano);
+            return p ? p.nome : plano;
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                ativo: '<span class="badge badge-success">Ativo</span>',
+                pendente: '<span class="badge badge-warning">Pendente</span>',
+                expirado: '<span class="badge badge-danger">Expirado</span>'
+            };
+            return badges[status] || status;
+        }
+
+        // Modal Cliente
+        function openClienteModal() {
+            document.getElementById('clienteModalTitle').textContent = 'Novo Cliente';
+            document.getElementById('clienteForm').reset();
+            document.getElementById('clienteId').value = '';
+            planoSelecionado = null;
+            renderPlanos();
+            updateRevendedorSelect('');
+            document.getElementById('clienteModal').classList.add('active');
+        }
+
+        function closeClienteModal() {
+            document.getElementById('clienteModal').classList.remove('active');
+        }
+
+        function editCliente(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+
+            document.getElementById('clienteModalTitle').textContent = 'Editar Cliente';
+            document.getElementById('clienteId').value = id;
+            document.getElementById('clienteNome').value = cliente.nome || '';
+            document.getElementById('clienteTelefone').value = cliente.telefone || '';
+            document.getElementById('clienteIdServidor').value = cliente.id_servidor || '';
+            document.getElementById('clienteTipo').value = cliente.tipo || 'direto';
+            updateRevendedorSelect(cliente.revendedor || '');
+            document.getElementById('clienteDataVencimento').value = cliente.data_vencimento || '';
+            document.getElementById('clienteValor').value = (cliente.valor_plano || 0).toFixed(2).replace('.', ',');
+            document.getElementById('clienteObs').value = cliente.observacoes || '';
+            
+            if (cliente.servidor) {
+                document.getElementById('clienteServidor').value = cliente.servidor;
+            }
+
+            planoSelecionado = cliente.tipo_plano;
+            renderPlanos();
+
+            document.getElementById('clienteModal').classList.add('active');
+        }
+
+        async function saveCliente() {
+            const id = document.getElementById('clienteId').value;
+            
+            const clienteData = {
+                nome: document.getElementById('clienteNome').value.trim(),
+                telefone: document.getElementById('clienteTelefone').value.trim(),
+                id_servidor: document.getElementById('clienteIdServidor').value.trim(),
+                tipo: document.getElementById('clienteTipo').value,
+                revendedor: document.getElementById('clienteRevendedor').value.trim() || null,
+                servidor: document.getElementById('clienteServidor').value,
+                data_vencimento: document.getElementById('clienteDataVencimento').value || null,
+                tipo_plano: planoSelecionado,
+                valor_plano: parseValor(document.getElementById('clienteValor').value),
+                observacoes: document.getElementById('clienteObs').value.trim() || null
+            };
+
+            if (!clienteData.nome) {
+                showToast('Nome  obrigatrio!', 'error');
+                return;
+            }
+
+            if (!clienteData.telefone) {
+                showToast('Telefone  obrigatrio!', 'error');
+                return;
+            }
+
+            let res;
+            if (id) {
+                res = await apiPatch('/clientes/' + id, clienteData);
+            } else {
+                res = await apiPost('/clientes', clienteData);
+            }
+
+            if (res.success) {
+                showToast(id ? 'Cliente atualizado!' : 'Cliente criado!');
+                closeClienteModal();
+                loadData();
+            } else {
+                showToast('Erro: ' + (res.error || 'Erro desconhecido'), 'error');
+            }
+        }
+
+        async function deleteCliente(id) {
+            if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
+
+            const res = await apiDelete('/clientes/' + id);
+            if (res.success) {
+                showToast('Cliente excludo!');
+                loadData();
+            } else {
+                showToast('Erro ao excluir', 'error');
+            }
+        }
+
+        // Planos
+        function renderPlanos() {
+            const grid = document.getElementById('planosGrid');
+            grid.innerHTML = PLANOS.map(p => `
+                <div class="plano-card ${planoSelecionado === p.id ? 'selected' : ''}" onclick="selectPlano('${p.id}', ${p.valor})">
+                    <div class="plano-header">
+                        <span class="plano-nome">${p.nome}</span>
+                        <span class="plano-preco">R$ ${p.valor}</span>
+                    </div>
+                    <div class="plano-dias">${p.dias} dias</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPlano(id, valor) {
+            planoSelecionado = id;
+            renderPlanos();
+            document.getElementById('clienteValor').value = valor.toFixed(2).replace('.', ',');
+        }
+
+        // Servidor select
+        function updateServidorSelect() {
+            const select = document.getElementById('clienteServidor');
+            select.innerHTML = '<option value="">Selecione...</option>' +
+                servidores.map(s => `<option value="${s.nome}">${s.nome}</option>`).join('');
+        }
+
+        function getRevendedorNome(revendedor) {
+            return (revendedor && (revendedor.nome || revendedor.name || revendedor.nome_revendedor) || '').trim();
+        }
+
+        function getRevendedorLabel(revendedor) {
+            const nome = getRevendedorNome(revendedor);
+            if (!nome) return '';
+            const status = (revendedor.status || '').toLowerCase();
+            if (status && status !== 'ativo') {
+                return `${nome} (${status})`;
+            }
+            return nome;
+        }
+
+        function updateRevendedorSelect(selectedValue = '') {
+            const select = document.getElementById('clienteRevendedor');
+            if (!select) return;
+
+            const selected = (selectedValue || select.value || '').trim();
+            select.innerHTML = '';
+
+            const baseOption = document.createElement('option');
+            baseOption.value = '';
+            baseOption.textContent = 'Direto / Sem revendedor';
+            select.appendChild(baseOption);
+
+            const sorted = [...revendedores]
+                .filter(r => getRevendedorNome(r))
+                .sort((a, b) => getRevendedorNome(a).localeCompare(getRevendedorNome(b), 'pt-BR', { sensitivity: 'base' }));
+
+            sorted.forEach(r => {
+                const option = document.createElement('option');
+                option.value = getRevendedorNome(r);
+                option.textContent = getRevendedorLabel(r);
+                select.appendChild(option);
+            });
+
+            if (selected && !sorted.some(r => getRevendedorNome(r) === selected)) {
+                const option = document.createElement('option');
+                option.value = selected;
+                option.textContent = `${selected} (n\u00E3o cadastrado)`;
+                select.appendChild(option);
+            }
+
+            select.value = selected;
+        }
+
+        function updateMigrarServidorSelect() {
+            const select = document.getElementById('migrarServidor');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecione...</option>' +
+                servidores.map(s => `<option value="${s.nome}">${s.nome}</option>`).join('');
+        }
+
+        function openMigrarModal(clienteId) {
+            const cliente = clientes.find(c => c.id === clienteId);
+            if (!cliente) return;
+            document.getElementById('migrarClienteId').value = clienteId;
+            updateMigrarServidorSelect();
+            document.getElementById('migrarServidor').value = cliente.servidor || '';
+            document.getElementById('migrarIdServidor').value = cliente.id_servidor || '';
+            document.getElementById('migrarModal').classList.add('active');
+        }
+
+        function closeMigrarModal() {
+            document.getElementById('migrarModal').classList.remove('active');
+        }
+
+        async function executarMigracao() {
+            const clienteId = document.getElementById('migrarClienteId').value;
+            const servidor = document.getElementById('migrarServidor').value;
+            const idServidor = document.getElementById('migrarIdServidor').value.trim();
+
+            if (!servidor) {
+                showToast('Selecione um servidor', 'error');
+                return;
+            }
+
+            const res = await apiPost('/clientes/' + clienteId + '/migrar-servidor', {
+                servidor: servidor,
+                id_servidor: idServidor || null
+            });
+
+            if (res.success) {
+                showToast('Servidor atualizado!');
+                closeMigrarModal();
+                loadData();
+            } else {
+                showToast('Erro ao migrar', 'error');
+            }
+        }
+
+        // Renovao
+        function openRenovacaoModal(clienteId) {
+            const cliente = clientes.find(c => c.id === clienteId);
+            if (!cliente) return;
+
+            document.getElementById('renovacaoClienteId').value = clienteId;
+            document.getElementById('renovacaoInfo').innerHTML = `
+                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px;">
+                    <h4 style="margin-bottom: 16px;">${cliente.nome}</h4>
+                    <p style="color: var(--white-600);">Telefone: ${cliente.telefone || '-'}</p>
+                    <p style="color: var(--white-600);">Plano Atual: ${getPlanoNome(cliente.tipo_plano)}</p>
+                    <p style="color: var(--white-600);">Vencimento: ${cliente.data_vencimento_formatada || '-'}</p>
+                </div>
+            `;
+
+            planoRenovacaoSelecionado = cliente.tipo_plano;
+            renderPlanosRenovacao();
+            const planoAtual = PLANOS.find(p => p.id === planoRenovacaoSelecionado);
+            document.getElementById('renovacaoValor').value = planoAtual
+                ? planoAtual.valor.toFixed(2).replace('.', ',')
+                : '';
+
+            document.getElementById('renovacaoModal').classList.add('active');
+        }
+
+        function closeRenovacaoModal() {
+            document.getElementById('renovacaoModal').classList.remove('active');
+        }
+
+        function renderPlanosRenovacao() {
+            const grid = document.getElementById('planosRenovacaoGrid');
+            grid.innerHTML = PLANOS.map(p => `
+                <div class="plano-card ${planoRenovacaoSelecionado === p.id ? 'selected' : ''}" onclick="selectPlanoRenovacao('${p.id}', ${p.valor})">
+                    <div class="plano-header">
+                        <span class="plano-nome">${p.nome}</span>
+                        <span class="plano-preco">R$ ${p.valor}</span>
+                    </div>
+                    <div class="plano-dias">${p.dias} dias</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPlanoRenovacao(id, valor) {
+            planoRenovacaoSelecionado = id;
+            renderPlanosRenovacao();
+            document.getElementById('renovacaoValor').value = valor.toFixed(2).replace('.', ',');
+        }
+
+        function renderPlanosMudanca() {
+            const grid = document.getElementById('planosMudancaGrid');
+            grid.innerHTML = PLANOS.map(p => `
+                <div class="plano-card ${planoMudancaSelecionado === p.id ? 'selected' : ''}" onclick="selectPlanoMudanca('${p.id}', ${p.valor})">
+                    <div class="plano-header">
+                        <span class="plano-nome">${p.nome}</span>
+                        <span class="plano-preco">R$ ${p.valor}</span>
+                    </div>
+                    <div class="plano-dias">${p.dias} dias</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPlanoMudanca(id, valor) {
+            planoMudancaSelecionado = id;
+            renderPlanosMudanca();
+            document.getElementById('mudarPlanoValor').value = valor.toFixed(2).replace('.', ',');
+        }
+
+        function openMudarPlanoModal(clienteId) {
+            const cliente = clientes.find(c => c.id === clienteId);
+            if (!cliente) return;
+            document.getElementById('mudarPlanoClienteId').value = clienteId;
+            planoMudancaSelecionado = cliente.tipo_plano;
+            renderPlanosMudanca();
+            document.getElementById('mudarPlanoValor').value = (cliente.valor_plano || 0).toFixed(2).replace('.', ',');
+            document.getElementById('mudarPlanoModal').classList.add('active');
+        }
+
+        function closeMudarPlanoModal() {
+            document.getElementById('mudarPlanoModal').classList.remove('active');
+        }
+
+        async function executarMudancaPlano() {
+            const clienteId = document.getElementById('mudarPlanoClienteId').value;
+            const valor = parseValor(document.getElementById('mudarPlanoValor').value);
+
+            if (!planoMudancaSelecionado) {
+                showToast('Selecione um plano!', 'error');
+                return;
+            }
+
+            const res = await apiPost('/clientes/' + clienteId + '/mudar-plano', {
+                tipo_plano: planoMudancaSelecionado,
+                valor_plano: valor
+            });
+
+            if (res.success) {
+                showToast('Plano atualizado!');
+                closeMudarPlanoModal();
+                loadData();
+            } else {
+                showToast('Erro ao mudar plano', 'error');
+            }
+        }
+
+        async function executarRenovacao() {
+            const clienteId = document.getElementById('renovacaoClienteId').value;
+            const valor = parseValor(document.getElementById('renovacaoValor').value);
+
+            if (!planoRenovacaoSelecionado) {
+                showToast('Selecione um plano!', 'error');
+                return;
+            }
+
+            const res = await apiPost('/renovacoes/executar', {
+                cliente_id: parseInt(clienteId),
+                plano_novo: planoRenovacaoSelecionado,
+                valor_renovacao: valor
+            });
+
+            if (res.success) {
+                showToast('Renovao realizada com sucesso!');
+                closeRenovacaoModal();
+                loadData();
+            } else {
+                showToast('Erro: ' + (res.error || 'Erro desconhecido'), 'error');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('searchClientes').addEventListener('input', () => {
+            const filter = document.getElementById('filterStatus').value;
+            renderClientes(filter);
+        });
+
+        document.getElementById('filterStatus').addEventListener('change', (e) => {
+            renderClientes(e.target.value);
+        });
+
+        // Telefone mask
+        document.getElementById('clienteTelefone').addEventListener('input', (e) => {
+            e.target.value = formatarTelefone(e.target.value);
+        });
+
+        // Valor mask
+        document.getElementById('clienteValor').addEventListener('input', (e) => {
+            e.target.value = formatarValor(e.target.value);
+        });
+
+        document.getElementById('renovacaoValor').addEventListener('input', (e) => {
+            e.target.value = formatarValor(e.target.value);
+        });
+
+        const mudarPlanoValorInput = document.getElementById('mudarPlanoValor');
+        if (mudarPlanoValorInput) {
+            mudarPlanoValorInput.addEventListener('input', (e) => {
+                e.target.value = formatarValor(e.target.value);
+            });
+        }
+
+        // Ditado por voz (Web Speech API)
+        function initVoiceButtons() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return;
+
+            const targets = [
+                'clienteNome',
+                'clienteTelefone',
+                'clienteIdServidor',
+                'clienteDataVencimento'
+            ];
+
+            let activeRecognition = null;
+            let activeButton = null;
+
+            function stopActive() {
+                if (activeRecognition) {
+                    activeRecognition.stop();
+                    activeRecognition = null;
+                }
+                if (activeButton) {
+                    activeButton.classList.remove('active');
+                    activeButton = null;
+                }
+            }
+
+            function normalizeDateSpeech(text) {
+                const clean = (text || '').trim();
+                const match = clean.match(/(\d{1,2})[\/\-\s\.]+(\d{1,2})[\/\-\s\.]+(\d{2,4})/);
+                if (!match) return '';
+                let day = match[1].padStart(2, '0');
+                let month = match[2].padStart(2, '0');
+                let year = match[3];
+                if (year.length === 2) year = `20${year}`;
+                return `${year}-${month}-${day}`;
+            }
+
+            targets.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input) return;
+
+                input.classList.add('voice-enabled');
+                if (input.parentElement && input.parentElement.querySelector('.voice-btn')) return;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'voice-btn';
+                btn.setAttribute('data-voice-target', id);
+                btn.setAttribute('aria-label', 'Ditado por voz');
+                btn.innerHTML = '<i class="fas fa-microphone"></i>';
+                input.insertAdjacentElement('afterend', btn);
+
+                btn.addEventListener('click', () => {
+                    if (activeButton === btn) {
+                        stopActive();
+                        return;
+                    }
+
+                    stopActive();
+
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = 'pt-BR';
+                    recognition.interimResults = false;
+                    recognition.maxAlternatives = 1;
+
+                    recognition.onstart = () => {
+                        activeRecognition = recognition;
+                        activeButton = btn;
+                        btn.classList.add('active');
+                    };
+
+                    recognition.onresult = (event) => {
+                        const transcript = event.results[0][0].transcript || '';
+                        if (input.type === 'date') {
+                            const normalized = normalizeDateSpeech(transcript);
+                            if (normalized) input.value = normalized;
+                        } else {
+                            input.value = transcript;
+                        }
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    };
+
+                    recognition.onerror = () => {
+                        if (typeof showToast === 'function') {
+                            showToast('Falha no reconhecimento de voz. Verifique o microfone.', 'error');
+                        }
+                    };
+
+                    recognition.onend = () => {
+                        stopActive();
+                    };
+
+                    recognition.start();
+                });
+            });
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderPlanos();
+            initVoiceButtons();
+            const whatsappSelect = document.getElementById('whatsappTemplateSelect');
+            if (whatsappSelect) {
+                whatsappSelect.addEventListener('change', updateWhatsappPreview);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+

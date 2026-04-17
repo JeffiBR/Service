@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuracoes - Precificacao</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07080a;
+      --panel: #12151d;
+      --panel-2: #181c26;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(1100px 600px at 10% -10%, rgba(59, 130, 246, 0.14), transparent 58%),
+        radial-gradient(900px 600px at 90% 0%, rgba(251, 191, 36, 0.13), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-right: 280px;
+    }
+
+    .title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .title span { color: var(--accent); }
+
+    .subtitle { color: var(--muted); margin: 6px 0 0; font-size: 0.94rem; }
+
+    .actions { display: flex; gap: 10px; }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 130px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111;
+      border-color: transparent;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--danger); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.015));
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      min-height: 360px;
+    }
+
+    .card-header {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.015);
+    }
+
+    .card-title { margin: 0; font-size: 1.02rem; }
+
+    .card-body {
+      max-height: 520px;
+      overflow: auto;
+      padding: 10px 12px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 4px;
+      border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+
+    .row:last-child { border-bottom: 0; }
+
+    .row-aviamento {
+      grid-template-columns: 1fr 130px 130px;
+    }
+
+    .name { font-size: 0.9rem; color: #e4e4e7; }
+
+    .money {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .money:focus {
+      border-color: rgba(251, 191, 36, 0.6);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: 1fr 130px 130px;
+      gap: 8px;
+      padding: 8px 4px 10px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 1050px) {
+      .top { padding-right: 0; flex-wrap: wrap; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <div>
+        <h1 class="title">Configurações de <span>Precificação</span></h1>
+        <p class="subtitle">Cada usuário salva seus próprios preços para preenchimento automático na tela de precificação.</p>
+      </div>
+      <div class="actions">
+        <a href="precificacao.html" class="btn">Voltar</a>
+        <button type="button" class="btn btn-primary" id="btnSalvar">Salvar</button>
+      </div>
+    </div>
+
+    <div class="status" id="status">Carregando configurações...</div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Tecidos (preço por metro)</h2>
+        </div>
+        <div class="card-body" id="tecidosRows"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Forros (preço por metro)</h2>
+        </div>
+        <div class="card-body" id="forrosRows"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">Aviamentos</h2>
+      </div>
+      <div class="card-body">
+        <div class="legend">
+          <span>Nome</span>
+          <span>Preço/metro</span>
+          <span>Preço/unidade</span>
+        </div>
+        <div id="aviamentosRows"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const API_URL = window.API_BASE || (window.location.origin + '/api');
+      const CONFIG_ENDPOINT = `${API_URL}/configuracoes`;
+
+      const TECIDOS = [
+        'Viscose', 'Tricoline', 'Algodo Cru', 'Crepe (bubble, musseline, alfaiataria)', 'Malha PV',
+        'Malha de Algodo', 'Suplex', 'Seda (natural e sinttica)', 'Cetim', 'Cetin', 'Chiffon / Musseline',
+        'Tule (fino, bordado, francs)', 'Twill', 'Sarja', 'Oxford', 'Gabardine', 'Linho', 'Linho Misto',
+        'Veludo (molhado, alemo, cotel)', 'Tricoline 100% Algodo', 'Brim Leve', 'Sarja Macia', 'Lona Leve',
+        'Tecidos Impermeveis (bagun, tactel grosso)', 'Meia Panam', 'Gorguro Grosso', 'Courino', 'Napa Sinttica',
+        'Camura Sinttica', 'Lona Grossa', 'Jeans', 'Jeans Tradicional', 'Jeans com Elastano', 'Jeans Leve',
+        'Jeans Escuro', 'Jeans Claro', 'Moletinho', 'Moletom', 'Malha Canelada', 'Ribana', 'Malha Fria',
+        'Malha Viscolycra', 'Nylon', 'Naylon', 'Naylon 600', 'Polister', 'Microfibra', 'Neoprene', 'Tactel',
+        'Dry Fit', 'Renda', 'Guipir', 'Organza', 'Taft?', 'Paet?', 'Lurex', 'Couro Sint?tico', 'PVC', 'Napa'
+      ];
+
+      const FORROS = [
+        'Forro de Cetim', 'Forro Acetinado', 'Forro de Tafetá', 'Forro de Viscose', 'Forro de Poliéster',
+        'Forro de Algodão', 'Forro de Seda', 'Forro de Malha', 'Forro de Helanca', 'Forro de Microfibra',
+        'Forro de Flanela', 'Forro de Tricoline', 'Tricoline Fino', 'Matelassê', 'Forro de Sarja', 'Forro de Voil',
+        'Forro Cetim', 'Entretela', 'Feltro', 'Malha de Forro', 'Manta Acrílica', 'Termocolante'
+      ];
+
+      const AVIAMENTOS = [
+        'Linha', 'Zíper', 'Zíper Invisível', 'Zíper Metal', 'Zíper Nylon', 'Botão', 'Botão de Pressão',
+        'Botão Forrado', 'Elástico', 'Viés', 'Entretela', 'Renda', 'Laço', 'Fita de Cetim', 'Fita de Gorgurão',
+        'Velcro', 'Passante', 'Ilhós', 'Alça', 'Argola', 'Meia-argola', 'Mosquetão', 'Fivela', 'Clipe',
+        'Aplique', 'Patch', 'Termocolante', 'Strass', 'Pérola', 'Miçanga', 'Barbatana', 'Cordão', 'Cordel',
+        'Franja', 'Pompom', 'Colchete', 'Gancho', 'Rebite', 'Tachinha', 'Cursor', 'Chaveiro', 'Etiqueta', 'Regulador'
+      ];
+
+      const estado = {
+        tecidos: {},
+        forros: {},
+        aviamentos: {}
+      };
+
+      const statusEl = document.getElementById('status');
+      const tecidosRows = document.getElementById('tecidosRows');
+      const forrosRows = document.getElementById('forrosRows');
+      const aviamentosRows = document.getElementById('aviamentosRows');
+      const btnSalvar = document.getElementById('btnSalvar');
+
+      function setStatus(texto, tipo) {
+        statusEl.textContent = texto || '';
+        statusEl.className = `status${tipo ? ' ' + tipo : ''}`;
+      }
+
+      function dedupe(items) {
+        return [...new Set(items)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      }
+
+      function formatarMoedaBr(valor) {
+        const n = Number(valor);
+        if (!Number.isFinite(n) || n <= 0) return '';
+        return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function parseMoedaBr(texto) {
+        if (!texto) return 0;
+        const limpo = String(texto).replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.');
+        const n = Number(limpo);
+        return Number.isFinite(n) && n > 0 ? Number(n.toFixed(4)) : 0;
+      }
+
+      function onInputMoeda(event) {
+        const digits = (event.target.value || '').replace(/\D/g, '');
+        if (!digits) {
+          event.target.value = '';
+          return;
+        }
+        const valor = Number(digits) / 100;
+        event.target.value = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function criarLinhaPadrao(nome, secao) {
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.dataset.nome = nome;
+        row.innerHTML = `
+          <div class="name">${nome}</div>
+          <input class="money" type="text" placeholder="0,00" value="${formatarMoedaBr(estado[secao][nome])}">
+        `;
+        const input = row.querySelector('input');
+        input.addEventListener('input', onInputMoeda);
+        return row;
+      }
+
+      function criarLinhaAviamento(nome) {
+        const row = document.createElement('div');
+        row.className = 'row row-aviamento';
+        row.dataset.nome = nome;
+        const item = estado.aviamentos[nome] || {};
+        row.innerHTML = `
+          <div class="name">${nome}</div>
+          <input class="money metro" type="text" placeholder="0,00" value="${formatarMoedaBr(item.metro)}">
+          <input class="money unidade" type="text" placeholder="0,00" value="${formatarMoedaBr(item.unidade)}">
+        `;
+        row.querySelectorAll('input').forEach((input) => input.addEventListener('input', onInputMoeda));
+        return row;
+      }
+
+      function render() {
+        tecidosRows.innerHTML = '';
+        forrosRows.innerHTML = '';
+        aviamentosRows.innerHTML = '';
+
+        dedupe(TECIDOS).forEach((nome) => tecidosRows.appendChild(criarLinhaPadrao(nome, 'tecidos')));
+        dedupe(FORROS).forEach((nome) => forrosRows.appendChild(criarLinhaPadrao(nome, 'forros')));
+        dedupe(AVIAMENTOS).forEach((nome) => aviamentosRows.appendChild(criarLinhaAviamento(nome)));
+      }
+
+      async function carregar() {
+        try {
+          const resp = await fetch(CONFIG_ENDPOINT);
+          if (!resp.ok) throw new Error('Falha ao carregar configurações');
+          const json = await resp.json();
+          const data = json && json.data ? json.data : {};
+          estado.tecidos = data.tecidos && typeof data.tecidos === 'object' ? data.tecidos : {};
+          estado.forros = data.forros && typeof data.forros === 'object' ? data.forros : {};
+          estado.aviamentos = data.aviamentos && typeof data.aviamentos === 'object' ? data.aviamentos : {};
+          render();
+          setStatus('Configurações carregadas.', 'ok');
+        } catch (err) {
+          render();
+          setStatus(err && err.message ? err.message : 'Falha ao carregar configurações.', 'error');
+        }
+      }
+
+      function coletarPayload() {
+        const payload = { tecidos: {}, forros: {}, aviamentos: {} };
+
+        tecidosRows.querySelectorAll('.row').forEach((row) => {
+          const nome = row.dataset.nome;
+          const valor = parseMoedaBr(row.querySelector('input').value);
+          if (valor > 0) payload.tecidos[nome] = valor;
+        });
+
+        forrosRows.querySelectorAll('.row').forEach((row) => {
+          const nome = row.dataset.nome;
+          const valor = parseMoedaBr(row.querySelector('input').value);
+          if (valor > 0) payload.forros[nome] = valor;
+        });
+
+        aviamentosRows.querySelectorAll('.row').forEach((row) => {
+          const nome = row.dataset.nome;
+          const metro = parseMoedaBr(row.querySelector('.metro').value);
+          const unidade = parseMoedaBr(row.querySelector('.unidade').value);
+          if (metro > 0 || unidade > 0) {
+            payload.aviamentos[nome] = { metro, unidade };
+          }
+        });
+
+        return payload;
+      }
+
+      async function salvar() {
+        btnSalvar.disabled = true;
+        setStatus('Salvando configurações...', '');
+        try {
+          const payload = coletarPayload();
+          const resp = await fetch(CONFIG_ENDPOINT, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!resp.ok) throw new Error('Falha ao salvar configurações');
+          setStatus('Configurações salvas com sucesso.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao salvar configurações.', 'error');
+        } finally {
+          btnSalvar.disabled = false;
+        }
+      }
+
+      btnSalvar.addEventListener('click', salvar);
+      carregar();
+    })();
+  </script>
+</body>
+</html>

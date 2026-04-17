@@ -1,0 +1,1650 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Preço Certo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --black-900: #000000;
+            --black-800: #0a0a0b;
+            --black-700: #111113;
+            --black-600: #18181b;
+            --black-500: #1f1f23;
+            --black-400: #27272a;
+            --black-300: #3f3f46;
+            --white: #fafafa;
+            --white-800: #e4e4e7;
+            --white-600: #a1a1aa;
+            --accent-gold: #fbbf24;
+            --accent-gold-light: #fcd34d;
+            --accent-gold-dark: #d97706;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-orange: #f97316;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+            --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black-900);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black-800); }
+        ::-webkit-scrollbar-thumb { background: var(--black-400); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--black-300); }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(251, 191, 36, 0.08), transparent 40%),
+                        radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.08), transparent 45%),
+                        var(--black-900);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .loading-screen.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-orbit {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+
+        .loading-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.08);
+            border-top-color: var(--accent-gold);
+            animation: spin 1.2s linear infinite;
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+        }
+
+        .loading-ring.ring-2 {
+            inset: 12px;
+            border-top-color: var(--accent-blue);
+            animation-duration: 1.6s;
+            opacity: 0.8;
+        }
+
+        .loading-ring.ring-3 {
+            inset: 24px;
+            border-top-color: var(--accent-rose);
+            animation-duration: 2s;
+            opacity: 0.7;
+        }
+
+        .loading-logo {
+            width: 54px;
+            height: 54px;
+            background: var(--gradient-gold);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            color: var(--white-600);
+            font-size: 0.8rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--black-900);
+            background: var(--gradient-gold);
+            box-shadow: var(--glow-gold);
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item span {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.waking { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .status-info { font-size: 0.75rem; color: var(--white-600); }
+        .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+        /* Main */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .page-title span {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-date {
+            color: var(--white-600);
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            padding: 32px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.gold::before { background: var(--gradient-gold); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.yellow::before { background: linear-gradient(90deg, #eab308, #f59e0b); }
+        .stat-card.red::before { background: linear-gradient(90deg, #ef4444, #f43f5e); }
+        .stat-card.purple::before { background: linear-gradient(90deg, #a855f7, #8b5cf6); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card.gold .stat-icon { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); }
+        .stat-card.green .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .stat-card.yellow .stat-icon { background: rgba(234, 179, 8, 0.1); color: var(--warning); }
+        .stat-card.red .stat-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+        .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--white-600);
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+        .chart-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-title i {
+            color: var(--accent-gold);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-container.small {
+            height: 250px;
+        }
+
+        /* Vencimentos List */
+        .vencimentos-section {
+            margin-top: 32px;
+        }
+
+        .vencimentos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .vencimento-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .vencimento-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vencimento-header.urgent { background: rgba(239, 68, 68, 0.1); }
+        .vencimento-header.warning { background: rgba(234, 179, 8, 0.1); }
+        .vencimento-header.info { background: rgba(59, 130, 246, 0.1); }
+
+        .vencimento-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .vencimento-header.urgent .vencimento-icon { background: var(--danger); color: white; }
+        .vencimento-header.warning .vencimento-icon { background: var(--warning); color: black; }
+        .vencimento-header.info .vencimento-icon { background: var(--accent-blue); color: white; }
+
+        .vencimento-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .vencimento-count {
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .vencimento-header.urgent .vencimento-count { color: var(--danger); }
+        .vencimento-header.warning .vencimento-count { color: var(--warning); }
+        .vencimento-header.info .vencimento-count { color: var(--accent-blue); }
+
+        .vencimento-body {
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .vencimento-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .vencimento-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .vencimento-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .cliente-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cliente-nome {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .cliente-telefone {
+            font-size: 0.8rem;
+            color: var(--white-600);
+        }
+
+        .cliente-dias {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .cliente-dias.critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .cliente-dias.warning { background: rgba(234, 179, 8, 0.2); color: var(--warning); }
+        .cliente-dias.info { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .cliente-dias.danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .cliente-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.1);
+        }
+
+        /* ===== BOTES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-dark:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: var(--white-600);
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--black-600);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+        }
+
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== MODAL PADRO ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--black-700);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-title-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black-900);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+
+        .modal-body .form-group.full {
+            min-height: 140px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* ===== FORMULRIOS ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full { grid-column: span 2; }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white-600);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-input[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Preview input special case */
+        #whatsappPreview {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--white);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .form-select,
+        select.form-input {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--accent-gold) 50%),
+                linear-gradient(135deg, var(--accent-gold) 50%, transparent 50%);
+            background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 36px;
+            z-index: 10;
+        }
+
+        .form-select:hover,
+        select.form-input:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.12);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .chart-card.full-width { grid-column: span 1; }
+        }
+
+        @media (max-width: 1100px) {
+            .vencimentos-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 16px; }
+        }
+    </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-orbit">
+            <div class="loading-ring"></div>
+            <div class="loading-ring ring-2"></div>
+            <div class="loading-ring ring-3"></div>
+            <div class="loading-logo">
+                <i class="fas fa-bolt"></i>
+            </div>
+        </div>
+        <p class="loading-text">Carregando...</p>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operao realizada!</span>
+    </div>
+
+    <!-- App -->
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
+            </div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item active" href="dashboard.html">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-users"></i>
+            <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+            <i class="fas fa-user-tie"></i>
+            <span>Revendedores</span>
+        </a>
+        <a class="nav-item" href="servidores.html">
+            <i class="fas fa-server"></i>
+            <span>Servidores</span>
+        </a>
+        <a class="nav-item" href="mensagens.html">
+            <i class="fas fa-message"></i>
+            <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+            <i class="fas fa-calculator"></i>
+            <span>Precificação</span>
+        </a>
+        <a class="nav-item" href="recebiveis.html">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item" href="dindin.html">
+            <i class="fas fa-sack-dollar"></i>
+            <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item" href="produtos-atelie.html">
+            <i class="fas fa-box"></i>
+            <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Histórico</span>
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="server-status">
+            <div class="status-dot" id="statusDot"></div>
+            <div>
+                <div class="status-info">Servidor</div>
+                <div class="status-value" id="statusText">Verificando...</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="main-header">
+                <h1 class="page-title"><span>Dashboard</span></h1>
+                <div class="header-date" id="headerDate"></div>
+            </header>
+
+            <div class="main-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total de Clientes</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-value" id="statAtivos">0</div>
+                        <div class="stat-label">Clientes Ativos</div>
+                    </div>
+                    <div class="stat-card yellow">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value" id="statPendentes">0</div>
+                        <div class="stat-label">Vencendo em 7 Dias</div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-value" id="statExpirados">0</div>
+                        <div class="stat-label">Expirados</div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title"><i class="fas fa-calendar-alt"></i> Vencimentos por Período</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartVencimentos"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title"><i class="fas fa-server"></i> Clientes por Servidor</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartServidores"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title"><i class="fas fa-crown"></i> Clientes por Plano</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartPlanos"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title"><i class="fas fa-chart-line"></i> Status Geral</h3>
+                        </div>
+                        <div class="chart-container small">
+                            <canvas id="chartStatus"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vencimentos Sections -->
+                <div class="vencimentos-section">
+                    <div class="vencimentos-grid">
+                        <!-- 1 Dia -->
+                        <div class="vencimento-card">
+                            <div class="vencimento-header urgent">
+                                <div class="vencimento-icon"><i class="fas fa-fire"></i></div>
+                                <div>
+                                    <div class="vencimento-title">Vencendo em 1 Dia</div>
+                                    <div class="vencimento-count" id="count1dia">0</div>
+                                </div>
+                            </div>
+                            <div class="vencimento-body" id="list1dia">
+                                <div class="empty-state">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Nenhum cliente vencendo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 Dias -->
+                        <div class="vencimento-card">
+                            <div class="vencimento-header warning">
+                                <div class="vencimento-icon"><i class="fas fa-exclamation"></i></div>
+                                <div>
+                                    <div class="vencimento-title">Vencendo em 3 Dias</div>
+                                    <div class="vencimento-count" id="count3dias">0</div>
+                                </div>
+                            </div>
+                            <div class="vencimento-body" id="list3dias">
+                                <div class="empty-state">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Nenhum cliente vencendo</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 7 Dias -->
+                        <div class="vencimento-card">
+                            <div class="vencimento-header info">
+                                <div class="vencimento-icon"><i class="fas fa-clock"></i></div>
+                                <div>
+                                    <div class="vencimento-title">Vencendo em 7 Dias</div>
+                                    <div class="vencimento-count" id="count7dias">0</div>
+                                </div>
+                            </div>
+                            <div class="vencimento-body" id="list7dias">
+                                <div class="empty-state">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Nenhum cliente vencendo</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Vencidos -->
+                        <div class="vencimento-card">
+                            <div class="vencimento-header urgent">
+                                <div class="vencimento-icon"><i class="fas fa-times-circle"></i></div>
+                                <div>
+                                    <div class="vencimento-title">Vencidos</div>
+                                    <div class="vencimento-count" id="countExpirados">0</div>
+                                </div>
+                            </div>
+                            <div class="vencimento-body" id="listExpirados">
+                                <div class="empty-state">
+                                    <i class="fas fa-check-circle"></i>
+                                    <p>Nenhum cliente vencido</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal WhatsApp -->
+    <div class="modal-overlay" id="whatsappModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fab fa-whatsapp"></i></div>
+                    <span>Enviar WhatsApp</span>
+                </h3>
+                <button class="modal-close" onclick="closeWhatsappModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Perfil da Mensagem</label>
+                        <select class="form-select" id="whatsappTemplateSelect"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" class="form-input" id="whatsappClienteNome" disabled>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Pré-visualização</label>
+                        <div class="form-input" id="whatsappPreview" style="min-height:120px; white-space:pre-wrap;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeWhatsappModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="sendWhatsappMensagem()">
+                    <i class="fab fa-whatsapp"></i> Enviar WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_URL = (window.API_BASE || (window.location.origin + '/api'));
+
+        // Dados
+        let clientes = [];
+        let mensagensTemplates = [];
+        let whatsappCliente = null;
+
+        // Helpers used by message templating
+        function diffDias(dataIso) {
+            if (!dataIso) return null;
+            const hoje = new Date();
+            const base = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+            const [ano, mes, dia] = dataIso.split('T')[0].split('-').map(Number);
+            const alvo = new Date(ano, mes - 1, dia);
+            const diffMs = alvo - base;
+            return Math.round(diffMs / (1000 * 60 * 60 * 24));
+        }
+
+        function applyTemplate(texto, cliente, dias) {
+            const map = {
+                nome: cliente.nome || '-',
+                vencimento: cliente.data_vencimento ? (
+                    ((d) => {
+                        const [y,m,dia] = d.split('T')[0].split('-');
+                        return `${dia}/${m}/${y}`;
+                    })(cliente.data_vencimento)
+                ) : '-',
+                dias: Math.abs(dias),
+                valor: cliente.valor_plano != null ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cliente.valor_plano) : 'R$ 0,00',
+                servidor: cliente.servidor || '-',
+                revendedor: cliente.revendedor || '-'
+            };
+            return texto.replace(/\{(\w+)\}/g, (m, key) => map[key] !== undefined ? map[key] : m);
+        }
+
+        // Loading
+        let loadingTimeout;
+        let loadingMaxTimeout;
+        function showLoading() {
+            clearTimeout(loadingTimeout);
+            clearTimeout(loadingMaxTimeout);
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('active');
+            }, 300);
+            // Evita travar carregando para sempre
+            loadingMaxTimeout = setTimeout(() => {
+                hideLoading();
+                showToast('Carregamento demorou. Mostrando dados disponveis.', 'error');
+            }, 10000);
+        }
+
+        function hideLoading() {
+            clearTimeout(loadingTimeout);
+            clearTimeout(loadingMaxTimeout);
+            document.getElementById('loadingScreen').classList.remove('active');
+        }
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        // Update date
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', options);
+        }
+
+        // API calls
+        async function apiGet(endpoint, signal) {
+            try {
+                const res = await fetch(API_URL + endpoint, { signal });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                console.error('API Error:', error);
+                const msg = (error && error.name === 'AbortError') ? 'timeout' : (error.message || 'erro');
+                return { success: false, error: msg, data: [] };
+            }
+        }
+
+        // Server Status
+        function updateServerStatus(online) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            if (online) {
+                dot.className = 'status-dot';
+                text.textContent = 'Online';
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        // Load Data
+        async function loadData() {
+            showLoading();
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 9000);
+
+            const [clientesRes, mensagensRes] = await Promise.all([
+                apiGet('/clientes', controller.signal),
+                apiGet('/mensagens', controller.signal)
+            ]);
+            clearTimeout(timeoutId);
+            hideLoading();
+
+            if (mensagensRes && mensagensRes.success) {
+                mensagensTemplates = mensagensRes.data;
+                setupWhatsappTemplates();
+            }
+
+            if (clientesRes.success) {
+                clientes = clientesRes.data;
+                renderStats();
+                renderCharts();
+                renderVencimentos();
+            } else {
+                showToast('Falha ao carregar clientes.', 'error');
+            }
+        }
+
+        // Stats
+        function renderStats() {
+            const ativos = clientes.filter(c => c.status === 'ativo').length;
+            const pendentes = clientes.filter(c => c.status === 'pendente').length;
+            const expirados = clientes.filter(c => c.status === 'expirado').length;
+
+            document.getElementById('statTotal').textContent = clientes.length;
+            document.getElementById('statAtivos').textContent = ativos;
+            document.getElementById('statPendentes').textContent = pendentes;
+            document.getElementById('statExpirados').textContent = expirados;
+        }
+
+        // Charts
+        function renderCharts() {
+            renderChartVencimentos();
+            renderChartServidores();
+            renderChartPlanos();
+            renderChartStatus();
+        }
+
+        // Grfico de Vencimentos
+        function renderChartVencimentos() {
+            const vencendo1 = clientes.filter(c => c.dias_restantes >= 0 && c.dias_restantes <= 1).length;
+            const vencendo3 = clientes.filter(c => c.dias_restantes > 1 && c.dias_restantes <= 3).length;
+            const vencendo7 = clientes.filter(c => c.dias_restantes > 3 && c.dias_restantes <= 7).length;
+            const vencendo15 = clientes.filter(c => c.dias_restantes > 7 && c.dias_restantes <= 15).length;
+            const vencendo30 = clientes.filter(c => c.dias_restantes > 15 && c.dias_restantes <= 30).length;
+
+            const ctx = document.getElementById('chartVencimentos').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1 Dia', '3 Dias', '7 Dias', '15 Dias', '30 Dias'],
+                    datasets: [{
+                        label: 'Clientes',
+                        data: [vencendo1, vencendo3, vencendo7, vencendo15, vencendo30],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(249, 115, 22, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(249, 115, 22, 1)',
+                            'rgba(234, 179, 8, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(34, 197, 94, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { 
+                                color: '#71717a',
+                                font: { family: 'Inter' }
+                            },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { 
+                                color: '#71717a',
+                                font: { family: 'Inter' }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Grfico de Servidores
+        function renderChartServidores() {
+            const servidorCount = {};
+            clientes.forEach(c => {
+                const servidor = c.servidor || 'Sem Servidor';
+                servidorCount[servidor] = (servidorCount[servidor] || 0) + 1;
+            });
+
+            const labels = Object.keys(servidorCount);
+            const data = Object.values(servidorCount);
+            const colors = generateColors(labels.length);
+
+            const ctx = document.getElementById('chartServidores').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: '#111113',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#e4e4e7',
+                                font: { family: 'Inter', size: 12 },
+                                padding: 16,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+
+        // Grfico de Planos
+        function renderChartPlanos() {
+            const planoCount = {};
+            clientes.forEach(c => {
+                const plano = getPlanoNome(c.tipo_plano);
+                planoCount[plano] = (planoCount[plano] || 0) + 1;
+            });
+
+            const labels = Object.keys(planoCount);
+            const data = Object.values(planoCount);
+            const colors = generateColors(labels.length);
+
+            const ctx = document.getElementById('chartPlanos').getContext('2d');
+            new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.map(c => c.replace('1)', '0.7)')),
+                        borderColor: colors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#e4e4e7',
+                                font: { family: 'Inter', size: 11 },
+                                padding: 12,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            ticks: { display: false },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Grfico de Status
+        function renderChartStatus() {
+            const ativos = clientes.filter(c => c.status === 'ativo').length;
+            const pendentes = clientes.filter(c => c.status === 'pendente').length;
+            const expirados = clientes.filter(c => c.status === 'expirado').length;
+
+            const ctx = document.getElementById('chartStatus').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ativos', 'Pendentes', 'Expirados'],
+                    datasets: [{
+                        data: [ativos, pendentes, expirados],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(234, 179, 8, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e4e4e7',
+                                font: { family: 'Inter', size: 12 },
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Vencimentos List
+        function renderVencimentos() {
+            const vencendo1 = clientes.filter(c => c.dias_restantes >= 0 && c.dias_restantes <= 1).sort((a, b) => a.dias_restantes - b.dias_restantes);
+            const vencendo3 = clientes.filter(c => c.dias_restantes > 1 && c.dias_restantes <= 3).sort((a, b) => a.dias_restantes - b.dias_restantes);
+            const vencendo7 = clientes.filter(c => c.dias_restantes > 3 && c.dias_restantes <= 7).sort((a, b) => a.dias_restantes - b.dias_restantes);
+            const expiradosList = clientes.filter(c => c.status === 'expirado' || c.dias_restantes < 0).sort((a,b)=>a.dias_restantes - b.dias_restantes);
+
+            document.getElementById('count1dia').textContent = vencendo1.length;
+            document.getElementById('count3dias').textContent = vencendo3.length;
+            document.getElementById('count7dias').textContent = vencendo7.length;
+            document.getElementById('countExpirados').textContent = expiradosList.length;
+
+            renderVencimentoList('list1dia', vencendo1, 'critical');
+            renderVencimentoList('list3dias', vencendo3, 'warning');
+            renderVencimentoList('list7dias', vencendo7, 'info');
+            renderVencimentoList('listExpirados', expiradosList, 'danger');
+        }
+
+        function renderVencimentoList(elementId, clientesList, badgeClass) {
+            const container = document.getElementById(elementId);
+            
+            if (clientesList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Nenhum cliente vencendo</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = clientesList.map(c => `
+                <div class="vencimento-item">
+                    <div class="cliente-info">
+                        <div class="cliente-nome">${c.nome || 'Sem nome'}</div>
+                        <div class="cliente-telefone">${c.telefone || '-'}</div>
+                        <div class="cliente-actions">
+                            <button class="btn-action btn-whatsapp" onclick="openWhatsappModal(${c.id})" title="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <a href="index.html" class="btn-action btn-whatsapp" style="background: var(--accent-gold); color: black;" title="Gerenciar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="cliente-dias ${badgeClass}">${c.dias_restantes}d</div>
+                </div>
+            `).join('');
+        }
+
+        // Whatsapp helpers
+        function setupWhatsappTemplates() {
+            const select = document.getElementById('whatsappTemplateSelect');
+            if (!select) return;
+            const order = ['D-3', 'D-2', 'D-1', 'D0', 'D+1'];
+            const sorted = [...mensagensTemplates].sort((a, b) => {
+                const ia = order.indexOf(a.regra);
+                const ib = order.indexOf(b.regra);
+                return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            });
+            select.innerHTML = sorted.map(t => `<option value="${t.id}">${t.nome} (${t.regra})</option>`).join('');
+        }
+
+        function getTemplateById(id) {
+            return mensagensTemplates.find(t => t.id === id);
+        }
+
+        function updateWhatsappPreview() {
+            const preview = document.getElementById('whatsappPreview');
+            const select = document.getElementById('whatsappTemplateSelect');
+            if (!preview || !select || !whatsappCliente) return;
+            const template = getTemplateById(select.value) || mensagensTemplates[0];
+            const dias = diffDias(whatsappCliente.data_vencimento) ?? 0;
+            preview.textContent = applyTemplate(template ? template.texto : '', whatsappCliente, dias);
+        }
+
+        function openWhatsappModal(clienteId) {
+            whatsappCliente = clientes.find(c => c.id === clienteId);
+            if (!whatsappCliente) return;
+            document.getElementById('whatsappClienteNome').value = whatsappCliente.nome || '-';
+            setupWhatsappTemplates();
+            updateWhatsappPreview();
+            document.getElementById('whatsappModal').classList.add('active');
+        }
+
+        function closeWhatsappModal() {
+            document.getElementById('whatsappModal').classList.remove('active');
+        }
+
+        function sendWhatsappMensagem() {
+            if (!whatsappCliente) return;
+            const select = document.getElementById('whatsappTemplateSelect');
+            const template = getTemplateById(select.value) || mensagensTemplates[0];
+            const dias = diffDias(whatsappCliente.data_vencimento) ?? 0;
+            const msg = applyTemplate(template ? template.texto : '', whatsappCliente, dias);
+            const phone = (whatsappCliente.telefone || '').replace(/\D/g, '');
+            if (!phone) {
+                showToast('Telefone invlido', 'error');
+                return;
+            }
+            const url = `https://wa.me/55${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+            closeWhatsappModal();
+        }
+
+        // Helpers
+        function getPlanoNome(plano) {
+            if (!plano) return 'Sem Plano';
+            const planos = {
+                '1_mes_sem_adultos': '1 Ms S/Adultos',
+                '1_mes_com_adultos': '1 Ms C/Adultos',
+                '2_mes_sem_adultos': '2 Meses S/Adultos',
+                '2_mes_com_adultos': '2 Meses C/Adultos',
+                '3_mes_sem_adultos': '3 Meses S/Adultos',
+                '3_mes_com_adultos': '3 Meses C/Adultos',
+                '6_mes_sem_adultos': '6 Meses S/Adultos',
+                '6_mes_com_adultos': '6 Meses C/Adultos',
+                '1_ano_sem_adultos': '1 Ano S/Adultos',
+                '1_ano_com_adultos': '1 Ano C/Adultos'
+            };
+            return planos[plano] || plano;
+        }
+
+        function generateColors(count) {
+            const colors = [
+                'rgba(251, 191, 36, 1)',
+                'rgba(168, 85, 247, 1)',
+                'rgba(59, 130, 246, 1)',
+                'rgba(34, 197, 94, 1)',
+                'rgba(239, 68, 68, 1)',
+                'rgba(236, 72, 153, 1)',
+                'rgba(6, 182, 212, 1)',
+                'rgba(249, 115, 22, 1)',
+                'rgba(132, 204, 22, 1)',
+                'rgba(99, 102, 241, 1)'
+            ];
+            const result = [];
+            for (let i = 0; i < count; i++) {
+                result.push(colors[i % colors.length]);
+            }
+            return result;
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDate();
+            loadData();
+            const whatsappSelect = document.getElementById('whatsappTemplateSelect');
+            if (whatsappSelect) whatsappSelect.addEventListener('change', updateWhatsappPreview);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+

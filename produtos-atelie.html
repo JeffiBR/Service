@@ -1,0 +1,1627 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos Registrados - Preço Certo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIVEIS GLOBAIS ===== */
+        :root {
+            --black-900: #000000;
+            --black-800: #0a0a0b;
+            --black-700: #111113;
+            --black-600: #18181b;
+            --black-500: #1f1f23;
+            --black-400: #27272a;
+            --black-300: #3f3f46;
+            --white: #fafafa;
+            --white-800: #e4e4e7;
+            --white-600: #a1a1aa;
+            --accent-gold: #fbbf24;
+            --accent-gold-light: #fcd34d;
+            --accent-gold-dark: #d97706;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-orange: #f97316;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+            --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black-900);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Fundo com gradientes e grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black-800); }
+        ::-webkit-scrollbar-thumb { background: var(--black-400); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--black-300); }
+
+        /* ===== LAYOUT PRINCIPAL ===== */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--black-900);
+            background: var(--gradient-gold);
+            box-shadow: var(--glow-gold);
+        }
+
+        .nav-item i { width: 20px; font-size: 1.1rem; }
+        .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+        .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.waking { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .status-info { font-size: 0.75rem; color: var(--white-600); }
+        .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+        /* ===== MAIN ===== */
+        .main { flex: 1; margin-left: 260px; min-height: 100vh; }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
+        .page-title span { background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-date { color: var(--white-600); font-size: 0.9rem; }
+
+        .main-content { padding: 32px; }
+
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 14px 14px 48px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        
+        .filters-bar .search-input {
+            min-width: 200px;
+        }
+
+        .filters-bar input[type="date"] {
+            color-scheme: dark;
+            padding-right: 14px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--white-600);
+        }
+
+        /* ===== BOTES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+        }
+
+        .btn-gold:hover {
+            box-shadow: var(--glow-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-dark:hover { border-color: var(--accent-gold); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-sm { padding: 10px 16px; font-size: 0.8rem; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i { color: var(--accent-gold); }
+
+        .table-wrapper { overflow-x: auto; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white-600);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .actions-cell { display: flex; gap: 6px; }
+        .view-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .view-toggle .btn.active {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+            border-color: transparent;
+        }
+        .produtos-cards {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 18px;
+        }
+        .produto-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+        }
+        .produto-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .produto-card-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+        .produto-card-list {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .produto-card-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--white-600);
+        }
+        .produto-card-row strong {
+            color: var(--white);
+            font-weight: 700;
+        }
+        .produto-card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px;
+            color: var(--white-600);
+        }
+
+        .empty-state i { font-size: 2rem; margin-bottom: 12px; opacity: 0.5; }
+
+        /* ===== CARDS DE ESTATSTICAS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.gold::before { background: var(--gradient-gold); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+        .stat-card.purple::before { background: linear-gradient(90deg, #a855f7, #8b5cf6); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card.gold .stat-icon { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); }
+        .stat-card.green .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--white-600);
+        }
+
+        /* ===== CARDS DE SERVIDORES ===== */
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--black-700);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal.modal-wide { max-width: 860px; }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-title-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black-900);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 280px;
+            gap: 24px;
+        }
+
+        .modal-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+        }
+
+        .panel-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--accent-gold);
+        }
+
+        .panel-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--white-600);
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+        }
+
+        .panel-row:last-child { border-bottom: none; }
+
+        .panel-row strong { color: var(--white); font-weight: 700; max-width: 150px; text-align: right; }
+
+        .panel-tip {
+            font-size: 0.8rem;
+            color: var(--white-600);
+            padding: 6px 0;
+        }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+        }
+
+        .status-pill.inativo { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        /* ===== FORMULRIOS ===== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-section { margin-bottom: 20px; }
+
+        .form-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--white-600);
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white-600);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-select option,
+        select.form-input option {
+            background: var(--black-700);
+            color: var(--white);
+        }
+
+        .form-select,
+        select.form-input {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--accent-gold) 50%),
+                linear-gradient(135deg, var(--accent-gold) 50%, transparent 50%);
+            background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 36px;
+        }
+
+        .form-select:hover,
+        select.form-input:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.12);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        .details-grid { display: grid; gap: 12px; }
+        .details-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+        .details-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+        }
+        .details-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+            font-size: 0.9rem;
+        }
+        .details-row:last-child { border-bottom: none; }
+        .details-label { color: var(--white-600); font-weight: 600; }
+        .details-value { color: var(--white); font-weight: 700; }
+        .comment-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            padding: 12px;
+        }
+        .comment-box textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-family: inherit;
+            outline: none;
+        }
+        .comment-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+        .comment-history { white-space: pre-wrap; color: var(--white-600); font-size: 0.85rem; }
+        .details-actions { display: flex; gap: 10px; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--black-600);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+        }
+
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--white-600);
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 1rem; }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 900px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operao realizada!</span>
+    </div>
+
+    <!-- App -->
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
+            </div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-users"></i>
+            <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+            <i class="fas fa-user-tie"></i>
+            <span>Revendedores</span>
+        </a>
+        <a class="nav-item" href="servidores.html">
+            <i class="fas fa-server"></i>
+            <span>Servidores</span>
+        </a>
+        <a class="nav-item" href="mensagens.html">
+            <i class="fas fa-message"></i>
+            <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+            <i class="fas fa-calculator"></i>
+            <span>Precificação</span>
+        </a>
+        <a class="nav-item" href="recebiveis.html">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item" href="dindin.html">
+            <i class="fas fa-sack-dollar"></i>
+            <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item active" href="produtos-atelie.html">
+            <i class="fas fa-box"></i>
+            <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Histórico</span>
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="server-status">
+            <div class="status-dot" id="statusDot"></div>
+            <div>
+                <div class="status-info">Servidor</div>
+                <div class="status-value" id="statusText">Verificando...</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="main-header">
+                <div class="page-title">Produtos <span>Registrados</span></div>
+                <div class="header-date" id="headerDate"></div>
+            </header>
+
+            
+            <div class="main-content">
+                
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Buscar por produto ou tecido...">
+                    </div>
+                    <input type="text" class="search-input" id="filterTecido" placeholder="Filtrar por tecido">
+                    <input type="date" class="search-input" id="filterDateFrom" title="De">
+                    <input type="date" class="search-input" id="filterDateTo" title="Ate">
+                    <button class="btn btn-gold" onclick="refreshData()"><i class="fas fa-rotate"></i> Atualizar</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-box"></i> Produtos Registrados</div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div class="view-toggle">
+                                <button class="btn btn-sm btn-dark active" id="viewLineBtn" onclick="setViewMode('line')"><i class="fas fa-list"></i> Linha</button>
+                                <button class="btn btn-sm btn-dark" id="viewCardBtn" onclick="setViewMode('cards')"><i class="fas fa-grip"></i> Cards</button>
+                            </div>
+                            <div class="badge" id="countBadge">0 itens</div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper" id="produtosTableWrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Foto</th>
+                                    <th>Produto</th>
+                                    <th>Tecido</th>
+                                    <th>Qtd</th>
+                                    <th>Preço Unit.</th>
+                                    <th>Lucro Unit.</th>
+                                    <th>Atualizado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="produtosTable"></tbody>
+                        </table>
+                    </div>
+                    <div class="produtos-cards" id="produtosCards"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Revendedor -->
+    
+    <div class="modal-overlay" id="produtoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-box"></i></div>
+                    <span id="modalTitle">Editar Produto</span>
+                </h3>
+                <button class="modal-close" onclick="closeProdutoModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="produtoId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Nome do Produto</label>
+                        <input type="text" class="form-input" id="produtoNome">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tecido</label>
+                        <input type="text" class="form-input" id="produtoTecido">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" class="form-input" id="produtoQtd" min="1" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Lucro (%)</label>
+                        <input type="number" class="form-input" id="produtoLucro" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Preço Unitário (R$)</label>
+                        <input type="text" class="form-input" id="produtoPreco">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Lucro Unitário (R$)</label>
+                        <input type="text" class="form-input" id="produtoLucroUnit">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Custo M.O. (R$)</label>
+                        <input type="text" class="form-input" id="produtoCustoMO">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Custo Embalagem (R$)</label>
+                        <input type="text" class="form-input" id="produtoCustoEmb">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Custo Transporte (R$)</label>
+                        <input type="text" class="form-input" id="produtoCustoTransp">
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Observações</label>
+                        <textarea class="form-textarea" id="produtoObs"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Foto do Produto</label>
+                        <input type="file" class="form-input" id="produtoFoto" accept="image/*">
+                        <img id="produtoFotoPreview" class="thumb" style="margin-top:8px; display:none;" alt="Preview">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeProdutoModal()">Cancelar</button>
+                <button class="btn btn-gold" onclick="saveProduto()"><i class="fas fa-save"></i> Salvar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-overlay" id="produtoDetalhesModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <span>Detalhes do Produto</span>
+                </h3>
+                <button class="modal-close" onclick="closeDetalhesModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="detalhesContent"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="details-actions">
+                    <button class="btn btn-dark" id="detalhesEditarBtn"><i class="fas fa-pen"></i> Editar</button>
+                    <button class="btn btn-gold" id="detalhesRecalcularBtn"><i class="fas fa-calculator"></i> Recalcular</button>
+                </div>
+                <button class="btn btn-dark" onclick="closeDetalhesModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_URL = (window.API_BASE || (window.location.origin + '/api'));
+        let produtos = [];
+        let produtosFiltrados = [];
+        let currentViewMode = localStorage.getItem('produtosViewMode') || 'line';
+        let produtoFotoBase64 = null;
+        let produtoFotoMeta = null;
+
+        function openDetalhesModal() {
+            document.getElementById('produtoDetalhesModal').classList.add('active');
+        }
+
+        function closeDetalhesModal() {
+            document.getElementById('produtoDetalhesModal').classList.remove('active');
+        }
+
+        function renderAviamentos(aviamentos) {
+            if (!aviamentos || !aviamentos.length) return '<div class="badge">Sem aviamentos</div>';
+            return '<ul style="margin-top:8px; padding-left:18px;">' +
+                aviamentos.map(a => {
+                    const detalhes = a?.detalhes || {};
+                    if (a?.tipo === 'metro') {
+                        return `<li><strong>${a.nome || 'Aviamento'}</strong> | tipo: por metro | custo: R$ ${formatMoney(a.custo_unitario || 0)} | comprado: ${formatNumber(detalhes.metros_total ?? 0, 2)} m | usado: ${formatNumber(detalhes.metros_utilizados ?? 0, 2)} m</li>`;
+                    }
+                    return `<li><strong>${a.nome || 'Aviamento'}</strong> | tipo: por unidade | custo: R$ ${formatMoney(a.custo_unitario || 0)} | valor un.: R$ ${formatMoney(detalhes.valor_unitario ?? 0)} | usados: ${formatNumber(detalhes.unidades_utilizadas ?? 0, 0)}</li>`;
+                }).join('') +
+                '</ul>';
+        }
+
+        function appendComentarioAtual(obs, comentario) {
+            const timestamp = new Date().toISOString();
+            const linha = `[${timestamp}] ${comentario}`;
+            if (!obs) return linha;
+            return `${obs}\n${linha}`;
+        }
+
+        async function saveComentario() {
+            const detalhesEl = document.getElementById('detalhesContent');
+            const id = detalhesEl ? detalhesEl.dataset.produtoId : null;
+            const textarea = document.getElementById('comentarioTexto');
+            if (!id || !textarea) return;
+            const comentario = textarea.value.trim();
+            if (!comentario) {
+                showToast('Digite um comentario', 'error');
+                return;
+            }
+            const p = produtos.find(x => String(x.id) === String(id));
+            const novasObs = appendComentarioAtual(p ? p.observacoes : '', comentario);
+            const res = await apiPatch('/precificacao/' + id, { observacoes: novasObs });
+            if (res.success) {
+                showToast('Comentario adicionado!');
+                if (p) p.observacoes = novasObs;
+                textarea.value = '';
+                verDetalhes(Number(id));
+            } else {
+                showToast('Erro ao salvar comentario', 'error');
+            }
+        }
+
+        function findProdutoById(id) {
+            return produtos.find(x => String(x.id) === String(id));
+        }
+
+        function verDetalhes(id) {
+            const p = findProdutoById(id);
+            if (!p) return;
+            const qtd = Number(p.quantidade_produtos || 0);
+            const custoMateriaisUnit =
+                Number(p.custo_unitario_tecido || 0) +
+                Number(p.custo_unitario_aviamentos || 0) +
+                Number(p.custo_unitario_embalagem || 0) +
+                Number(p.custo_unitario_transporte || 0);
+            const custoProducaoUnit = custoMateriaisUnit + Number(p.custo_unitario_mo || 0);
+            const vendaTotal = Number(p.preco_venda_unitario || 0) * qtd;
+            const lucroTotal = Number(p.lucro_unitario || 0) * qtd;
+            const totalAviamentos = Array.isArray(p.aviamentos_data) ? p.aviamentos_data.length : 0;
+            const areaPeca = Number(p.area_utilizada || (Number(p.largura_utilizada || 0) * Number(p.comprimento_utilizado || 0)));
+            const areaLote = areaPeca * qtd;
+
+            const html = `
+                <div class="details-grid">
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-box" style="color: var(--accent-gold);"></i>
+                            <div style="font-weight: 800; font-size: 1.1rem;">${p.nome_produto || '-'}</div>
+                        </div>
+                        ${p.foto_url || p.foto_base64 ? `<img class="thumb" src="${p.foto_url || p.foto_base64}" alt="Foto" style="width:72px; height:72px;">` : ''}
+                        <div class="details-row"><span class="details-label">Código do Produto</span><span class="details-value">${p.id ?? '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Tecido Principal</span><span class="details-value">${p.tecido_tipo || '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Quantidade</span><span class="details-value">${p.quantidade_produtos ?? '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Preço Unitário</span><span class="details-value">R$ ${formatMoney(p.preco_venda_unitario || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Lucro Unitário</span><span class="details-value">R$ ${formatMoney(p.lucro_unitario || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Preço Total do Lote</span><span class="details-value">R$ ${formatMoney(vendaTotal)}</span></div>
+                        <div class="details-row"><span class="details-label">Lucro Total do Lote</span><span class="details-value">R$ ${formatMoney(lucroTotal)}</span></div>
+                        <div class="details-row"><span class="details-label">Lucro (%)</span><span class="details-value">${p.porcentagem_lucro || 0}%</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-sack-dollar" style="color: var(--accent-emerald);"></i>
+                            <div style="font-weight: 700;">Custos e Margem</div>
+                        </div>
+                        <div class="details-row"><span class="details-label">Custo Tecido (total unitário)</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_tecido || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Aviamentos</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_aviamentos || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo M.O.</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_mo || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Embalagem</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_embalagem || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Transporte</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_transporte || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Materiais (unit.)</span><span class="details-value">R$ ${formatMoney(custoMateriaisUnit)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Produção (unit.)</span><span class="details-value">R$ ${formatMoney(custoProducaoUnit)}</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-ruler-combined" style="color: var(--accent-purple);"></i>
+                            <div style="font-weight: 700;">Materiais e Medidas</div>
+                        </div>
+                        <div class="details-row"><span class="details-label">Tecido 1</span><span class="details-value">${p.tecido_tipo || '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Pago Tecido 1</span><span class="details-value">R$ ${formatMoney(p.valor_total_tecido || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Comprimento Total Tecido 1</span><span class="details-value">${formatNumber(p.comprimento_total_tecido || 0, 2)} cm</span></div>
+                        <div class="details-row"><span class="details-label">Largura Tecido 1</span><span class="details-value">${formatNumber(p.largura_tecido || 0, 2)} cm</span></div>
+                        <div class="details-row"><span class="details-label">Largura Utilizada</span><span class="details-value">${formatNumber(p.largura_utilizada || 0, 2)} cm</span></div>
+                        <div class="details-row"><span class="details-label">Comprimento Utilizado</span><span class="details-value">${formatNumber(p.comprimento_utilizado || 0, 2)} cm</span></div>
+                        <div class="details-row"><span class="details-label">Área por Peça</span><span class="details-value">${formatNumber(areaPeca, 2)} cm²</span></div>
+                        <div class="details-row"><span class="details-label">Área Total do Lote</span><span class="details-value">${formatNumber(areaLote, 2)} cm²</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-layer-group" style="color: var(--accent-orange);"></i>
+                            <div style="font-weight: 700;">Tecidos Adicionais e Forro</div>
+                        </div>
+                        <div class="details-row"><span class="details-label">Tecido 2</span><span class="details-value">${p.tecido_tipo2 || '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Tecido 2</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_tecido2 || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Pago Tecido 2</span><span class="details-value">R$ ${formatMoney(p.valor_total_tecido2 || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Tecido 3</span><span class="details-value">${p.tecido_tipo3 || '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Tecido 3</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_tecido3 || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Pago Tecido 3</span><span class="details-value">R$ ${formatMoney(p.valor_total_tecido3 || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Forro</span><span class="details-value">${p.tecido_tipo_forro || '-'}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Forro</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_forro || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Pago Forro</span><span class="details-value">R$ ${formatMoney(p.valor_total_forro || 0)}</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-paperclip" style="color: var(--accent-blue);"></i>
+                            <div style="font-weight: 700;">Aviamentos e Produção</div>
+                        </div>
+                        <div class="details-row"><span class="details-label">Total de Aviamentos</span><span class="details-value">${totalAviamentos}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Hora</span><span class="details-value">R$ ${formatMoney(p.valor_hora || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Tempo Gasto</span><span class="details-value">${formatNumber(p.tempo_gasto_minutos || 0, 0)} min</span></div>
+                        <div class="details-row"><span class="details-label">Sublimação</span><span class="details-value">${p.sublimacao_qtd_folhas ? 'Sim' : 'Não'}</span></div>
+                        <div class="details-row"><span class="details-label">Folhas Sublimação</span><span class="details-value">${formatNumber(p.sublimacao_qtd_folhas || 0, 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Folhas Usadas</span><span class="details-value">${formatNumber(p.sublimacao_folhas_usadas || 0, 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Folhas</span><span class="details-value">R$ ${formatMoney(p.sublimacao_valor_folhas || 0)}</span></div>
+                        <div style="margin-top:10px;" class="details-row"><span class="details-label">Aviamentos (detalhado)</span><span class="details-value">${renderAviamentos(p.aviamentos_data)}</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-calendar-days" style="color: var(--accent-cyan);"></i>
+                            <div style="font-weight: 700;">Rastreabilidade</div>
+                        </div>
+                        <div class="details-row"><span class="details-label">Criado em</span><span class="details-value">${formatDateTime(p.created_at)}</span></div>
+                        <div class="details-row"><span class="details-label">Atualizado em</span><span class="details-value">${formatDateTime(p.updated_at)}</span></div>
+                        <div class="details-row"><span class="details-label">Foto URL</span><span class="details-value">${p.foto_url ? 'Salva no repositório' : 'Sem foto remota'}</span></div>
+                    </div>
+
+                    <div class="details-card">
+                        <div class="details-header">
+                            <i class="fas fa-comment" style="color: var(--accent-blue);"></i>
+                            <div style="font-weight: 700;">Comentários</div>
+                        </div>
+                        <div class="comment-history">${p.observacoes ? p.observacoes : 'Sem observações'}</div>
+                        <div class="comment-box" style="margin-top:12px;">
+                            <textarea id="comentarioTexto" placeholder="Adicionar comentário..."></textarea>
+                            <div class="comment-actions">
+                                <button class="btn btn-sm btn-gold" onclick="saveComentario()"><i class="fas fa-paper-plane"></i> Salvar comentário</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const detalhesEl = document.getElementById('detalhesContent');
+            detalhesEl.dataset.produtoId = String(p.id);
+            detalhesEl.innerHTML = html;
+            document.getElementById('detalhesEditarBtn').onclick = () => editProduto(p.id);
+            document.getElementById('detalhesRecalcularBtn').onclick = () => recalcularProduto(p.id);
+            openDetalhesModal();
+        }
+
+        function recalcularProduto(id) {
+            const p = findProdutoById(id);
+            if (!p) return;
+            sessionStorage.setItem('pc_recalculate_product', JSON.stringify(p));
+            window.location.href = 'precificacao.html?recalculate=1';
+        }
+
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        function updateServerStatus(online) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            if (online) {
+                dot.className = 'status-dot';
+                text.textContent = 'Online';
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', options);
+        }
+
+        async function apiGet(endpoint) {
+            try {
+                const res = await fetch(API_URL + endpoint);
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false, data: [] };
+            }
+        }
+
+        async function apiPatch(endpoint, body) {
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false };
+            }
+        }
+
+        async function apiDelete(endpoint) {
+            try {
+                const res = await fetch(API_URL + endpoint, { method: 'DELETE' });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false };
+            }
+        }
+
+        function formatMoney(value) {
+            const num = Number(value || 0);
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatNumber(value, decimals = 2) {
+            const num = Number(value || 0);
+            return num.toLocaleString('pt-BR', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function formatDateTime(iso) {
+            if (!iso) return '-';
+            try {
+                const date = new Date(iso);
+                return date.toLocaleString('pt-BR');
+            } catch (_) {
+                return '-';
+            }
+        }
+
+        function parseMoney(value) {
+            if (!value) return 0;
+            const cleaned = value.toString().replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '');
+            return Number(cleaned || 0);
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '-';
+            try {
+                const date = new Date(iso);
+                return date.toLocaleDateString('pt-BR');
+            } catch (_) {
+                return '-';
+            }
+        }
+
+        function getThumb(item) {
+            if (item && (item.foto_url || item.foto_base64)) return item.foto_url || item.foto_base64;
+            return '';
+        }
+
+        function renderTable(list) {
+            const tbody = document.getElementById('produtosTable');
+            document.getElementById('countBadge').textContent = `${list.length} itens`;
+
+            if (!list.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <p>Nenhum produto registrado</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = list.map(p => {
+                const thumb = getThumb(p);
+                const idSafe = String(p.id).replace(/'/g, "\\'");
+                return `
+                    <tr>
+                        <td>${thumb ? `<img class="thumb" src="${thumb}" alt="Foto">` : '<div class="badge">Sem foto</div>'}</td>
+                        <td><strong>${p.nome_produto || '-'}</strong></td>
+                        <td>${p.tecido_tipo || '-'}</td>
+                        <td>${p.quantidade_produtos ?? '-'}</td>
+                        <td>R$ ${formatMoney(p.preco_venda_unitario || 0)}</td>
+                        <td>R$ ${formatMoney(p.lucro_unitario || 0)}</td>
+                        <td>${formatDate(p.updated_at || p.created_at)}</td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="btn btn-sm btn-dark" onclick="verDetalhes('${idSafe}')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm btn-dark" onclick="editProduto('${idSafe}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-gold" onclick="recalcularProduto('${idSafe}')"><i class="fas fa-calculator"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduto('${idSafe}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCards(list) {
+            const cards = document.getElementById('produtosCards');
+            if (!list.length) {
+                cards.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i class="fas fa-box-open"></i>
+                        <p>Nenhum produto registrado</p>
+                    </div>
+                `;
+                return;
+            }
+
+            cards.innerHTML = list.map((p) => {
+                const thumb = getThumb(p);
+                const idSafe = String(p.id).replace(/'/g, "\\'");
+                return `
+                    <article class="produto-card">
+                        <div class="produto-card-head">
+                            <div class="produto-card-title">${p.nome_produto || '-'}</div>
+                            ${thumb ? `<img class="thumb" src="${thumb}" alt="Foto">` : '<div class="badge">Sem foto</div>'}
+                        </div>
+                        <div class="produto-card-list">
+                            <div class="produto-card-row"><span>Tecido</span><strong>${p.tecido_tipo || '-'}</strong></div>
+                            <div class="produto-card-row"><span>Quantidade</span><strong>${p.quantidade_produtos ?? '-'}</strong></div>
+                            <div class="produto-card-row"><span>Preço unitário</span><strong>R$ ${formatMoney(p.preco_venda_unitario || 0)}</strong></div>
+                            <div class="produto-card-row"><span>Lucro unitário</span><strong>R$ ${formatMoney(p.lucro_unitario || 0)}</strong></div>
+                            <div class="produto-card-row"><span>Atualizado</span><strong>${formatDate(p.updated_at || p.created_at)}</strong></div>
+                        </div>
+                        <div class="produto-card-actions">
+                            <button class="btn btn-sm btn-dark" onclick="verDetalhes('${idSafe}')"><i class="fas fa-eye"></i> Detalhes</button>
+                            <button class="btn btn-sm btn-dark" onclick="editProduto('${idSafe}')"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-sm btn-gold" onclick="recalcularProduto('${idSafe}')"><i class="fas fa-calculator"></i> Recalcular</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduto('${idSafe}')"><i class="fas fa-trash"></i> Excluir</button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function setViewMode(mode) {
+            currentViewMode = mode === 'cards' ? 'cards' : 'line';
+            localStorage.setItem('produtosViewMode', currentViewMode);
+            document.getElementById('viewLineBtn').classList.toggle('active', currentViewMode === 'line');
+            document.getElementById('viewCardBtn').classList.toggle('active', currentViewMode === 'cards');
+            renderCurrentView();
+        }
+
+        function renderCurrentView() {
+            const tableWrapper = document.getElementById('produtosTableWrapper');
+            const cards = document.getElementById('produtosCards');
+            document.getElementById('countBadge').textContent = `${produtosFiltrados.length} itens`;
+            if (currentViewMode === 'cards') {
+                tableWrapper.style.display = 'none';
+                cards.style.display = 'grid';
+                renderCards(produtosFiltrados);
+                return;
+            }
+            tableWrapper.style.display = 'block';
+            cards.style.display = 'none';
+            renderTable(produtosFiltrados);
+        }
+
+        function applySearch() {
+            const term = (document.getElementById('searchInput').value || '').toLowerCase();
+            const tecidoTerm = (document.getElementById('filterTecido').value || '').toLowerCase();
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
+            const filtered = produtos.filter(p =>
+                (!term || (p.nome_produto || '').toLowerCase().includes(term) || (p.tecido_tipo || '').toLowerCase().includes(term))
+                && (!tecidoTerm || (p.tecido_tipo || '').toLowerCase().includes(tecidoTerm))
+                && (!dateFrom || new Date(p.updated_at || p.created_at || 0) >= new Date(dateFrom))
+                && (!dateTo || new Date(p.updated_at || p.created_at || 0) <= new Date(dateTo + "T23:59:59"))
+            );
+            produtosFiltrados = filtered;
+            renderCurrentView();
+        }
+
+        function openProdutoModal() {
+            document.getElementById('produtoModal').classList.add('active');
+        }
+
+        
+        function handleFotoChange(file) {
+            if (!file) {
+                produtoFotoBase64 = null;
+                produtoFotoMeta = null;
+                document.getElementById('produtoFotoPreview').style.display = 'none';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                produtoFotoBase64 = e.target.result;
+                produtoFotoMeta = { nome: file.name, tipo: file.type };
+                const preview = document.getElementById('produtoFotoPreview');
+                preview.src = produtoFotoBase64;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeProdutoModal() {
+            document.getElementById('produtoModal').classList.remove('active');
+        }
+
+        function editProduto(id) {
+            const p = findProdutoById(id);
+            if (!p) return;
+
+            document.getElementById('produtoId').value = p.id;
+            document.getElementById('produtoNome').value = p.nome_produto || '';
+            document.getElementById('produtoTecido').value = p.tecido_tipo || '';
+            document.getElementById('produtoQtd').value = p.quantidade_produtos ?? '';
+            document.getElementById('produtoLucro').value = p.porcentagem_lucro ?? '';
+            document.getElementById('produtoPreco').value = formatMoney(p.preco_venda_unitario || 0);
+            document.getElementById('produtoLucroUnit').value = formatMoney(p.lucro_unitario || 0);
+            document.getElementById('produtoCustoMO').value = formatMoney(p.custo_unitario_mo || 0);
+            document.getElementById('produtoCustoEmb').value = formatMoney(p.custo_unitario_embalagem || 0);
+            document.getElementById('produtoCustoTransp').value = formatMoney(p.custo_unitario_transporte || 0);
+            document.getElementById('produtoObs').value = p.observacoes || '';
+            produtoFotoBase64 = null;
+            produtoFotoMeta = null;
+            const preview = document.getElementById('produtoFotoPreview');
+            if (preview) {
+                if (p.foto_url || p.foto_base64) { preview.src = p.foto_url || p.foto_base64; preview.style.display = 'block'; }
+                else { preview.style.display = 'none'; }
+            }
+            openProdutoModal();
+        }
+
+        async function saveProduto() {
+            const id = document.getElementById('produtoId').value;
+            if (!id) return;
+
+            const payload = {
+                nome_produto: document.getElementById('produtoNome').value.trim(),
+                tecido_tipo: document.getElementById('produtoTecido').value.trim(),
+                quantidade_produtos: Number(document.getElementById('produtoQtd').value || 0),
+                porcentagem_lucro: Number(document.getElementById('produtoLucro').value || 0),
+                preco_venda_unitario: parseMoney(document.getElementById('produtoPreco').value),
+                lucro_unitario: parseMoney(document.getElementById('produtoLucroUnit').value),
+                custo_unitario_mo: parseMoney(document.getElementById('produtoCustoMO').value),
+                custo_unitario_embalagem: parseMoney(document.getElementById('produtoCustoEmb').value),
+                custo_unitario_transporte: parseMoney(document.getElementById('produtoCustoTransp').value),
+                observacoes: document.getElementById('produtoObs').value.trim()
+            };
+
+            const res = await apiPatch('/precificacao/' + id, payload);
+            if (res.success) {
+                showToast('Produto atualizado!');
+                closeProdutoModal();
+                refreshData();
+            } else {
+                showToast('Erro ao atualizar', 'error');
+            }
+        }
+
+        async function deleteProduto(id) {
+            if (!confirm('Deseja excluir este produto?')) return;
+            const res = await apiDelete('/precificacao/' + id);
+            if (res.success) {
+                showToast('Produto excluido!');
+                refreshData();
+            } else {
+                showToast('Erro ao excluir', 'error');
+            }
+        }
+
+        async function refreshData() {
+            const res = await apiGet('/precificacao');
+            if (res.success) {
+                produtos = res.data || [];
+                applySearch();
+            } else {
+                showToast('Falha ao carregar', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDate();
+            refreshData();
+            setViewMode(currentViewMode);
+            document.getElementById('searchInput').addEventListener('input', applySearch);
+            document.getElementById('filterTecido').addEventListener('input', applySearch);
+            document.getElementById('filterDateFrom').addEventListener('change', applySearch);
+            document.getElementById('filterDateTo').addEventListener('change', applySearch);
+            const fotoInput = document.getElementById('produtoFoto');
+            if (fotoInput) {
+                fotoInput.addEventListener('change', (e) => handleFotoChange(e.target.files[0]));
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

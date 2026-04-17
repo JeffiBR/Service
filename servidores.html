@@ -1,0 +1,1056 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servidores - Preço Certo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIVEIS GLOBAIS ===== */
+        :root {
+            --black-900: #000000;
+            --black-800: #0a0a0b;
+            --black-700: #111113;
+            --black-600: #18181b;
+            --black-500: #1f1f23;
+            --black-400: #27272a;
+            --black-300: #3f3f46;
+            --white: #fafafa;
+            --white-800: #e4e4e7;
+            --white-600: #a1a1aa;
+            --accent-gold: #fbbf24;
+            --accent-gold-light: #fcd34d;
+            --accent-gold-dark: #d97706;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-orange: #f97316;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --gradient-purple: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+            --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black-900);
+            color: var(--white);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Fundo com gradientes e grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black-800); }
+        ::-webkit-scrollbar-thumb { background: var(--black-400); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--black-300); }
+
+        /* ===== LAYOUT PRINCIPAL ===== */
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            background: rgba(10, 10, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--black-900);
+            box-shadow: var(--glow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            transform: translateX(-100%);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-tag {
+            font-size: 0.65rem;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--white-600);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--black-900);
+            background: var(--gradient-gold);
+            box-shadow: var(--glow-gold);
+        }
+
+        .nav-item i { width: 20px; font-size: 1.1rem; }
+        .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+        .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.waking { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); animation: none; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .status-info { font-size: 0.75rem; color: var(--white-600); }
+        .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+        /* ===== MAIN ===== */
+        .main { flex: 1; margin-left: 260px; min-height: 100vh; }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 32px;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
+        .page-title span { background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .main-content { padding: 32px; }
+
+        /* ===== BOTES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: var(--black-900);
+        }
+
+        .btn-gold:hover {
+            box-shadow: var(--glow-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-dark:hover { border-color: var(--accent-gold); }
+
+        .btn-success { background: var(--success); color: var(--white); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-sm { padding: 10px 16px; font-size: 0.8rem; }
+
+        /* ===== CARDS DE ESTATSTICAS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.gold::before { background: var(--gradient-gold); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+        .stat-card.purple::before { background: linear-gradient(90deg, #a855f7, #8b5cf6); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card.gold .stat-icon { background: rgba(251, 191, 36, 0.1); color: var(--accent-gold); }
+        .stat-card.green .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+        .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--white-600);
+        }
+
+        /* ===== CARDS DE SERVIDORES ===== */
+        .servidores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .servidor-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .servidor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-gold);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .servidor-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .servidor-card:hover::before { opacity: 1; }
+
+        .servidor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .servidor-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--black-900);
+        }
+
+        .servidor-status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .servidor-status-badge.ativo { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .servidor-status-badge.inativo { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        .servidor-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .servidor-url {
+            font-size: 0.85rem;
+            color: var(--white-600);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .servidor-url i { color: var(--accent-gold); font-size: 0.8rem; }
+
+        .servidor-desc {
+            font-size: 0.85rem;
+            color: var(--white-600);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .servidor-stats {
+            display: flex;
+            gap: 20px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 16px;
+        }
+
+        .servidor-stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .servidor-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .servidor-stat-label {
+            font-size: 0.75rem;
+            color: var(--white-600);
+        }
+
+        .servidor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--black-700);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .modal-title-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--black-900);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: var(--white); }
+
+        .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* ===== FORMULRIOS ===== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white-600);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-select option,
+        select.form-input option {
+            background: var(--black-700);
+            color: var(--white);
+        }
+
+        .form-select,
+        select.form-input {
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, var(--accent-gold) 50%),
+                linear-gradient(135deg, var(--accent-gold) 50%, transparent 50%);
+            background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 36px;
+        }
+
+        .form-select:hover,
+        select.form-input:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.12);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--black-600);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: var(--transition);
+        }
+
+        .toast.active { transform: translateX(0); }
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--white-600);
+        }
+
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 1rem; }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .servidores-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Operao realizada!</span>
+    </div>
+
+    <!-- App -->
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
+            </div>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+            <i class="fas fa-users"></i>
+            <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+            <i class="fas fa-user-tie"></i>
+            <span>Revendedores</span>
+        </a>
+        <a class="nav-item active" href="servidores.html">
+            <i class="fas fa-server"></i>
+            <span>Servidores</span>
+        </a>
+        <a class="nav-item" href="mensagens.html">
+            <i class="fas fa-message"></i>
+            <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+            <i class="fas fa-calculator"></i>
+            <span>Precificação</span>
+        </a>
+        <a class="nav-item" href="recebiveis.html">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item" href="dindin.html">
+            <i class="fas fa-sack-dollar"></i>
+            <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item" href="produtos-atelie.html">
+            <i class="fas fa-box"></i>
+            <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Histórico</span>
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="server-status">
+            <div class="status-dot" id="statusDot"></div>
+            <div>
+                <div class="status-info">Servidor</div>
+                <div class="status-value" id="statusText">Verificando...</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="main-header">
+                <h1 class="page-title"><span>Servidores</span></h1>
+                <button class="btn btn-gold" onclick="openServidorModal()">
+                    <i class="fas fa-plus"></i> Novo Servidor
+                </button>
+            </header>
+
+            <div class="main-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card gold">
+                        <div class="stat-icon"><i class="fas fa-server"></i></div>
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total de Servidores</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-value" id="statAtivos">0</div>
+                        <div class="stat-label">Servidores Ativos</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="statClientes">0</div>
+                        <div class="stat-label">Total de Clientes</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-value" id="statMedia">0</div>
+                        <div class="stat-label">Média por Servidor</div>
+                    </div>
+                </div>
+
+                <!-- Servidores Grid -->
+                <div class="servidores-grid" id="servidoresGrid"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Servidor -->
+    <div class="modal-overlay" id="servidorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <div class="modal-title-icon"><i class="fas fa-server"></i></div>
+                    <span id="modalTitle">Novo Servidor</span>
+                </h3>
+                <button class="modal-close" onclick="closeServidorModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="servidorForm">
+                    <input type="hidden" id="servidorId">
+                    <div class="form-group">
+                        <label class="form-label">Nome do Servidor *</label>
+                        <input type="text" class="form-input" id="servidorNome" required placeholder="Ex: UltraPlay">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL do Servidor</label>
+                        <input type="url" class="form-input" id="servidorUrl" placeholder="https://servidor.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-textarea" id="servidorDescricao" placeholder="Descrio do servidor..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-input" id="servidorStatus">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="closeServidorModal()">Cancelar</button>
+                <button class="btn btn-gold" onclick="saveServidor()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = (window.API_BASE || (window.location.origin + '/api'));
+        let servidores = [];
+        let clientes = [];
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        // Server Status
+        function updateServerStatus(online) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            if (online) {
+                dot.className = 'status-dot';
+                text.textContent = 'Online';
+            } else {
+                dot.className = 'status-dot offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        // API calls (sem loading)
+        async function apiGet(endpoint) {
+            try {
+                const res = await fetch(API_URL + endpoint);
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false, data: [] };
+            }
+        }
+
+        async function apiPost(endpoint, body) {
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false };
+            }
+        }
+
+        async function apiPatch(endpoint, body) {
+            try {
+                const res = await fetch(API_URL + endpoint, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false };
+            }
+        }
+
+        async function apiDelete(endpoint) {
+            try {
+                const res = await fetch(API_URL + endpoint, { method: 'DELETE' });
+                const data = await res.json();
+                updateServerStatus(true);
+                return data;
+            } catch (error) {
+                updateServerStatus(false);
+                return { success: false };
+            }
+        }
+
+        // Load Data
+        async function loadData() {
+            const [servidoresRes, clientesRes] = await Promise.all([
+                apiGet('/servidores'),
+                apiGet('/clientes')
+            ]);
+
+            if (servidoresRes.success) servidores = servidoresRes.data;
+            if (clientesRes.success) clientes = clientesRes.data;
+
+            renderStats();
+            renderServidores();
+        }
+
+        // Stats
+        function renderStats() {
+            const ativos = servidores.filter(s => s.status === 'ativo').length;
+            const totalClientes = clientes.length;
+            const media = servidores.length > 0 ? (totalClientes / servidores.length).toFixed(1) : 0;
+
+            document.getElementById('statTotal').textContent = servidores.length;
+            document.getElementById('statAtivos').textContent = ativos;
+            document.getElementById('statClientes').textContent = totalClientes;
+            document.getElementById('statMedia').textContent = media;
+        }
+
+        // Render Servidores
+        function renderServidores() {
+            const grid = document.getElementById('servidoresGrid');
+
+            if (servidores.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-server"></i>
+                        <p>Nenhum servidor cadastrado</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = servidores.map(s => {
+                const clientesServidor = clientes.filter(c => c.servidor === s.nome).length;
+                return `
+                    <div class="servidor-card">
+                        <div class="servidor-header">
+                            <div class="servidor-icon"><i class="fas fa-server"></i></div>
+                            <span class="servidor-status-badge ${s.status || 'ativo'}">${s.status || 'ativo'}</span>
+                        </div>
+                        <div class="servidor-name">${s.nome}</div>
+                        ${s.url ? `<div class="servidor-url"><i class="fas fa-link"></i> ${s.url}</div>` : ''}
+                        ${s.descricao ? `<div class="servidor-desc">${s.descricao}</div>` : ''}
+                        <div class="servidor-stats">
+                            <div class="servidor-stat">
+                                <div class="servidor-stat-value">${clientesServidor}</div>
+                                <div class="servidor-stat-label">Clientes</div>
+                            </div>
+                            <div class="servidor-stat">
+                                <div class="servidor-stat-value">${s.id || '-'}</div>
+                                <div class="servidor-stat-label">ID</div>
+                            </div>
+                        </div>
+                        <div class="servidor-actions">
+                            <button class="btn btn-sm btn-dark" onclick="editServidor(${s.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteServidor(${s.id})">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modal Functions
+        function openServidorModal() {
+            document.getElementById('modalTitle').textContent = 'Novo Servidor';
+            document.getElementById('servidorForm').reset();
+            document.getElementById('servidorId').value = '';
+            document.getElementById('servidorModal').classList.add('active');
+        }
+
+        function closeServidorModal() {
+            document.getElementById('servidorModal').classList.remove('active');
+        }
+
+        function editServidor(id) {
+            const servidor = servidores.find(s => s.id === id);
+            if (!servidor) return;
+
+            document.getElementById('modalTitle').textContent = 'Editar Servidor';
+            document.getElementById('servidorId').value = id;
+            document.getElementById('servidorNome').value = servidor.nome || '';
+            document.getElementById('servidorUrl').value = servidor.url || '';
+            document.getElementById('servidorDescricao').value = servidor.descricao || '';
+            document.getElementById('servidorStatus').value = servidor.status || 'ativo';
+
+            document.getElementById('servidorModal').classList.add('active');
+        }
+
+        async function saveServidor() {
+            const id = document.getElementById('servidorId').value;
+            const data = {
+                nome: document.getElementById('servidorNome').value.trim(),
+                url: document.getElementById('servidorUrl').value.trim(),
+                descricao: document.getElementById('servidorDescricao').value.trim(),
+                status: document.getElementById('servidorStatus').value
+            };
+
+            if (!data.nome) {
+                showToast('Nome  obrigatrio!', 'error');
+                return;
+            }
+
+            let res;
+            if (id) {
+                res = await apiPatch('/servidores/' + id, data);
+            } else {
+                res = await apiPost('/servidores', data);
+            }
+
+            if (res.success) {
+                showToast(id ? 'Servidor atualizado!' : 'Servidor criado!');
+                closeServidorModal();
+                loadData();
+            } else {
+                showToast('Erro ao salvar', 'error');
+            }
+        }
+
+        async function deleteServidor(id) {
+            if (!confirm('Tem certeza que deseja excluir este servidor?')) return;
+
+            const res = await apiDelete('/servidores/' + id);
+            if (res.success) {
+                showToast('Servidor excludo!');
+                loadData();
+            } else {
+                showToast('Erro ao excluir', 'error');
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,1018 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recebíveis - Preço Certo</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black-900: #000000;
+      --black-800: #0a0a0b;
+      --black-700: #111113;
+      --black-600: #18181b;
+      --black-500: #1f1f23;
+      --black-400: #27272a;
+      --white: #fafafa;
+      --white-800: #e4e4e7;
+      --white-600: #a1a1aa;
+      --accent-gold: #fbbf24;
+      --accent-gold-light: #fcd34d;
+      --accent-gold-dark: #d97706;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+      --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --gradient-dark: linear-gradient(180deg, #0a0a0b 0%, #000000 100%);
+      --glow-gold: 0 0 40px rgba(251, 191, 36, 0.3);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black-900);
+      color: var(--white);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(251, 191, 36, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(10, 10, 11, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .brand { display: flex; align-items: center; gap: 14px; }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-gold);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: var(--black-900);
+      box-shadow: var(--glow-gold);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+      transform: translateX(-100%);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      color: var(--white-600);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--white-600);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      color: var(--white-600);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 4px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: var(--black-900);
+      background: var(--gradient-gold);
+      box-shadow: var(--glow-gold);
+    }
+
+    .nav-item i { width: 20px; font-size: 1.1rem; }
+    .nav-item span { font-weight: 600; font-size: 0.9rem; }
+
+    .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .status-info { font-size: 0.75rem; color: var(--white-600); }
+    .status-value { font-weight: 700; color: var(--white); font-size: 0.85rem; }
+
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      min-height: 100vh;
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 20px 32px;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .page-title span {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-date {
+      color: var(--white-600);
+      font-size: 0.9rem;
+    }
+
+    .main-content { padding: 32px; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i { color: var(--accent-gold); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .form-container { padding: 24px; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-weight: 600;
+      color: var(--white-800);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--white-600);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      font-size: 14px;
+      transition: var(--transition);
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--white);
+      font-family: inherit;
+    }
+
+    select option {
+      background: var(--black-600);
+      color: var(--white);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      padding-left: 14px;
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--white-600); }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent-gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.12);
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      transition: var(--transition);
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      top: 4px;
+      border-radius: 50%;
+      background: var(--white);
+      transition: var(--transition);
+    }
+
+    .switch input:checked + .slider {
+      background: rgba(34, 197, 94, 0.5);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(24px);
+      background: var(--white);
+    }
+
+    .summary {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px dashed rgba(251, 191, 36, 0.4);
+      background: rgba(251, 191, 36, 0.06);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .summary { grid-template-columns: 1fr; }
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--white-600);
+    }
+
+    .summary-item strong {
+      color: var(--white);
+      font-size: 1.05rem;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 700;
+      transition: var(--transition);
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--black-900);
+      box-shadow: var(--glow-gold);
+    }
+
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white-800);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-outline:hover { border-color: var(--accent-gold); color: var(--white); }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--white-600);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .badge-open { background: rgba(251, 191, 36, 0.14); color: var(--accent-gold); }
+    .badge-paid { background: rgba(34, 197, 94, 0.16); color: var(--success); }
+
+    .table-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .table-actions button {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--white-800);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .table-actions button:hover { border-color: var(--accent-gold); color: var(--white); }
+
+    .empty-state {
+      padding: 20px 24px;
+      color: var(--white-600);
+      font-size: 0.95rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .note {
+      color: var(--white-600);
+      font-size: 0.85rem;
+    }
+
+    .muted {
+      color: var(--white-600);
+      font-size: 0.85rem;
+    }
+
+    .obs {
+      max-width: 220px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" href="index.html">
+          <i class="fas fa-users"></i>
+          <span>Clientes</span>
+        </a>
+        <a class="nav-item" href="revendedores.html">
+          <i class="fas fa-user-tie"></i>
+          <span>Revendedores</span>
+        </a>
+        <a class="nav-item" href="servidores.html">
+          <i class="fas fa-server"></i>
+          <span>Servidores</span>
+        </a>
+        <a class="nav-item" href="mensagens.html">
+          <i class="fas fa-message"></i>
+          <span>Mensagens</span>
+        </a>
+        <a class="nav-item" href="precificacao.html">
+          <i class="fas fa-calculator"></i>
+          <span>Precificação</span>
+        </a>
+        <a class="nav-item active" href="recebiveis.html">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span>Recebíveis Ateli</span>
+        </a>
+        <a class="nav-item" href="dindin.html">
+          <i class="fas fa-sack-dollar"></i>
+          <span>Dindin pra Receber</span>
+        </a>
+        <a class="nav-item" href="produtos-atelie.html">
+          <i class="fas fa-box"></i>
+          <span>Produtos Registrados</span>
+        </a>
+        <a class="nav-item" href="historico-renovacoes.html">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Histórico</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div>
+            <div class="status-info">Servidor</div>
+            <div class="status-value">Online</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="main-header">
+        <div>
+          <div class="page-title">Página de <span>Recebíveis</span></div>
+          <div class="header-date" id="headerDate"></div>
+        </div>
+        <div class="badge badge-open"><i class="fa-solid fa-circle-dollar-to-slot"></i> Controle de cobranças</div>
+      </header>
+
+      <main class="main-content">
+      <div class="container">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-file-invoice-dollar"></i> Novo recebível</div>
+            <div class="note">Preencha o valor e marque se teve adiantamento de 50%.</div>
+          </div>
+          <div class="form-container">
+            <form id="recebiveisForm">
+              <div class="grid">
+                <div class="form-group">
+                  <label for="comprador"><i class="fa-solid fa-user"></i> Quem comprou</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    <input id="comprador" name="comprador" type="text" placeholder="Nome do comprador" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="telefone"><i class="fa-solid fa-phone"></i> Telefone</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-phone input-icon"></i>
+                    <input id="telefone" name="telefone" type="text" placeholder="Ex: (11) 99999-0000" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="vendedor"><i class="fa-solid fa-store"></i> Quem vendeu</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-store input-icon"></i>
+                    <input id="vendedor" name="vendedor" type="text" placeholder="Nome do vendedor" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="valorTotal"><i class="fa-solid fa-coins"></i> Valor total</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-coins input-icon"></i>
+                    <input id="valorTotal" name="valorTotal" type="text" placeholder="Ex: 1500,00" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="dataAcerto"><i class="fa-solid fa-calendar-check"></i> Para quando ficou acertado</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-calendar-check input-icon"></i>
+                    <input id="dataAcerto" name="dataAcerto" type="date" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="formaPagamento"><i class="fa-solid fa-credit-card"></i> Forma de pagamento</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-credit-card input-icon"></i>
+                    <select id="formaPagamento" name="formaPagamento">
+                      <option value="">Selecione</option>
+                      <option value="pix">PIX</option>
+                      <option value="dinheiro">Dinheiro</option>
+                      <option value="cartao">Cartão</option>
+                      <option value="boleto">Boleto</option>
+                      <option value="transferencia">Transferência</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="adiantado">Adiantamento de 50%</label>
+                  <div class="toggle">
+                    <span>Foi adiantado 50% do valor?</span>
+                    <label class="switch">
+                      <input id="adiantado" name="adiantado" type="checkbox" />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="status"><i class="fa-solid fa-flag"></i> Status</label>
+                  <div class="input-with-icon">
+                    <i class="fa-solid fa-flag input-icon"></i>
+                    <select id="status" name="status">
+                      <option value="aberto">Em aberto</option>
+                      <option value="pago">Pago</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label for="observacoes"><i class="fa-solid fa-note-sticky"></i> Observações</label>
+                  <textarea id="observacoes" name="observacoes" placeholder="Detalhes importantes, combinados, observações..."></textarea>
+                </div>
+              </div>
+
+              <div class="summary" id="resumo">
+                <div class="summary-item">
+                  <span>Valor adiantado (50%)</span>
+                  <strong id="valorAdiantado">R$ 0,00</strong>
+                </div>
+                <div class="summary-item">
+                  <span>Valor restante</span>
+                  <strong id="valorRestante">R$ 0,00</strong>
+                </div>
+                <div class="summary-item">
+                  <span>Valor total</span>
+                  <strong id="valorTotalResumo">R$ 0,00</strong>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> Adicionar recebível</button>
+                <button class="btn btn-outline" type="reset"><i class="fa-solid fa-rotate-left"></i> Limpar</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-list"></i> Lista de recebíveis</div>
+            <div class="note">Clique em pagar quando o restante for quitado.</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Comprador</th>
+                  <th>Telefone</th>
+                  <th>Vendedor</th>
+                  <th>Valor</th>
+                  <th>Adiantado</th>
+                  <th>Restante</th>
+                  <th>Acerto</th>
+                  <th>Forma</th>
+                  <th>Obs.</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="recebiveisBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="emptyState">Nenhum recebível cadastrado ainda.</div>
+        </section>
+      </div>
+    </main>
+  </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const headerDate = document.getElementById('headerDate');
+    const compradorInput = document.getElementById('comprador');
+    const telefoneInput = document.getElementById('telefone');
+    const vendedorInput = document.getElementById('vendedor');
+    const valorTotalInput = document.getElementById('valorTotal');
+    const dataAcertoInput = document.getElementById('dataAcerto');
+    const formaPagamentoInput = document.getElementById('formaPagamento');
+    const adiantadoInput = document.getElementById('adiantado');
+    const statusInput = document.getElementById('status');
+    const observacoesInput = document.getElementById('observacoes');
+    const valorAdiantadoEl = document.getElementById('valorAdiantado');
+    const valorRestanteEl = document.getElementById('valorRestante');
+    const valorTotalResumoEl = document.getElementById('valorTotalResumo');
+    const recebiveisBody = document.getElementById('recebiveisBody');
+    const emptyState = document.getElementById('emptyState');
+    const recebiveisForm = document.getElementById('recebiveisForm');
+
+    const API_BASE = `${window.API_BASE}/recebiveis`;
+
+    const moneyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return '';
+      return text
+        .toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const [year, month, day] = dateStr.split('-');
+      if (!year || !month || !day) return dateStr;
+      return `${day}/${month}/${year}`;
+    }
+
+    function parseMoney(value) {
+      if (!value) return 0;
+      const cleaned = value
+        .toString()
+        .replace(/\./g, '')
+        .replace(/,/g, '.')
+        .replace(/[^0-9.-]/g, '');
+      const parsed = parseFloat(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function getResumo() {
+      const total = parseMoney(valorTotalInput.value);
+      const adiantado = adiantadoInput.checked ? total * 0.5 : 0;
+      const restante = Math.max(total - adiantado, 0);
+      return { total, adiantado, restante };
+    }
+
+    function atualizarResumo() {
+      const { total, adiantado, restante } = getResumo();
+      valorAdiantadoEl.textContent = moneyFormatter.format(adiantado);
+      valorRestanteEl.textContent = moneyFormatter.format(restante);
+      valorTotalResumoEl.textContent = moneyFormatter.format(total);
+    }
+
+    async function apiRequest(path = '', options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        ...options
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data.success === false) {
+        throw new Error(data.error || 'Erro ao acessar o servidor');
+      }
+      return data;
+    }
+
+    async function loadRecebiveis() {
+      const res = await apiRequest('');
+      return res.data || [];
+    }
+
+    async function createRecebivel(payload) {
+      const res = await apiRequest('', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      return res.data;
+    }
+
+    async function updateRecebivel(id, updates) {
+      const res = await apiRequest(`/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updates)
+      });
+      return res.data;
+    }
+
+    async function deleteRecebivel(id) {
+      await apiRequest(`/${id}`, { method: 'DELETE' });
+    }
+
+    async function renderRecebiveis() {
+      recebiveisBody.innerHTML = '';
+      try {
+        const items = await loadRecebiveis();
+        if (!items.length) {
+          emptyState.style.display = 'block';
+          return;
+        }
+        emptyState.style.display = 'none';
+        items.forEach((item) => {
+          const tr = document.createElement('tr');
+          const badgeClass = item.status === 'pago' ? 'badge-paid' : 'badge-open';
+          const badgeText = item.status === 'pago' ? 'Pago' : 'Em aberto';
+          const observacoes = escapeHtml(item.observacoes || '-');
+
+          tr.innerHTML = `
+            <td>${escapeHtml(item.comprador)}</td>
+            <td class="muted">${escapeHtml(item.telefone || '-')}</td>
+            <td>${escapeHtml(item.vendedor)}</td>
+            <td>${moneyFormatter.format(item.total || 0)}</td>
+            <td>${moneyFormatter.format(item.adiantado || 0)}</td>
+            <td>${moneyFormatter.format(item.restante || 0)}</td>
+            <td>${formatDate(item.data_acerto)}</td>
+            <td class="muted">${escapeHtml(item.forma_pagamento || '-')}</td>
+            <td title="${observacoes}"><span class="obs">${observacoes}</span></td>
+            <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+            <td>
+              <div class="table-actions">
+                <button type="button" data-action="toggle" data-id="${item.id}">
+                  <i class="fa-solid fa-check"></i> Pagar
+                </button>
+                <button type="button" data-action="remove" data-id="${item.id}">
+                  <i class="fa-solid fa-trash"></i> Remover
+                </button>
+              </div>
+            </td>
+          `;
+          recebiveisBody.appendChild(tr);
+        });
+      } catch (error) {
+        emptyState.style.display = 'block';
+        emptyState.textContent = 'Erro ao carregar recebiveis. Verifique o servidor.';
+      }
+    }
+
+    function setHeaderDate() {
+      const now = new Date();
+      headerDate.textContent = now.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+
+    valorTotalInput.addEventListener('input', atualizarResumo);
+    adiantadoInput.addEventListener('change', atualizarResumo);
+
+    recebiveisForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const { total, adiantado, restante } = getResumo();
+      const comprador = compradorInput.value.trim();
+      const vendedor = vendedorInput.value.trim();
+      const telefone = telefoneInput.value.trim();
+      const dataAcerto = dataAcertoInput.value;
+      const formaPagamento = formaPagamentoInput.value;
+      const observacoes = observacoesInput.value.trim();
+
+      if (!comprador || !vendedor || !total || !dataAcerto) return;
+
+      try {
+        await createRecebivel({
+          comprador,
+          vendedor,
+          telefone,
+          total,
+          adiantado,
+          restante,
+          adiantado_percentual: adiantadoInput.checked ? 50 : 0,
+          data_acerto: dataAcerto,
+          forma_pagamento: formaPagamento,
+          observacoes,
+          status: statusInput.value
+        });
+        recebiveisForm.reset();
+        atualizarResumo();
+        renderRecebiveis();
+      } catch (error) {
+        alert(error.message || 'Erro ao salvar recebivel');
+      }
+    });
+
+    recebiveisForm.addEventListener('reset', () => {
+      setTimeout(atualizarResumo, 0);
+    });
+
+    recebiveisBody.addEventListener('click', async (event) => {
+      const btn = event.target.closest('button');
+      if (!btn) return;
+      const action = btn.getAttribute('data-action');
+      const id = btn.getAttribute('data-id');
+      if (!id) return;
+
+      try {
+        if (action === 'remove') {
+          await deleteRecebivel(id);
+        }
+
+        if (action === 'toggle') {
+          const row = btn.closest('tr');
+          const badge = row ? row.querySelector('.badge') : null;
+          const isPago = badge && badge.textContent.trim().toLowerCase() === 'pago';
+          await updateRecebivel(id, { status: isPago ? 'aberto' : 'pago' });
+        }
+
+        renderRecebiveis();
+      } catch (error) {
+        alert(error.message || 'Erro ao atualizar recebivel');
+      }
+    });
+
+    setHeaderDate();
+    atualizarResumo();
+    renderRecebiveis();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
