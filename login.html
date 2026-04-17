@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -178,6 +178,60 @@
         return user.imageUrl || user.profileImageUrl || null;
       }
 
+      function decodeBase64UrlSafe(value) {
+        try {
+          let base64 = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
+          const pad = base64.length % 4;
+          if (pad) base64 += '='.repeat(4 - pad);
+          return atob(base64);
+        } catch (_) {
+          return '';
+        }
+      }
+
+      function getClerkHostedScriptUrlFromKey() {
+        const pk = String(window.CLERK_PUBLISHABLE_KEY || '');
+        const parts = pk.split('_');
+        if (parts.length < 3) return '';
+
+        const encodedHost = parts.slice(2).join('_');
+        const decoded = decodeBase64UrlSafe(encodedHost).replace(/\$/g, '').trim();
+        if (!decoded || !decoded.includes('clerk.')) return '';
+
+        return 'https://' + decoded + '/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+      }
+
+      function getClerkHostedBaseFromKey() {
+        const pk = String(window.CLERK_PUBLISHABLE_KEY || '');
+        const parts = pk.split('_');
+        if (parts.length < 3) return '';
+
+        const encodedHost = parts.slice(2).join('_');
+        const decoded = decodeBase64UrlSafe(encodedHost).replace(/\$/g, '').trim();
+        if (!decoded) return '';
+
+        // Hosted auth pages usually use *.accounts.dev
+        return 'https://' + decoded.replace('.clerk.accounts.dev', '.accounts.dev');
+      }
+
+      function toAbsoluteUrl(pathOrUrl) {
+        try {
+          return new URL(pathOrUrl, window.location.origin).href;
+        } catch (_) {
+          return window.location.origin + '/';
+        }
+      }
+
+      function redirectToHostedAuth(currentMode, nextUrl) {
+        const hostedBase = getClerkHostedBaseFromKey();
+        if (!hostedBase) return false;
+
+        const targetPath = currentMode === 'signup' ? '/sign-up' : '/sign-in';
+        const redirectUrl = encodeURIComponent(toAbsoluteUrl(nextUrl || 'index.html'));
+        window.location.replace(`${hostedBase}${targetPath}?redirect_url=${redirectUrl}`);
+        return true;
+      }
+
       function loadClerkScript() {
         return new Promise(function (resolve, reject) {
           if (window.Clerk) return resolve();
@@ -194,7 +248,7 @@
           script.setAttribute('data-tp-clerk', '1');
           script.setAttribute('crossorigin', 'anonymous');
           script.setAttribute('data-clerk-publishable-key', window.CLERK_PUBLISHABLE_KEY || '');
-          script.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+          script.src = getClerkHostedScriptUrlFromKey() || 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
           script.onload = function () { resolve(); };
           script.onerror = function () { reject(new Error('Falha ao carregar Clerk')); };
           document.head.appendChild(script);
@@ -238,6 +292,11 @@
             afterSignUpForceRedirectUrl: next
           };
 
+          if (typeof window.Clerk.mountSignIn !== 'function' || typeof window.Clerk.mountSignUp !== 'function') {
+            if (redirectToHostedAuth(mode, next)) return;
+            throw new Error('Clerk foi carregado sem componentes de UI.');
+          }
+
           if (mode === 'signup') {
             window.Clerk.mountSignUp(document.getElementById('clerkRoot'), common);
           } else {
@@ -262,6 +321,10 @@
 
           status.textContent = '';
         } catch (err) {
+          const msg = err && err.message ? err.message : '';
+          if (msg.toLowerCase().includes('ui components')) {
+            if (redirectToHostedAuth(mode, next)) return;
+          }
           status.textContent = err && err.message ? err.message : 'Falha ao iniciar login Clerk';
           status.className = 'status error';
         }
@@ -272,7 +335,3 @@
   </script>
 </body>
 </html>
-
-
-
-
