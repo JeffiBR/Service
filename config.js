@@ -14,15 +14,14 @@
   } else if (isLocalHost) {
     window.API_BASE = 'http://localhost:3000/api';
   } else {
-    // Troque para a URL real do backend no Render antes de publicar no GitHub Pages.
-    window.API_BASE = 'https://SEU-SERVICO.onrender.com/api';
+    window.API_BASE = 'https://certobackend.onrender.com/api';
   }
 
   // Session duration in ms (default 30 days)
   window.AUTH_TTL_MS = window.AUTH_TTL_MS || (30 * 24 * 60 * 60 * 1000);
 
   // Clerk config (set your publishable key to enable)
-  window.CLERK_PUBLISHABLE_KEY = window.CLERK_PUBLISHABLE_KEY || '';
+  window.CLERK_PUBLISHABLE_KEY = window.CLERK_PUBLISHABLE_KEY || 'pk_test_dW5pZmllZC1hbHBhY2EtMjMuY2xlcmsuYWNjb3VudHMuZGV2JA';
   window.CLERK_ENABLED = window.CLERK_ENABLED === true || !!window.CLERK_PUBLISHABLE_KEY;
   window.CLERK_AFTER_SIGN_IN_URL = window.CLERK_AFTER_SIGN_IN_URL || 'index.html';
   window.CLERK_AFTER_SIGN_UP_URL = window.CLERK_AFTER_SIGN_UP_URL || 'index.html';
