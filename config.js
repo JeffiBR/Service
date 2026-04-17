@@ -21,7 +21,8 @@
   window.AUTH_TTL_MS = window.AUTH_TTL_MS || (30 * 24 * 60 * 60 * 1000);
 
   // Clerk config (set your publishable key to enable)
-  window.CLERK_PUBLISHABLE_KEY = window.CLERK_PUBLISHABLE_KEY || 'pk_test_dW5pZmllZC1hbHBhY2EtMjMuY2xlcmsuYWNjb3VudHMuZGV2JA';
+  window.CLERK_PUBLISHABLE_KEY =
+    window.CLERK_PUBLISHABLE_KEY || 'pk_test_dW5pZmllZC1hbHBhY2EtMjMuY2xlcmsuYWNjb3VudHMuZGV2JA';
   window.CLERK_ENABLED = window.CLERK_ENABLED === true || !!window.CLERK_PUBLISHABLE_KEY;
   window.CLERK_AFTER_SIGN_IN_URL = window.CLERK_AFTER_SIGN_IN_URL || 'index.html';
   window.CLERK_AFTER_SIGN_UP_URL = window.CLERK_AFTER_SIGN_UP_URL || 'index.html';
