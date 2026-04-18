@@ -48,6 +48,40 @@
     .brand-name { font-size:1.25rem; font-weight:800; background: linear-gradient(135deg,#fbbf24 0%,#d97706 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .brand-tag { font-size:.65rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; font-weight:600; }
     .sidebar-nav { flex: 1; padding:16px 12px; overflow-y:auto; }
+    .nav-section-title {
+      font-size: .65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: .2s ease;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+    }
+    .nav-item.active {
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 28px rgba(251,191,36,.25);
+    }
+    .nav-item i { width: 20px; font-size: 1.1rem; }
+    .nav-item span { font-size: .9rem; }
     .sidebar-footer { padding:16px; border-top:1px solid rgba(255,255,255,.05); }
     .server-status { display:flex; gap:12px; align-items:center; padding:12px; border:1px solid rgba(255,255,255,.05); border-radius:12px; background: rgba(255,255,255,.02); }
     .status-dot { width:10px; height:10px; border-radius:50%; background:var(--ok); box-shadow:0 0 12px var(--ok); }
@@ -72,11 +106,11 @@
     .form-grid { display:grid; gap: 10px; }
     .field { display:flex; flex-direction:column; gap:6px; }
     label { font-size:.84rem; font-weight:700; color:#e5e7eb; }
-    input {
+    input, select {
       width:100%; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.22); color: var(--text);
       padding:10px 11px; outline:none; font-size:.9rem;
     }
-    input:focus { border-color: rgba(251,191,36,.7); box-shadow:0 0 0 3px rgba(251,191,36,.16); }
+    input:focus, select:focus { border-color: rgba(251,191,36,.7); box-shadow:0 0 0 3px rgba(251,191,36,.16); }
     .btn {
       border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:rgba(255,255,255,.05);
       color: var(--text); font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
@@ -124,6 +158,15 @@
           <div class="card-body">
             <div class="form-grid">
               <div class="field">
+                <label for="pixKeyType">Tipo da chave PIX</label>
+                <select id="pixKeyType">
+                  <option value="cpf">CPF</option>
+                  <option value="cnpj">CNPJ</option>
+                  <option value="telefone">Telefone</option>
+                  <option value="aleatoria">Chave aleatoria</option>
+                </select>
+              </div>
+              <div class="field">
                 <label for="pixKey">Chave PIX</label>
                 <input id="pixKey" type="text" placeholder="Ex.: 82999158412">
               </div>
@@ -146,6 +189,7 @@
     (function () {
       const statusEl = document.getElementById('status');
       const btnSave = document.getElementById('btnSave');
+      const pixKeyTypeEl = document.getElementById('pixKeyType');
       const pixKeyEl = document.getElementById('pixKey');
       const merchantNameEl = document.getElementById('merchantName');
       const merchantCityEl = document.getElementById('merchantCity');
@@ -163,16 +207,42 @@
         return p.data;
       }
 
+      function updatePixPlaceholder() {
+        const type = String(pixKeyTypeEl.value || 'telefone');
+        if (type === 'cpf') pixKeyEl.placeholder = 'Ex.: 12345678901';
+        else if (type === 'cnpj') pixKeyEl.placeholder = 'Ex.: 12345678000199';
+        else if (type === 'telefone') pixKeyEl.placeholder = 'Ex.: +5582999158412';
+        else pixKeyEl.placeholder = 'Ex.: e2a1c8d2-1234-5678-9012-abcdef123456';
+      }
+
+      function normalizeKeyByType(type, raw) {
+        const value = String(raw || '').trim();
+        const t = String(type || 'telefone');
+        if (t === 'cpf' || t === 'cnpj') return value.replace(/\D+/g, '');
+        if (t === 'telefone') {
+          const digits = value.replace(/\D+/g, '');
+          if (!digits) return '';
+          if (digits.length === 10 || digits.length === 11) return '+55' + digits;
+          if (digits.length === 12 || digits.length === 13) return '+' + digits;
+          return value;
+        }
+        return value;
+      }
+
       async function loadConfig() {
         const cfg = await fetchJson(API);
+        pixKeyTypeEl.value = cfg.pix_key_type || 'telefone';
         pixKeyEl.value = cfg.pix_key || '';
         merchantNameEl.value = cfg.pix_merchant_name || 'PRECO CERTO';
         merchantCityEl.value = cfg.pix_city || 'ARAPIRACA';
+        updatePixPlaceholder();
       }
 
       async function saveConfig() {
+        const keyType = String(pixKeyTypeEl.value || 'telefone');
         const payload = {
-          pix_key: String(pixKeyEl.value || '').trim(),
+          pix_key_type: keyType,
+          pix_key: normalizeKeyByType(keyType, pixKeyEl.value),
           pix_merchant_name: String(merchantNameEl.value || '').trim(),
           pix_city: String(merchantCityEl.value || '').trim()
         };
@@ -182,10 +252,17 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+        pixKeyTypeEl.value = saved.pix_key_type || payload.pix_key_type;
         pixKeyEl.value = saved.pix_key || payload.pix_key;
         merchantNameEl.value = saved.pix_merchant_name || payload.pix_merchant_name;
         merchantCityEl.value = saved.pix_city || payload.pix_city;
+        updatePixPlaceholder();
       }
+
+      pixKeyTypeEl.addEventListener('change', function () {
+        pixKeyEl.value = normalizeKeyByType(pixKeyTypeEl.value, pixKeyEl.value);
+        updatePixPlaceholder();
+      });
 
       btnSave.addEventListener('click', async function () {
         btnSave.disabled = true;

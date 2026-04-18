@@ -38,6 +38,40 @@
     .brand-name { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .brand-tag { font-size: .65rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
     .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+    .nav-section-title {
+      font-size: .65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: .2s ease;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+    }
+    .nav-item.active {
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 28px rgba(251,191,36,.25);
+    }
+    .nav-item i { width: 20px; font-size: 1.1rem; }
+    .nav-item span { font-size: .9rem; }
     .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,.05); }
     .server-status { display:flex; gap:12px; align-items:center; padding:12px; border: 1px solid rgba(255,255,255,.05); border-radius: 12px; background: rgba(255,255,255,.02); }
     .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
