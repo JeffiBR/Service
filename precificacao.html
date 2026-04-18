@@ -1972,6 +1972,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
         // ** CONFIGURAO DO BACKEND **
         const API_URL = (window.API_BASE || (window.location.origin + '/api'));
         const SAVE_ENDPOINT = `${API_URL}/precificacao`;
+        const CONFIG_ENDPOINT = `${API_URL}/configuracoes`;
         
         const MAX_FILE_SIZE_MB = 0.9;
         const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024; // 900KB
@@ -2061,6 +2062,9 @@ input:not([type="file"]):not([type="checkbox"]), select {
         let tecidoSelecionado2 = ''; // guarda o segundo tecido (opcional)
         let tecidoSelecionado3 = ''; // terceiro tecido opcional
         let forroSelecionado = '';
+        let configPrecificacao = { tecidos: {}, forros: {}, aviamentos: {} };
+        let precoTecidosIndex = {};
+        let precoForrosIndex = {};
         
         // elementos de toggles e sees sero armazenados mais tarde aps DOMContentLoaded
 
@@ -2196,9 +2200,18 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     'estruturados_alfaiataria': 'Tecidos Estruturados para Alfaiataria',
                     'artesanato_jogos_americanos': 'Tecidos para Artesanato e Jogos Americanos',
                     'calados_bolsas_pecas_firmes': 'Tecidos para Calados, Bolsas e Peas Firmes',
-                    'forros': 'Forros'
+                    'forros': 'Forros',
+                    'personalizados_usuario': 'Personalizados do Usuario'
                 };
                 return nomes[categoria] || categoria;
+            }
+
+            function normalizeName(value) {
+                return String(value || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .trim();
             }
             
             function formatarMoeda(valor) {
@@ -2234,6 +2247,69 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 limpo = limpo.replace(',', '.'); 
                 limpo = limpo.replace(/[^\d.]/g, ''); 
                 return parseFloat(limpo) || 0;
+            }
+
+            function formatarMoedaNumero(numero) {
+                const n = Number(numero);
+                if (!Number.isFinite(n) || n < 0) return '0,00';
+                return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function buildPriceIndexMap(dict) {
+                const index = {};
+                Object.entries(dict || {}).forEach(([nome, valor]) => {
+                    const key = normalizeName(nome);
+                    const n = Number(valor);
+                    if (!key || !Number.isFinite(n) || n <= 0) return;
+                    index[key] = n;
+                });
+                return index;
+            }
+
+            function mergeUniqueNames(targetList, names) {
+                if (!Array.isArray(targetList)) return;
+                const seen = new Set(targetList.map((n) => normalizeName(n)));
+                names.forEach((name) => {
+                    const raw = String(name || '').trim();
+                    const key = normalizeName(raw);
+                    if (!raw || !key || seen.has(key)) return;
+                    seen.add(key);
+                    targetList.push(raw);
+                });
+            }
+
+            function applyConfiguredPrice(fieldId, tipo, nomeMaterial) {
+                const input = document.getElementById(fieldId);
+                if (!input) return;
+                const nome = normalizeName(nomeMaterial);
+                if (!nome) return;
+                const source = tipo === 'forro' ? precoForrosIndex : precoTecidosIndex;
+                const valor = source[nome];
+                if (!Number.isFinite(valor) || valor <= 0) return;
+                input.value = formatarMoedaNumero(valor);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+
+            async function carregarConfiguracoesPrecificacao() {
+                try {
+                    const response = await fetch(CONFIG_ENDPOINT, { cache: 'no-store' });
+                    const payload = await response.json().catch(() => ({}));
+                    if (!response.ok || !payload || !payload.success || !payload.data) return;
+                    const data = payload.data || {};
+                    configPrecificacao = {
+                        tecidos: data.tecidos && typeof data.tecidos === 'object' ? data.tecidos : {},
+                        forros: data.forros && typeof data.forros === 'object' ? data.forros : {},
+                        aviamentos: data.aviamentos && typeof data.aviamentos === 'object' ? data.aviamentos : {}
+                    };
+                    precoTecidosIndex = buildPriceIndexMap(configPrecificacao.tecidos);
+                    precoForrosIndex = buildPriceIndexMap(configPrecificacao.forros);
+
+                    if (!Array.isArray(tecidos.personalizados_usuario)) tecidos.personalizados_usuario = [];
+                    mergeUniqueNames(tecidos.personalizados_usuario, Object.keys(configPrecificacao.tecidos || {}));
+                    mergeUniqueNames(tecidos.forros, Object.keys(configPrecificacao.forros || {}));
+                } catch (err) {
+                    console.warn('Nao foi possivel carregar configuracoes de precificacao:', err);
+                }
             }
 
             function calcularRendimentoEncaixe({ comprimentoTotal, larguraTotal, comprimentoUtilizado, larguraUtilizada }) {
@@ -2383,6 +2459,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidoSelecionadoNome.textContent = tecido;
                         tecidosSelected.classList.add('active');
                         tecidosList.classList.remove('active');
+                        applyConfiguredPrice('valorTotalTecido', 'tecido', tecido);
                         limparErro('tipoTecido');
                     } else if (parentId === 'tecidosList2') {
                         tecidoSelecionado2 = tecido;
@@ -2390,6 +2467,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidoSelecionadoNome2.textContent = tecido;
                         tecidosSelected2.classList.add('active');
                         tecidosList2.classList.remove('active');
+                        applyConfiguredPrice('valorTotalTecido2', 'tecido', tecido);
                         limparErro('tipoTecido2');
                     } else if (parentId === 'tecidosList3') {
                         tecidoSelecionado3 = tecido;
@@ -2397,6 +2475,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidoSelecionadoNome3.textContent = tecido;
                         tecidosSelected3.classList.add('active');
                         tecidosList3.classList.remove('active');
+                        applyConfiguredPrice('valorTotalTecido3', 'tecido', tecido);
                         limparErro('tipoTecido3');
                     } else if (parentId === 'forrosList') {
                         forroSelecionado = tecido;
@@ -2404,6 +2483,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         forroSelecionadoNome.textContent = tecido;
                         forrosSelected.classList.add('active');
                         forrosList.classList.remove('active');
+                        applyConfiguredPrice('valorTotalForro', 'forro', tecido);
                         limparErro('tipoForro');
                     }
                     atualizarPrevia();
@@ -2615,6 +2695,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     categorias.forEach(categoria => categoria.style.display = 'block');
                 }
                 limparErro('tipoTecido');
+                applyConfiguredPrice('valorTotalTecido', 'tecido', this.value);
             });
 
             // segundo tecido busca
@@ -2645,6 +2726,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         categorias.forEach(categoria => categoria.style.display = 'block');
                     }
                     limparErro('tipoTecido2');
+                    applyConfiguredPrice('valorTotalTecido2', 'tecido', this.value);
                 });
             }
 
@@ -2676,6 +2758,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         categorias.forEach(categoria => categoria.style.display = 'block');
                     }
                     limparErro('tipoTecido3');
+                    applyConfiguredPrice('valorTotalTecido3', 'tecido', this.value);
                 });
             }
 
@@ -2707,6 +2790,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         categorias.forEach(categoria => categoria.style.display = 'block');
                     }
                     limparErro('tipoForro');
+                    applyConfiguredPrice('valorTotalForro', 'forro', this.value);
                 });
             }
             
@@ -3799,8 +3883,11 @@ input:not([type="file"]):not([type="checkbox"]), select {
             })();
             
             // Inicializar
-            carregarTecidos();
-            atualizarPrevia();
+            carregarConfiguracoesPrecificacao()
+                .finally(() => {
+                    carregarTecidos();
+                    atualizarPrevia();
+                });
         });
     </script>
 </body>

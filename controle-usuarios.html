@@ -15,6 +15,7 @@
       --text: #f4f4f5;
       --muted: #a1a1aa;
       --accent: #fbbf24;
+      --accent-strong: #f59e0b;
       --ok: #22c55e;
       --danger: #ef4444;
     }
@@ -24,7 +25,9 @@
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
       color: var(--text);
       min-height: 100vh;
     }
@@ -192,7 +195,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
     }
 
@@ -207,8 +210,9 @@
 
     .title {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
     .subtitle {
@@ -219,14 +223,28 @@
     }
 
     .status {
-      min-height: 22px;
+      min-height: 44px;
       margin-bottom: 14px;
-      color: var(--muted);
-      font-size: 0.92rem;
+      color: #d1d5db;
+      font-size: 0.93rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
     }
 
-    .status.ok { color: var(--ok); }
-    .status.error { color: var(--danger); }
+    .status.ok {
+      color: #86efac;
+      border-color: rgba(34, 197, 94, 0.38);
+      background: rgba(34, 197, 94, 0.09);
+    }
+    .status.error {
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.38);
+      background: rgba(239, 68, 68, 0.09);
+    }
 
     .grid {
       display: grid;
@@ -239,6 +257,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
     }
 
     .card-header {
@@ -270,12 +289,23 @@
       padding: 9px 12px;
       font-weight: 700;
       cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
       color: #111;
       border-color: transparent;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(245, 158, 11, 0.26);
     }
 
     .btn:disabled { opacity: 0.7; cursor: not-allowed; }
@@ -322,8 +352,13 @@
       font-weight: 700;
       position: sticky;
       top: 0;
-      background: #10131c;
+      background: rgba(16, 19, 28, 0.96);
+      backdrop-filter: blur(8px);
       z-index: 1;
+    }
+
+    .users-table tbody tr:hover {
+      background: rgba(255,255,255,0.018);
     }
 
     select,
@@ -348,6 +383,9 @@
 
     .actions-cell {
       min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .actions-cell .btn {
@@ -409,11 +447,29 @@
       background: rgba(255,255,255,0.02);
     }
 
+    .perm-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
     .perm-title {
-      margin: 0 0 8px;
+      margin: 0;
       text-transform: capitalize;
       font-size: 0.94rem;
       font-weight: 700;
+    }
+
+    .perm-count {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
     }
 
     .perm-toolbar {
@@ -732,8 +788,8 @@
             <td class="active-cell">${getActiveSelect(user.active)}</td>
             <td class="role-cell">${getRoleSelect(user.role)}</td>
             <td class="actions-cell">
-              <button class="btn btn-primary btn-save-user" type="button">Salvar dados</button>
-              <button class="btn btn-primary btn-save-role" type="button" style="margin-top:8px;">Salvar nivel</button>
+              <button class="btn btn-primary btn-save-user" type="button"><i class="fas fa-save"></i> Salvar dados</button>
+              <button class="btn btn-primary btn-save-role" type="button"><i class="fas fa-user-shield"></i> Salvar nivel</button>
             </td>
           `;
 
@@ -861,7 +917,10 @@
           const item = document.createElement('div');
           item.className = 'perm-item';
           item.innerHTML = `
-            <h3 class="perm-title">${role}</h3>
+            <div class="perm-head">
+              <h3 class="perm-title">${role}</h3>
+              <span class="perm-count">0 selecionada(s)</span>
+            </div>
             <div class="perm-toolbar">
               <button class="btn btn-soft btn-select-all" type="button">Selecionar todas</button>
               <button class="btn btn-soft btn-clear" type="button">Limpar</button>
@@ -883,14 +942,17 @@
           const addBtn = item.querySelector('.btn-add-page');
           const textarea = item.querySelector('textarea');
           const saveBtn = item.querySelector('.btn-save-pages');
+          const countEl = item.querySelector('.perm-count');
 
           function syncTextareaFromSet() {
             textarea.value = Array.from(selected).join('\n');
+            if (countEl) countEl.textContent = `${selected.size} selecionada(s)`;
           }
 
           function syncSetFromTextarea() {
             selected.clear();
             normalizePages(textToPermissions(textarea.value)).forEach((page) => selected.add(page));
+            if (countEl) countEl.textContent = `${selected.size} selecionada(s)`;
           }
 
           function renderChips() {

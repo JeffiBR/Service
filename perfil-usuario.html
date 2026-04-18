@@ -798,6 +798,9 @@
         try {
           const updated = await window.authUpdateMyProfile(payload);
           fillForm(updated.user);
+          if (typeof window.authRefreshUserMenu === 'function') {
+            window.authRefreshUserMenu();
+          }
           document.getElementById('senhaAtual').value = '';
           document.getElementById('senhaNova').value = '';
           setStatus('Perfil atualizado com sucesso.', 'ok');

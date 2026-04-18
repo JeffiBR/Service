@@ -686,6 +686,12 @@
     });
   }
 
+  function refreshUserMenu() {
+    const menu = document.getElementById('tpUserMenu');
+    if (menu) menu.remove();
+    mountUserMenu();
+  }
+
   window.requireAuth = requireAuth;
   window.authIsLoggedIn = isLoggedIn;
   window.authGetNext = getNextFromUrl;
@@ -701,6 +707,7 @@
   window.authRefreshCurrentUser = refreshCurrentUser;
   window.authUpdateMyProfile = updateMyProfile;
   window.authPrewarm = prewarmAuthServer;
+  window.authRefreshUserMenu = refreshUserMenu;
 
   patchFetchWithUserHeaders();
 
