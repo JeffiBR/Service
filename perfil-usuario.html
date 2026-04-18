@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil do Usuario - Preco Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -25,6 +26,132 @@
       background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(10, 10, 11, 0.95);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 32px rgba(251, 191, 36, 0.25);
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fbbf24;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: 0.2s ease;
+      font-weight: 600;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 28px rgba(251, 191, 36, 0.25);
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 10px var(--ok);
+    }
+
+    .status-info { font-size: 0.75rem; color: var(--muted); }
+    .status-value { font-weight: 700; color: var(--text); font-size: 0.85rem; }
+
+    .main {
+      flex: 1;
+      margin-left: 260px;
       padding: 24px;
     }
 
@@ -185,6 +312,9 @@
     }
 
     @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
   </style>
@@ -192,102 +322,137 @@
   <script src="auth.js"></script>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div>
-        <h1 class="title">Perfil do Usuario</h1>
-        <div class="subtitle">Atualize seus dados pessoais e foto de perfil.</div>
-      </div>
-      <a class="btn" href="index.html">Voltar</a>
-    </div>
-
-    <div id="status" class="status">Carregando perfil...</div>
-
-    <section class="card">
-      <div class="profile-top">
-        <div class="avatar-box" id="avatarBox">U</div>
-        <div class="avatar-actions">
-          <label class="btn file">Selecionar foto
-            <input id="photoInput" type="file" accept="image/*">
-          </label>
-          <button id="btnRemovePhoto" class="btn" type="button">Remover foto</button>
-          <span style="color:var(--muted);font-size:12px;">A foto sera salva no seu perfil.</span>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
         </div>
       </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+        <a class="nav-item" href="index.html"><i class="fas fa-users"></i><span>Clientes</span></a>
+        <a class="nav-item" href="revendedores.html"><i class="fas fa-user-tie"></i><span>Revendedores</span></a>
+        <a class="nav-item" href="servidores.html"><i class="fas fa-server"></i><span>Servidores</span></a>
+        <a class="nav-item" href="mensagens.html"><i class="fas fa-comment"></i><span>Mensagens</span></a>
+        <a class="nav-item" href="precificacao.html"><i class="fas fa-calculator"></i><span>Precificacao</span></a>
+        <a class="nav-item" href="recebiveis.html"><i class="fas fa-file-invoice-dollar"></i><span>Recebiveis Ateli</span></a>
+        <a class="nav-item" href="dindin.html"><i class="fas fa-sack-dollar"></i><span>Dindin pra Receber</span></a>
+        <a class="nav-item" href="produtos-atelie.html"><i class="fas fa-box-archive"></i><span>Produtos Registrados</span></a>
+        <a class="nav-item active" href="perfil-usuario.html"><i class="fas fa-user-circle"></i><span>Perfil do Usuario</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
 
-      <form id="profileForm" class="grid" autocomplete="off">
-        <div class="field">
-          <label for="nome">Nome</label>
-          <input id="nome" type="text" required>
+    <main class="main">
+      <div class="wrap">
+        <div class="header">
+          <div>
+            <h1 class="title">Perfil do Usuario</h1>
+            <div class="subtitle">Atualize seus dados pessoais e foto de perfil.</div>
+          </div>
+          <a class="btn" href="index.html">Voltar</a>
         </div>
 
-        <div class="grid-2">
-          <div class="field">
-            <label for="email">E-mail</label>
-            <input id="email" type="email" required>
-          </div>
-          <div class="field">
-            <label for="telefone">Telefone</label>
-            <input id="telefone" type="tel" placeholder="+55 (00) 00000-0000" required>
-          </div>
-        </div>
+        <div id="status" class="status">Carregando perfil...</div>
 
-        <div class="grid-3">
-          <div class="field">
-            <label for="cep">CEP</label>
-            <input id="cep" type="text" placeholder="00000-000" required>
-          </div>
-          <div class="field">
-            <label for="cidade">Cidade</label>
-            <input id="cidade" type="text" required>
-          </div>
-          <div class="field">
-            <label for="estado">Estado (UF)</label>
-            <input id="estado" type="text" maxlength="2" required>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="rua">Rua</label>
-          <input id="rua" type="text" required>
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label for="sexo">Sexo</label>
-            <select id="sexo" required>
-              <option value="masculino">Masculino</option>
-              <option value="feminino">Feminino</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="endereco">Endereco completo</label>
-            <input id="endereco" type="text" required>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="field">
-            <label for="senhaAtual">Senha atual (opcional)</label>
-            <div class="password-wrap">
-              <input id="senhaAtual" type="password" placeholder="Digite para alterar senha">
-              <button class="toggle-btn" type="button" data-toggle="senhaAtual">Ver</button>
+        <section class="card">
+          <div class="profile-top">
+            <div class="avatar-box" id="avatarBox">U</div>
+            <div class="avatar-actions">
+              <label class="btn file">Selecionar foto
+                <input id="photoInput" type="file" accept="image/*">
+              </label>
+              <button id="btnRemovePhoto" class="btn" type="button">Remover foto</button>
+              <span style="color:var(--muted);font-size:12px;">A foto sera salva no seu perfil.</span>
             </div>
           </div>
-          <div class="field">
-            <label for="senhaNova">Nova senha (opcional)</label>
-            <div class="password-wrap">
-              <input id="senhaNova" type="password" placeholder="Nova senha (minimo 6 caracteres)">
-              <button class="toggle-btn" type="button" data-toggle="senhaNova">Ver</button>
-            </div>
-          </div>
-        </div>
 
-        <div class="actions">
-          <button id="btnSave" class="btn btn-primary" type="submit">Salvar perfil</button>
-        </div>
-      </form>
-    </section>
+          <form id="profileForm" class="grid" autocomplete="off">
+            <div class="field">
+              <label for="nome">Nome</label>
+              <input id="nome" type="text" required>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" required>
+              </div>
+              <div class="field">
+                <label for="telefone">Telefone</label>
+                <input id="telefone" type="tel" placeholder="+55 (00) 00000-0000" required>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="field">
+                <label for="cep">CEP</label>
+                <input id="cep" type="text" placeholder="00000-000" required>
+              </div>
+              <div class="field">
+                <label for="cidade">Cidade</label>
+                <input id="cidade" type="text" required>
+              </div>
+              <div class="field">
+                <label for="estado">Estado (UF)</label>
+                <input id="estado" type="text" maxlength="2" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="rua">Rua</label>
+              <input id="rua" type="text" required>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="sexo">Sexo</label>
+                <select id="sexo" required>
+                  <option value="masculino">Masculino</option>
+                  <option value="feminino">Feminino</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="endereco">Endereco completo</label>
+                <input id="endereco" type="text" required>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="senhaAtual">Senha atual (opcional)</label>
+                <div class="password-wrap">
+                  <input id="senhaAtual" type="password" placeholder="Digite para alterar senha">
+                  <button class="toggle-btn" type="button" data-toggle="senhaAtual">Ver</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="senhaNova">Nova senha (opcional)</label>
+                <div class="password-wrap">
+                  <input id="senhaNova" type="password" placeholder="Nova senha (minimo 6 caracteres)">
+                  <button class="toggle-btn" type="button" data-toggle="senhaNova">Ver</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="btnSave" class="btn btn-primary" type="submit">Salvar perfil</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
   </div>
 
   <script>

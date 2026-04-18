@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Controle de Usuarios - Preco Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -26,6 +27,132 @@
       background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(10, 10, 11, 0.95);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 32px rgba(251, 191, 36, 0.25);
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fbbf24;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: 0.2s ease;
+      font-weight: 600;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 28px rgba(251, 191, 36, 0.25);
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 10px var(--ok);
+    }
+
+    .status-info { font-size: 0.75rem; color: var(--muted); }
+    .status-value { font-weight: 700; color: var(--text); font-size: 0.85rem; }
+
+    .main {
+      flex: 1;
+      margin-left: 260px;
       padding: 24px;
     }
 
@@ -118,10 +245,30 @@
 
     .btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
+    .users-tools {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr auto;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .users-count {
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: right;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
     .users-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
+      min-width: 1050px;
     }
 
     .users-table th,
@@ -138,6 +285,10 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       font-weight: 700;
+      position: sticky;
+      top: 0;
+      background: #10131c;
+      z-index: 1;
     }
 
     select,
@@ -151,6 +302,26 @@
       color: var(--text);
       font-size: 0.9rem;
       outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(251, 191, 36, 0.7);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.16);
+    }
+
+    .actions-cell {
+      min-width: 160px;
+    }
+
+    .actions-cell .btn {
+      width: 100%;
+    }
+
+    .role-cell,
+    .active-cell {
+      min-width: 140px;
     }
 
     textarea {
@@ -190,59 +361,114 @@
     @media (max-width: 1080px) {
       .header { padding-right: 0; }
       .perm-grid { grid-template-columns: 1fr; }
-      .users-table { display: block; overflow-x: auto; white-space: nowrap; }
+      .users-tools { grid-template-columns: 1fr; }
+      .users-count { text-align: left; }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
     }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div>
-        <h1 class="title">Controle de Usuarios</h1>
-        <p class="subtitle">Somente usuarios com role <strong>desenvolvedor</strong> conseguem acessar e alterar permissoes.</p>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
       </div>
-      <a class="btn" href="index.html">Voltar</a>
-    </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+        <a class="nav-item" href="index.html"><i class="fas fa-users"></i><span>Clientes</span></a>
+        <a class="nav-item" href="revendedores.html"><i class="fas fa-user-tie"></i><span>Revendedores</span></a>
+        <a class="nav-item" href="servidores.html"><i class="fas fa-server"></i><span>Servidores</span></a>
+        <a class="nav-item" href="mensagens.html"><i class="fas fa-comment"></i><span>Mensagens</span></a>
+        <a class="nav-item" href="precificacao.html"><i class="fas fa-calculator"></i><span>Precificacao</span></a>
+        <a class="nav-item" href="recebiveis.html"><i class="fas fa-file-invoice-dollar"></i><span>Recebiveis Ateli</span></a>
+        <a class="nav-item" href="dindin.html"><i class="fas fa-sack-dollar"></i><span>Dindin pra Receber</span></a>
+        <a class="nav-item" href="produtos-atelie.html"><i class="fas fa-box-archive"></i><span>Produtos Registrados</span></a>
+        <a class="nav-item active" href="controle-usuarios.html"><i class="fas fa-user-shield"></i><span>Controle de Usuarios</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
 
-    <div id="status" class="status">Carregando dados...</div>
+    <main class="main">
+      <div class="container">
+        <div class="header">
+          <div>
+            <h1 class="title">Controle de Usuarios</h1>
+            <p class="subtitle">Somente usuarios com role <strong>desenvolvedor</strong> conseguem acessar e alterar permissoes.</p>
+          </div>
+          <a class="btn" href="index.html">Voltar</a>
+        </div>
 
-    <div class="grid">
-      <section class="card">
-        <div class="card-header">
-          <h2 class="card-title">Usuarios cadastrados</h2>
-          <button id="btnReloadUsers" class="btn" type="button">Atualizar</button>
-        </div>
-        <div class="card-body">
-          <table class="users-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Sexo</th>
-                <th>Endereco</th>
-                <th>Nivel</th>
-                <th>Acoes</th>
-              </tr>
-            </thead>
-            <tbody id="usersBody"></tbody>
-          </table>
-        </div>
-      </section>
+        <div id="status" class="status">Carregando dados...</div>
 
-      <section class="card">
-        <div class="card-header">
-          <h2 class="card-title">Paginas por grupo</h2>
-          <button id="btnReloadPerms" class="btn" type="button">Recarregar</button>
+        <div class="grid">
+          <section class="card">
+            <div class="card-header">
+              <h2 class="card-title">Usuarios cadastrados</h2>
+              <button id="btnReloadUsers" class="btn" type="button">Atualizar</button>
+            </div>
+            <div class="card-body">
+              <div class="users-tools">
+                <input id="usersSearch" type="text" placeholder="Buscar por nome, email ou telefone">
+                <select id="usersRoleFilter">
+                  <option value="">Todos os niveis</option>
+                  <option value="usuario">usuario</option>
+                  <option value="administrador">administrador</option>
+                  <option value="desenvolvedor">desenvolvedor</option>
+                </select>
+                <div id="usersCount" class="users-count">0 usuario(s)</div>
+              </div>
+              <div class="table-wrap">
+                <table class="users-table">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Telefone</th>
+                      <th>Sexo</th>
+                      <th>Endereco</th>
+                      <th>Status</th>
+                      <th>Nivel</th>
+                      <th>Acoes</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usersBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <h2 class="card-title">Paginas por grupo</h2>
+              <button id="btnReloadPerms" class="btn" type="button">Recarregar</button>
+            </div>
+            <div class="card-body">
+              <div class="perm-grid" id="permGrid"></div>
+              <p class="hint">Informe uma pagina por linha (ex.: index.html). Para acesso total, use <code>*</code>.</p>
+            </div>
+          </section>
         </div>
-        <div class="card-body">
-          <div class="perm-grid" id="permGrid"></div>
-          <p class="hint">Informe uma pagina por linha (ex.: index.html). Para acesso total, use <code>*</code>.</p>
-        </div>
-      </section>
-    </div>
+      </div>
+    </main>
   </div>
 
   <script>
@@ -250,7 +476,11 @@
       const statusEl = document.getElementById('status');
       const usersBody = document.getElementById('usersBody');
       const permGrid = document.getElementById('permGrid');
+      const usersSearch = document.getElementById('usersSearch');
+      const usersRoleFilter = document.getElementById('usersRoleFilter');
+      const usersCount = document.getElementById('usersCount');
       const authBase = String(window.AUTH_API_BASE || '').replace(/\/+$/, '');
+      let usersCache = [];
 
       function setStatus(message, kind) {
         statusEl.textContent = message || '';
@@ -294,6 +524,16 @@
         `;
       }
 
+      function getActiveSelect(currentActive) {
+        const active = currentActive !== false;
+        return `
+          <select>
+            <option value="true" ${active ? 'selected' : ''}>ativo</option>
+            <option value="false" ${!active ? 'selected' : ''}>inativo</option>
+          </select>
+        `;
+      }
+
       async function fetchJson(path, options) {
         const response = await fetch(authBase + path, options || {});
         const payload = await response.json().catch(() => ({}));
@@ -303,12 +543,34 @@
         return payload.data;
       }
 
-      async function loadUsers() {
-        const users = await fetchJson('/auth/users');
+      function updateUsersCount(visible, total) {
+        usersCount.textContent = `${visible} de ${total} usuario(s)`;
+      }
+
+      function applyUsersFilters() {
+        const term = String(usersSearch.value || '').trim().toLowerCase();
+        const role = String(usersRoleFilter.value || '').trim().toLowerCase();
+
+        const filtered = usersCache.filter((user) => {
+          const roleOk = !role || getRoleLabel(user.role) === role;
+          const haystack = [
+            user.name || '',
+            user.email || '',
+            user.phone || ''
+          ].join(' ').toLowerCase();
+          const textOk = !term || haystack.includes(term);
+          return roleOk && textOk;
+        });
+
+        renderUsers(filtered, usersCache.length);
+      }
+
+      function renderUsers(users, total) {
         usersBody.innerHTML = '';
+        updateUsersCount(users.length, total);
 
         if (!Array.isArray(users) || users.length === 0) {
-          usersBody.innerHTML = '<tr><td colspan="6">Nenhum usuario encontrado.</td></tr>';
+          usersBody.innerHTML = '<tr><td colspan="8">Nenhum usuario encontrado com os filtros aplicados.</td></tr>';
           return;
         }
 
@@ -320,8 +582,9 @@
             <td><input type="text" class="u-phone" value="${(user.phone || '').replace(/"/g, '&quot;')}"></td>
             <td>${getSexSelect(user.sex)}</td>
             <td><input type="text" class="u-address" value="${(user.address || '').replace(/"/g, '&quot;')}"></td>
+            <td class="active-cell">${getActiveSelect(user.active)}</td>
             <td class="role-cell">${getRoleSelect(user.role)}</td>
-            <td>
+            <td class="actions-cell">
               <button class="btn btn-primary btn-save-user" type="button">Salvar dados</button>
               <button class="btn btn-primary btn-save-role" type="button" style="margin-top:8px;">Salvar nivel</button>
             </td>
@@ -332,7 +595,8 @@
           const phoneInput = tr.querySelector('.u-phone');
           const addressInput = tr.querySelector('.u-address');
           const sexSelect = tr.querySelector('td:nth-child(4) select');
-          const roleSelect = tr.querySelector('td:nth-child(6) select');
+          const activeSelect = tr.querySelector('td:nth-child(6) select');
+          const roleSelect = tr.querySelector('td:nth-child(7) select');
           const saveUserBtn = tr.querySelector('.btn-save-user');
           const saveRoleBtn = tr.querySelector('.btn-save-role');
 
@@ -347,9 +611,16 @@
                   email: emailInput.value.trim(),
                   telefone: phoneInput.value.trim(),
                   endereco: addressInput.value.trim(),
-                  sexo: sexSelect.value
+                  sexo: sexSelect.value,
+                  active: activeSelect.value === 'true'
                 })
               });
+              user.name = nameInput.value.trim();
+              user.email = emailInput.value.trim();
+              user.phone = phoneInput.value.trim();
+              user.address = addressInput.value.trim();
+              user.sex = sexSelect.value;
+              user.active = activeSelect.value === 'true';
               setStatus(`Dados de ${nameInput.value || user.name} atualizados.`, 'ok');
             } catch (err) {
               setStatus(err && err.message ? err.message : 'Falha ao salvar dados do usuario.', 'error');
@@ -363,7 +634,9 @@
             try {
               const role = roleSelect.value;
               await fetchJson(`/auth/users/${encodeURIComponent(user.id)}/role?role=${encodeURIComponent(role)}`, { method: 'POST' });
+              user.role = role;
               setStatus(`Nivel de ${nameInput.value || user.name} atualizado para ${role}.`, 'ok');
+              applyUsersFilters();
             } catch (err) {
               setStatus(err && err.message ? err.message : 'Falha ao atualizar nivel.', 'error');
             } finally {
@@ -373,6 +646,11 @@
 
           usersBody.appendChild(tr);
         });
+      }
+
+      async function loadUsers() {
+        usersCache = await fetchJson('/auth/users');
+        applyUsersFilters();
       }
 
       function permissionsToText(pages) {
@@ -460,6 +738,9 @@
           setStatus(err && err.message ? err.message : 'Falha ao atualizar permissoes.', 'error');
         }
       });
+
+      usersSearch.addEventListener('input', applyUsersFilters);
+      usersRoleFilter.addEventListener('change', applyUsersFilters);
 
       init();
     })();

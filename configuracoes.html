@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Configuracoes - Precificacao</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -29,6 +30,132 @@
         var(--bg);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(10, 10, 11, 0.95);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 32px rgba(251, 191, 36, 0.25);
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fbbf24;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 4px;
+      transition: 0.2s ease;
+      font-weight: 600;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item.active {
+      color: #111;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 28px rgba(251, 191, 36, 0.25);
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 10px var(--ok);
+    }
+
+    .status-info { font-size: 0.75rem; color: var(--muted); }
+    .status-value { font-weight: 700; color: var(--text); font-size: 0.85rem; }
+
+    .main {
+      flex: 1;
+      margin-left: 260px;
       padding: 28px;
     }
 
@@ -105,6 +232,10 @@
       padding: 14px;
       border-bottom: 1px solid var(--line);
       background: rgba(255,255,255,0.015);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .card-title { margin: 0; font-size: 1.02rem; }
@@ -117,7 +248,7 @@
 
     .row {
       display: grid;
-      grid-template-columns: 1fr 150px;
+      grid-template-columns: 1fr 150px 38px;
       align-items: center;
       gap: 8px;
       padding: 8px 4px;
@@ -127,10 +258,19 @@
     .row:last-child { border-bottom: 0; }
 
     .row-aviamento {
-      grid-template-columns: 1fr 130px 130px;
+      grid-template-columns: 1fr 130px 130px 38px;
     }
 
-    .name { font-size: 0.9rem; color: #e4e4e7; }
+    .name {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 9px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: #e4e4e7;
+      font-size: 0.9rem;
+      outline: none;
+    }
 
     .money {
       width: 100%;
@@ -150,7 +290,7 @@
 
     .legend {
       display: grid;
-      grid-template-columns: 1fr 130px 130px;
+      grid-template-columns: 1fr 130px 130px 38px;
       gap: 8px;
       padding: 8px 4px 10px;
       color: var(--muted);
@@ -162,16 +302,92 @@
       margin-bottom: 4px;
     }
 
+    .legend-simple {
+      display: grid;
+      grid-template-columns: 1fr 150px 38px;
+      gap: 8px;
+      padding: 0 4px 8px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 4px;
+    }
+
+    .btn-add {
+      min-width: auto;
+      padding: 8px 10px;
+      font-size: 0.84rem;
+    }
+
+    .btn-remove {
+      min-width: auto;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+      border-color: rgba(239, 68, 68, 0.35);
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .btn-remove:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
     @media (max-width: 1050px) {
       .top { padding-right: 0; flex-wrap: wrap; }
       .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
     }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
 <body>
-  <div class="container">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a class="nav-item" href="dashboard.html"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+        <a class="nav-item" href="index.html"><i class="fas fa-users"></i><span>Clientes</span></a>
+        <a class="nav-item" href="revendedores.html"><i class="fas fa-user-tie"></i><span>Revendedores</span></a>
+        <a class="nav-item" href="servidores.html"><i class="fas fa-server"></i><span>Servidores</span></a>
+        <a class="nav-item" href="mensagens.html"><i class="fas fa-comment"></i><span>Mensagens</span></a>
+        <a class="nav-item" href="precificacao.html"><i class="fas fa-calculator"></i><span>Precificacao</span></a>
+        <a class="nav-item" href="recebiveis.html"><i class="fas fa-file-invoice-dollar"></i><span>Recebiveis Ateli</span></a>
+        <a class="nav-item" href="dindin.html"><i class="fas fa-sack-dollar"></i><span>Dindin pra Receber</span></a>
+        <a class="nav-item" href="produtos-atelie.html"><i class="fas fa-box-archive"></i><span>Produtos Registrados</span></a>
+        <a class="nav-item active" href="configuracoes.html"><i class="fas fa-sliders"></i><span>Configurações</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
     <div class="top">
       <div>
         <h1 class="title">Configurações de <span>Precificação</span></h1>
@@ -189,31 +405,51 @@
       <section class="card">
         <div class="card-header">
           <h2 class="card-title">Tecidos (preço por metro)</h2>
+          <button type="button" class="btn btn-add" id="btnAddTecido">+ Adicionar</button>
         </div>
-        <div class="card-body" id="tecidosRows"></div>
+        <div class="card-body">
+          <div class="legend-simple">
+            <span>Nome</span>
+            <span>Preço/metro</span>
+            <span></span>
+          </div>
+          <div id="tecidosRows"></div>
+        </div>
       </section>
 
       <section class="card">
         <div class="card-header">
           <h2 class="card-title">Forros (preço por metro)</h2>
+          <button type="button" class="btn btn-add" id="btnAddForro">+ Adicionar</button>
         </div>
-        <div class="card-body" id="forrosRows"></div>
+        <div class="card-body">
+          <div class="legend-simple">
+            <span>Nome</span>
+            <span>Preço/metro</span>
+            <span></span>
+          </div>
+          <div id="forrosRows"></div>
+        </div>
       </section>
     </div>
 
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">Aviamentos</h2>
+        <button type="button" class="btn btn-add" id="btnAddAviamento">+ Adicionar</button>
       </div>
       <div class="card-body">
         <div class="legend">
           <span>Nome</span>
           <span>Preço/metro</span>
           <span>Preço/unidade</span>
+          <span></span>
         </div>
         <div id="aviamentosRows"></div>
       </div>
     </section>
+      </div>
+    </main>
   </div>
 
   <script>
@@ -253,20 +489,40 @@
         forros: {},
         aviamentos: {}
       };
+      const SEED_TECIDOS = new Set(TECIDOS.map((n) => normalizeNome(n).toLocaleLowerCase('pt-BR')));
+      const SEED_FORROS = new Set(FORROS.map((n) => normalizeNome(n).toLocaleLowerCase('pt-BR')));
+      const SEED_AVIAMENTOS = new Set(AVIAMENTOS.map((n) => normalizeNome(n).toLocaleLowerCase('pt-BR')));
 
       const statusEl = document.getElementById('status');
       const tecidosRows = document.getElementById('tecidosRows');
       const forrosRows = document.getElementById('forrosRows');
       const aviamentosRows = document.getElementById('aviamentosRows');
       const btnSalvar = document.getElementById('btnSalvar');
+      const btnAddTecido = document.getElementById('btnAddTecido');
+      const btnAddForro = document.getElementById('btnAddForro');
+      const btnAddAviamento = document.getElementById('btnAddAviamento');
 
       function setStatus(texto, tipo) {
         statusEl.textContent = texto || '';
         statusEl.className = `status${tipo ? ' ' + tipo : ''}`;
       }
 
+      function normalizeNome(value) {
+        return String(value || '').trim().replace(/\s+/g, ' ');
+      }
+
       function dedupe(items) {
-        return [...new Set(items)].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+        const seen = new Set();
+        const out = [];
+        (items || []).forEach((item) => {
+          const nome = normalizeNome(item);
+          if (!nome) return;
+          const key = nome.toLocaleLowerCase('pt-BR');
+          if (seen.has(key)) return;
+          seen.add(key);
+          out.push(nome);
+        });
+        return out.sort((a, b) => a.localeCompare(b, 'pt-BR'));
       }
 
       function formatarMoedaBr(valor) {
@@ -292,31 +548,61 @@
         event.target.value = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
 
+      function criarBotaoRemover() {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-remove';
+        btn.title = 'Remover item';
+        btn.textContent = '×';
+        btn.addEventListener('click', () => {
+          const row = btn.closest('.row');
+          if (row) row.remove();
+        });
+        return btn;
+      }
+
       function criarLinhaPadrao(nome, secao) {
         const row = document.createElement('div');
         row.className = 'row';
-        row.dataset.nome = nome;
         row.innerHTML = `
-          <div class="name">${nome}</div>
+          <input class="name" type="text" value="${nome}" placeholder="Nome do item">
           <input class="money" type="text" placeholder="0,00" value="${formatarMoedaBr(estado[secao][nome])}">
         `;
         const input = row.querySelector('input');
-        input.addEventListener('input', onInputMoeda);
+        row.querySelector('.money').addEventListener('input', onInputMoeda);
+        row.appendChild(criarBotaoRemover());
         return row;
       }
 
       function criarLinhaAviamento(nome) {
         const row = document.createElement('div');
         row.className = 'row row-aviamento';
-        row.dataset.nome = nome;
         const item = estado.aviamentos[nome] || {};
         row.innerHTML = `
-          <div class="name">${nome}</div>
+          <input class="name" type="text" value="${nome}" placeholder="Nome do aviamento">
           <input class="money metro" type="text" placeholder="0,00" value="${formatarMoedaBr(item.metro)}">
           <input class="money unidade" type="text" placeholder="0,00" value="${formatarMoedaBr(item.unidade)}">
         `;
         row.querySelectorAll('input').forEach((input) => input.addEventListener('input', onInputMoeda));
+        row.querySelector('.name').removeEventListener('input', onInputMoeda);
+        row.appendChild(criarBotaoRemover());
         return row;
+      }
+
+      function adicionarNovoPadrao(secao) {
+        const nomeBase = secao === 'tecidos' ? 'Novo tecido' : 'Novo forro';
+        const row = criarLinhaPadrao(nomeBase, secao);
+        const target = secao === 'tecidos' ? tecidosRows : forrosRows;
+        target.prepend(row);
+        row.querySelector('.name').focus();
+        row.querySelector('.name').select();
+      }
+
+      function adicionarNovoAviamento() {
+        const row = criarLinhaAviamento('Novo aviamento');
+        aviamentosRows.prepend(row);
+        row.querySelector('.name').focus();
+        row.querySelector('.name').select();
       }
 
       function render() {
@@ -324,9 +610,13 @@
         forrosRows.innerHTML = '';
         aviamentosRows.innerHTML = '';
 
-        dedupe(TECIDOS).forEach((nome) => tecidosRows.appendChild(criarLinhaPadrao(nome, 'tecidos')));
-        dedupe(FORROS).forEach((nome) => forrosRows.appendChild(criarLinhaPadrao(nome, 'forros')));
-        dedupe(AVIAMENTOS).forEach((nome) => aviamentosRows.appendChild(criarLinhaAviamento(nome)));
+        const tecidosNomes = dedupe([...TECIDOS, ...Object.keys(estado.tecidos || {})]);
+        const forrosNomes = dedupe([...FORROS, ...Object.keys(estado.forros || {})]);
+        const aviamentosNomes = dedupe([...AVIAMENTOS, ...Object.keys(estado.aviamentos || {})]);
+
+        tecidosNomes.forEach((nome) => tecidosRows.appendChild(criarLinhaPadrao(nome, 'tecidos')));
+        forrosNomes.forEach((nome) => forrosRows.appendChild(criarLinhaPadrao(nome, 'forros')));
+        aviamentosNomes.forEach((nome) => aviamentosRows.appendChild(criarLinhaAviamento(nome)));
       }
 
       async function carregar() {
@@ -350,22 +640,28 @@
         const payload = { tecidos: {}, forros: {}, aviamentos: {} };
 
         tecidosRows.querySelectorAll('.row').forEach((row) => {
-          const nome = row.dataset.nome;
-          const valor = parseMoedaBr(row.querySelector('input').value);
-          if (valor > 0) payload.tecidos[nome] = valor;
+          const nome = normalizeNome(row.querySelector('.name').value);
+          const valor = parseMoedaBr(row.querySelector('.money').value);
+          if (!nome) return;
+          const isSeed = SEED_TECIDOS.has(nome.toLocaleLowerCase('pt-BR'));
+          if (valor > 0 || !isSeed) payload.tecidos[nome] = valor;
         });
 
         forrosRows.querySelectorAll('.row').forEach((row) => {
-          const nome = row.dataset.nome;
-          const valor = parseMoedaBr(row.querySelector('input').value);
-          if (valor > 0) payload.forros[nome] = valor;
+          const nome = normalizeNome(row.querySelector('.name').value);
+          const valor = parseMoedaBr(row.querySelector('.money').value);
+          if (!nome) return;
+          const isSeed = SEED_FORROS.has(nome.toLocaleLowerCase('pt-BR'));
+          if (valor > 0 || !isSeed) payload.forros[nome] = valor;
         });
 
         aviamentosRows.querySelectorAll('.row').forEach((row) => {
-          const nome = row.dataset.nome;
+          const nome = normalizeNome(row.querySelector('.name').value);
+          if (!nome) return;
           const metro = parseMoedaBr(row.querySelector('.metro').value);
           const unidade = parseMoedaBr(row.querySelector('.unidade').value);
-          if (metro > 0 || unidade > 0) {
+          const isSeed = SEED_AVIAMENTOS.has(nome.toLocaleLowerCase('pt-BR'));
+          if (metro > 0 || unidade > 0 || !isSeed) {
             payload.aviamentos[nome] = { metro, unidade };
           }
         });
@@ -393,6 +689,9 @@
       }
 
       btnSalvar.addEventListener('click', salvar);
+      btnAddTecido.addEventListener('click', () => adicionarNovoPadrao('tecidos'));
+      btnAddForro.addEventListener('click', () => adicionarNovoPadrao('forros'));
+      btnAddAviamento.addEventListener('click', adicionarNovoAviamento);
       carregar();
     })();
   </script>
