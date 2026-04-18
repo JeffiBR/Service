@@ -1,6 +1,7 @@
-﻿(function () {
+(function () {
   const SESSION_KEY = 'tp_auth_session';
   let heartbeatTimer = null;
+  let redirectingToLogin = false;
 
   function nowMs() { return Date.now(); }
 
@@ -162,6 +163,14 @@
     return 'login.html?next=' + encodeURIComponent(next);
   }
 
+  function forceRelogin() {
+    if (isLoginPage() || redirectingToLogin) return;
+    redirectingToLogin = true;
+    stopHeartbeat();
+    clearSession();
+    window.location.replace(buildLoginTarget());
+  }
+
   function getFallbackPage(session) {
     if (!session) return 'index.html';
     const role = roleValue(session.user && session.user.role);
@@ -244,23 +253,29 @@
   function patchFetchWithUserHeaders() {
     if (window.__TP_FETCH_PATCHED__) return;
     if (typeof window.fetch !== 'function') return;
-
     const originalFetch = window.fetch.bind(window);
     window.fetch = function (input, init) {
       const requestInit = init ? { ...init } : {};
       const headers = new Headers(requestInit.headers || {});
       const identity = getRequestIdentity();
-
+      const base = getAuthBase();
+      const requestUrl = typeof input === 'string'
+        ? input
+        : (input && typeof input.url === 'string' ? input.url : '');
       if (identity.token) headers.set('Authorization', 'Bearer ' + identity.token);
       if (identity.userId) headers.set('X-User-Id', identity.userId);
       if (identity.email) headers.set('X-User-Email', identity.email);
       if (identity.name) headers.set('X-User-Name', identity.name);
       if (identity.role) headers.set('X-User-Role', identity.role);
-
       requestInit.headers = headers;
-      return originalFetch(input, requestInit);
+      return originalFetch(input, requestInit).then(function (response) {
+        const isAuthApiCall = !!(base && requestUrl && requestUrl.startsWith(base + '/auth/'));
+        if (response && response.status === 401 && isAuthApiCall && !isLoginPage()) {
+          forceRelogin();
+        }
+        return response;
+      });
     };
-
     window.__TP_FETCH_PATCHED__ = true;
   }
 
@@ -383,6 +398,7 @@
     stopHeartbeat();
     if (!isLoggedIn()) return;
     const ms = Number(window.AUTH_HEARTBEAT_MS || 30000);
+    pingPresence();
     heartbeatTimer = setInterval(function () {
       pingPresence();
     }, Math.max(10000, ms));
@@ -424,6 +440,108 @@
       if (!canAccessPage(file, session) && !href.endsWith('login.html')) {
         a.style.display = 'none';
       }
+    });
+  }
+
+  function standardizeSidebarMenu() {
+    if (isLoginPage()) return;
+    const nav = document.querySelector('.sidebar-nav');
+    if (!nav) return;
+
+    const current = getCurrentPageFile();
+    const session = getStoredSession();
+    const role = getCurrentRole(session);
+    const items = [
+      { href: 'dashboard.html', icon: 'fas fa-chart-pie', label: 'Dashboard' },
+      { href: 'index.html', icon: 'fas fa-users', label: 'Clientes' },
+      { href: 'revendedores.html', icon: 'fas fa-user-tie', label: 'Revendedores' },
+      { href: 'servidores.html', icon: 'fas fa-server', label: 'Servidores' },
+      { href: 'mensagens.html', icon: 'fas fa-comment', label: 'Mensagens' },
+      { href: 'precificacao.html', icon: 'fas fa-calculator', label: 'Precificacao' },
+      { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebiveis Ateli' },
+      { href: 'dindin.html', icon: 'fas fa-sack-dollar', label: 'Dindin pra Receber' },
+      { href: 'produtos-atelie.html', icon: 'fas fa-box-archive', label: 'Produtos Registrados' },
+      { href: 'historico-renovacoes.html', icon: 'fas fa-clock-rotate-left', label: 'Historico Renovacoes' },
+      { href: 'configuracoes.html', icon: 'fas fa-sliders', label: 'Configuracoes' },
+      { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do Usuario' },
+      { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de Usuarios', devOnly: true }
+    ];
+
+    nav.innerHTML = '';
+    const section = document.createElement('div');
+    section.className = 'nav-section-title';
+    section.textContent = 'Menu';
+    nav.appendChild(section);
+
+    items.forEach((item) => {
+      if (item.devOnly && role !== 'desenvolvedor') return;
+      const a = document.createElement('a');
+      const isActive = current === item.href;
+      a.href = item.href;
+      a.className = 'nav-item' + (isActive ? ' active' : '') + (item.devOnly ? ' tp-dev-sidebar-link' : '');
+      a.innerHTML = `<i class="${item.icon}"></i><span>${item.label}</span>`;
+      nav.appendChild(a);
+    });
+  }
+
+  function setupSidebarMobileToggle() {
+    if (isLoginPage()) return;
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    if (!document.getElementById('tpSidebarMobileStyle')) {
+      const style = document.createElement('style');
+      style.id = 'tpSidebarMobileStyle';
+      style.textContent = `
+        .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:1300; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
+        .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1199; }
+        @media (max-width: 960px) {
+          .tp-sidebar-toggle { display:flex; align-items:center; justify-content:center; }
+          .sidebar { position:fixed !important; top:0; left:0; height:100vh !important; width:260px !important; transform:translateX(-100%); transition:transform .25s ease; z-index:1200; }
+          body.tp-sidebar-open .sidebar { transform:translateX(0); }
+          body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
+          .main { margin-left:0 !important; padding-top:64px !important; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    let toggle = document.getElementById('tpSidebarToggle');
+    if (!toggle) {
+      toggle = document.createElement('button');
+      toggle.id = 'tpSidebarToggle';
+      toggle.className = 'tp-sidebar-toggle';
+      toggle.type = 'button';
+      toggle.setAttribute('aria-label', 'Abrir menu');
+      toggle.innerHTML = '&#9776;';
+      document.body.appendChild(toggle);
+    }
+
+    let overlay = document.getElementById('tpSidebarOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'tpSidebarOverlay';
+      overlay.className = 'tp-sidebar-overlay';
+      document.body.appendChild(overlay);
+    }
+
+    const closeMenu = function () { document.body.classList.remove('tp-sidebar-open'); };
+    const openMenu = function () { document.body.classList.add('tp-sidebar-open'); };
+
+    toggle.onclick = function () {
+      if (document.body.classList.contains('tp-sidebar-open')) closeMenu();
+      else openMenu();
+    };
+    overlay.onclick = closeMenu;
+
+    document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
+      item.addEventListener('click', function () {
+        if (window.innerWidth <= 960) closeMenu();
+      });
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 960) closeMenu();
     });
   }
 
@@ -578,6 +696,8 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     requireAuth();
+    standardizeSidebarMenu();
+    setupSidebarMobileToggle();
     startHeartbeat();
     applyNavigationPermissions();
     mountDeveloperSidebarLink();
