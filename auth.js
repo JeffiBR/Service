@@ -1,5 +1,6 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
+  let heartbeatTimer = null;
 
   function nowMs() { return Date.now(); }
 
@@ -101,6 +102,13 @@
 
   function clearSession() {
     localStorage.removeItem(SESSION_KEY);
+  }
+
+  function stopHeartbeat() {
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+      heartbeatTimer = null;
+    }
   }
 
   function isLoginPage() {
@@ -272,6 +280,7 @@
     }
 
     saveSession(payload.data, !!remember);
+    startHeartbeat();
     return payload.data;
   }
 
@@ -352,6 +361,49 @@
     }, remember);
 
     return payload.data;
+  }
+
+  async function pingPresence() {
+    if (!isLoggedIn()) return false;
+    const base = getAuthBase();
+    const session = getStoredSession();
+    if (!base || !session || !session.token) return false;
+    try {
+      const response = await fetch(base + '/auth/ping', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + session.token }
+      });
+      return !!response.ok;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function startHeartbeat() {
+    stopHeartbeat();
+    if (!isLoggedIn()) return;
+    const ms = Number(window.AUTH_HEARTBEAT_MS || 30000);
+    heartbeatTimer = setInterval(function () {
+      pingPresence();
+    }, Math.max(10000, ms));
+  }
+
+  async function logout() {
+    const base = getAuthBase();
+    const session = getStoredSession();
+    try {
+      if (base && session && session.token) {
+        await fetch(base + '/auth/logout', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + session.token }
+        });
+      }
+    } catch (_) {
+      // best effort
+    } finally {
+      stopHeartbeat();
+      clearSession();
+    }
   }
 
   function applyNavigationPermissions() {
@@ -500,8 +552,8 @@
       }
     });
 
-    logoutBtn.addEventListener('click', function () {
-      clearSession();
+    logoutBtn.addEventListener('click', async function () {
+      await logout();
       window.location.replace('login.html');
     });
   }
@@ -510,8 +562,11 @@
   window.authIsLoggedIn = isLoggedIn;
   window.authGetNext = getNextFromUrl;
   window.authSetSession = saveSession;
-  window.authClearSession = clearSession;
-  window.authLogout = clearSession;
+  window.authClearSession = function () {
+    stopHeartbeat();
+    clearSession();
+  };
+  window.authLogout = logout;
   window.authGetSessionProfile = getSessionProfile;
   window.authLogin = login;
   window.authRegister = register;
@@ -523,8 +578,10 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     requireAuth();
+    startHeartbeat();
     applyNavigationPermissions();
     mountDeveloperSidebarLink();
     mountUserMenu();
   });
 })();
+
