@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Precificação - Preço Certo</title>
+<title>Precificação Ateli D'Maria - ThunderPlay IPTV</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <style>
@@ -1022,8 +1022,8 @@ input:not([type="file"]):not([type="checkbox"]), select {
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">Preço Certo</div>
-                <div class="brand-tag">PREÇO CERTO</div>
+                <div class="brand-name">ThunderPlay</div>
+                <div class="brand-tag">IPTV Manager</div>
             </div>
         </div>
     </div>
@@ -1051,7 +1051,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
         </a>
         <a class="nav-item active" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>Precificação</span>
+            <span>Precificação Ateli D'Maria</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
@@ -1082,7 +1082,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
 </aside>
 <main class="main">
 <header class="main-header">
-<div class="page-title">Precificação</div>
+<div class="page-title">Precificação <span>Ateli D'Maria</span></div>
 <div class="header-date" id="headerDate"></div>
 </header>
 <div class="main-content">
@@ -1263,6 +1263,40 @@ input:not([type="file"]):not([type="checkbox"]), select {
         </div>
     </div>
 </div>
+<div class="form-group">
+    <label for="margemErro">
+        <i class="fas fa-expand-arrows-alt"></i>
+        Margem de Erro (cm por lado)
+    </label>
+    <div class="input-with-icon">
+        <i class="fas fa-ruler-combined input-icon"></i>
+        <input class="number-input" id="margemErro" placeholder="Ex: 1,5" type="text" value="1,5"/>
+    </div>
+    <div class="error-message" id="margemErroError">
+        <i class="fas fa-exclamation-circle"></i>
+        Informe uma margem válida (>= 0)
+    </div>
+    <div class="highlight-info" style="padding-left: 5px;">
+        <i class="fas fa-info-circle"></i> A margem é aplicada em cada lado da peça: largura e comprimento usados no cálculo recebem +2x margem.
+    </div>
+</div>
+<div class="form-group">
+    <label for="partesReaisTecido">
+        <i class="fas fa-layer-group"></i>
+        Quantidade Real de Partes por Tecido (opcional)
+    </label>
+    <div class="input-with-icon">
+        <i class="fas fa-hashtag input-icon"></i>
+        <input class="number-input" id="partesReaisTecido" placeholder="Ex: 18" type="text"/>
+    </div>
+    <div class="error-message" id="partesReaisTecidoError">
+        <i class="fas fa-exclamation-circle"></i>
+        Informe um valor maior que zero
+    </div>
+    <div class="highlight-info" style="padding-left: 5px;">
+        <i class="fas fa-info-circle"></i> Se preenchido, o custo unitário do tecido será calculado por rendimento real: Valor total / Partes reais.
+    </div>
+</div>
 <div class="calculation-example" id="tecidoCalcInfo" style="display:none; margin-top:5px;">
 </div>
 
@@ -1401,6 +1435,20 @@ input:not([type="file"]):not([type="checkbox"]), select {
         </div>
     </div>
 </div>
+<div class="form-group">
+    <label for="partesReaisTecido2">
+        <i class="fas fa-layer-group"></i>
+        Quantidade Real de Partes por Tecido 2 (opcional)
+    </label>
+    <div class="input-with-icon">
+        <i class="fas fa-hashtag input-icon"></i>
+        <input class="number-input" id="partesReaisTecido2" placeholder="Ex: 18" type="text"/>
+    </div>
+    <div class="error-message" id="partesReaisTecido2Error">
+        <i class="fas fa-exclamation-circle"></i>
+        Informe um valor maior que zero
+    </div>
+</div>
 
 </div>
 <!-- fim seo segundo tecido -->
@@ -1504,6 +1552,20 @@ input:not([type="file"]):not([type="checkbox"]), select {
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <label for="partesReaisTecido3">
+            <i class="fas fa-layer-group"></i>
+            Quantidade Real de Partes por Tecido 3 (opcional)
+        </label>
+        <div class="input-with-icon">
+            <i class="fas fa-hashtag input-icon"></i>
+            <input class="number-input" id="partesReaisTecido3" placeholder="Ex: 18" type="text"/>
+        </div>
+        <div class="error-message" id="partesReaisTecido3Error">
+            <i class="fas fa-exclamation-circle"></i>
+            Informe um valor maior que zero
+        </div>
+    </div>
 </div>
 
 <!-- FORRO (opcional) -->
@@ -1603,6 +1665,20 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 <i class="fas fa-exclamation-circle"></i>
                 Comprimento utilizado do forro
             </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="partesReaisForro">
+            <i class="fas fa-layer-group"></i>
+            Quantidade Real de Partes por Forro (opcional)
+        </label>
+        <div class="input-with-icon">
+            <i class="fas fa-hashtag input-icon"></i>
+            <input class="number-input" id="partesReaisForro" placeholder="Ex: 18" type="text"/>
+        </div>
+        <div class="error-message" id="partesReaisForroError">
+            <i class="fas fa-exclamation-circle"></i>
+            Informe um valor maior que zero
         </div>
     </div>
 </div>
@@ -1802,7 +1878,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
 <input class="number-input" id="porcentagemLucro" placeholder="0,00" required="" type="text"/>
 </div>
 <div class="calculation-example" style="margin-top: 5px; font-size: 0.85em;">
-<i class="fas fa-info-circle"></i> O lucro incidir apenas sobre os materiais base: **Tecido + Aviamentos**. Os custos de Mão de Obra, Embalagem e Transporte serão somados ao final.
+<i class="fas fa-info-circle"></i> O lucro incidirá sobre os materiais base: **Tecido + Aviamentos + Sublimação**. Os custos de Mão de Obra, Embalagem e Transporte serão somados ao final.
                         </div>
 <div class="error-message" id="porcentagemLucroError">
 <i class="fas fa-exclamation-circle"></i>
@@ -1896,7 +1972,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
         // ** CONFIGURAO DO BACKEND **
         const API_URL = (window.API_BASE || (window.location.origin + '/api'));
         const SAVE_ENDPOINT = `${API_URL}/precificacao`;
-        const CONFIG_ENDPOINT = `${API_URL}/configuracoes`;
         
         const MAX_FILE_SIZE_MB = 0.9;
         const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024; // 900KB
@@ -1986,8 +2061,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
         let tecidoSelecionado2 = ''; // guarda o segundo tecido (opcional)
         let tecidoSelecionado3 = ''; // terceiro tecido opcional
         let forroSelecionado = '';
-        let configuracaoPrecosUsuario = { tecidos: {}, forros: {}, aviamentos: {} };
-        let carregandoRecalculo = false;
         
         // elementos de toggles e sees sero armazenados mais tarde aps DOMContentLoaded
 
@@ -2016,7 +2089,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
             fetch(`${API_URL}/health`)
                 .then(() => updateServerStatus(true))
                 .catch(() => updateServerStatus(false));
-            carregarConfiguracoesUsuario();
 
             const tecidos = {
                 "leves_para_roupas": [
@@ -2164,104 +2236,69 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 return parseFloat(limpo) || 0;
             }
 
-            function formatarMoedaNumero(valor) {
-                const numero = Number(valor);
-                if (!Number.isFinite(numero)) return '';
-                return numero.toLocaleString('pt-BR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
+            function calcularRendimentoEncaixe({ comprimentoTotal, larguraTotal, comprimentoUtilizado, larguraUtilizada }) {
+                if (comprimentoTotal <= 0 || larguraTotal <= 0 || comprimentoUtilizado <= 0 || larguraUtilizada <= 0) return null;
+                const pecaArea = comprimentoUtilizado * larguraUtilizada;
+                if (pecaArea <= 0) return null;
+
+                const colA = Math.floor(larguraTotal / larguraUtilizada);
+                const linA = Math.floor(comprimentoTotal / comprimentoUtilizado);
+                const partesA = colA * linA;
+                const areaSobraA = (comprimentoTotal * larguraTotal) - (partesA * pecaArea);
+
+                const colB = Math.floor(larguraTotal / comprimentoUtilizado);
+                const linB = Math.floor(comprimentoTotal / larguraUtilizada);
+                const partesB = colB * linB;
+                const areaSobraB = (comprimentoTotal * larguraTotal) - (partesB * pecaArea);
+
+                const usarA = (partesA > partesB) || (partesA === partesB && areaSobraA <= areaSobraB);
+                if ((usarA ? partesA : partesB) <= 0) return null;
+
+                return {
+                    partes: usarA ? partesA : partesB,
+                    orientacao: usarA ? 'normal' : 'rotacionada',
+                    colunas: usarA ? colA : colB,
+                    linhas: usarA ? linA : linB,
+                    areaSobra: usarA ? areaSobraA : areaSobraB
+                };
             }
 
-            function normalizarChaveConfig(texto) {
-                return (texto || '')
-                    .toString()
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .toLowerCase()
-                    .trim();
+            function aplicarMargemDimensao(valorBase, margemPorLado) {
+                const base = Number(valorBase) || 0;
+                const margem = Math.max(0, Number(margemPorLado) || 0);
+                return base > 0 ? base + (2 * margem) : 0;
             }
 
-            function obterPrecoConfigurado(mapa, nome) {
-                if (!mapa || typeof mapa !== 'object') return null;
-                const chaveBuscada = normalizarChaveConfig(nome);
-                if (!chaveBuscada) return null;
-                for (const [chave, valor] of Object.entries(mapa)) {
-                    if (normalizarChaveConfig(chave) === chaveBuscada) {
-                        const numero = Number(valor);
-                        return Number.isFinite(numero) && numero > 0 ? numero : null;
-                    }
+            function calcularCustoMaterial({ valorTotal, comprimentoTotal, larguraTotal, larguraUtilizada, comprimentoUtilizado, partesReais }) {
+                const partes = Number(partesReais) || 0;
+                if (valorTotal > 0 && partes > 0) {
+                    return { custo: valorTotal / partes, metodo: 'rendimento_real', partesReais: partes, partesConsideradas: partes };
                 }
-                return null;
-            }
-
-            function definirCampoMoeda(input, valorNumerico) {
-                if (!input) return;
-                input.value = Number.isFinite(valorNumerico) && valorNumerico > 0 ? formatarMoedaNumero(valorNumerico) : '';
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-
-            function aplicarPrecoConfiguradoTecido(nomeTecido, inputIdValor) {
-                if (carregandoRecalculo) return;
-                const input = document.getElementById(inputIdValor);
-                if (!input) return;
-                const preco = obterPrecoConfigurado(configuracaoPrecosUsuario.tecidos, nomeTecido);
-                definirCampoMoeda(input, preco || NaN);
-            }
-
-            function aplicarPrecoConfiguradoForro(nomeForro) {
-                if (carregandoRecalculo) return;
-                const input = document.getElementById('valorTotalForro');
-                if (!input) return;
-                const preco = obterPrecoConfigurado(configuracaoPrecosUsuario.forros, nomeForro);
-                definirCampoMoeda(input, preco || NaN);
-            }
-
-            function obterPrecoAviamentoConfigurado(nomeAviamento, tipoAviamento) {
-                const mapa = configuracaoPrecosUsuario.aviamentos || {};
-                const chaveBuscada = normalizarChaveConfig(nomeAviamento);
-                if (!chaveBuscada) return null;
-                for (const [chave, valor] of Object.entries(mapa)) {
-                    if (normalizarChaveConfig(chave) !== chaveBuscada) continue;
-                    if (!valor || typeof valor !== 'object') return null;
-                    const campo = tipoAviamento === 'unidade' ? 'unidade' : 'metro';
-                    const preco = Number(valor[campo]);
-                    return Number.isFinite(preco) && preco > 0 ? preco : null;
+                const estimado = calcularRendimentoEncaixe({ comprimentoTotal, larguraTotal, comprimentoUtilizado, larguraUtilizada });
+                if (valorTotal > 0 && estimado && estimado.partes > 0) {
+                    return { custo: valorTotal / estimado.partes, metodo: 'rendimento_estimado', partesConsideradas: estimado.partes, estimado };
                 }
-                return null;
+                if (comprimentoTotal > 0 && larguraTotal > 0 && larguraUtilizada > 0 && comprimentoUtilizado > 0 && valorTotal > 0) {
+                    const areaTotal = comprimentoTotal * larguraTotal;
+                    const areaUsada = larguraUtilizada * comprimentoUtilizado;
+                    const custoCm2 = valorTotal / areaTotal;
+                    return { custo: custoCm2 * areaUsada, metodo: 'area', areaTotal, areaUsada, partesConsideradas: 0 };
+                }
+                return { custo: 0, metodo: 'incompleto' };
             }
 
-            function aplicarPrecoAviamentoConfigurado(aviamentoItem) {
-                if (carregandoRecalculo || !aviamentoItem) return;
-                const nome = (aviamentoItem.querySelector('.aviamento-nome')?.value || '').trim();
-                const tipo = aviamentoItem.querySelector('.tipo-aviamento-select')?.value || 'metro';
-                const preco = obterPrecoAviamentoConfigurado(nome, tipo);
-
-                const inputMetro = aviamentoItem.querySelector('.aviamento-valor');
-                const inputUnidade = aviamentoItem.querySelector('.aviamento-valor-unidade');
-                if (tipo === 'unidade') {
-                    if (inputMetro) inputMetro.value = '';
-                    definirCampoMoeda(inputUnidade, preco || NaN);
-                } else {
-                    if (inputUnidade) inputUnidade.value = '';
-                    definirCampoMoeda(inputMetro, preco || NaN);
+            function calcularMetragemLote({ qtdProdutos, comprimentoTotal, larguraTotal, larguraUtilizada, comprimentoUtilizado, calculoMaterial }) {
+                if (qtdProdutos <= 0) return 0;
+                const partes = calculoMaterial?.partesConsideradas || 0;
+                if (partes > 0 && comprimentoTotal > 0) {
+                    return (qtdProdutos / partes) * (comprimentoTotal / 100);
                 }
-            }
-
-            async function carregarConfiguracoesUsuario() {
-                try {
-                    const response = await fetch(CONFIG_ENDPOINT);
-                    if (!response.ok) return;
-                    const payload = await response.json();
-                    const data = payload && payload.data ? payload.data : {};
-                    configuracaoPrecosUsuario = {
-                        tecidos: data.tecidos && typeof data.tecidos === 'object' ? data.tecidos : {},
-                        forros: data.forros && typeof data.forros === 'object' ? data.forros : {},
-                        aviamentos: data.aviamentos && typeof data.aviamentos === 'object' ? data.aviamentos : {}
-                    };
-                } catch (error) {
-                    console.warn('Nao foi possivel carregar configuracoes do usuario:', error);
+                const areaUsadaUnit = larguraUtilizada * comprimentoUtilizado;
+                if (larguraTotal > 0 && areaUsadaUnit > 0) {
+                    const comprimentoNecessarioCm = (areaUsadaUnit * qtdProdutos) / larguraTotal;
+                    return comprimentoNecessarioCm / 100;
                 }
+                return 0;
             }
 
             function mostrarErro(campoId, mensagem) {
@@ -2299,172 +2336,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 setTimeout(() => {
                     alertDiv.style.display = 'none';
                 }, 5000);
-            }
-
-            function preencherAviamentosRecalculo(aviamentos) {
-                if (!Array.isArray(aviamentos) || !aviamentos.length) {
-                    temAviamentosCheckbox.checked = false;
-                    temAviamentosCheckbox.dispatchEvent(new Event('change'));
-                    return;
-                }
-
-                temAviamentosCheckbox.checked = true;
-                temAviamentosCheckbox.dispatchEvent(new Event('change'));
-                aviamentosContainer.innerHTML = '';
-                aviamentoCount = 0;
-
-                aviamentos.forEach((item) => {
-                    adicionarAviamento();
-                    const atual = aviamentosContainer.lastElementChild;
-                    if (!atual) return;
-
-                    const nomeInput = atual.querySelector('.aviamento-nome');
-                    const tipoSelect = atual.querySelector('.tipo-aviamento-select');
-                    if (nomeInput) nomeInput.value = item?.nome || '';
-                    if (tipoSelect) {
-                        tipoSelect.value = item?.tipo === 'unidade' ? 'unidade' : 'metro';
-                        tipoSelect.dispatchEvent(new Event('change'));
-                    }
-
-                    if (item?.tipo === 'unidade') {
-                        const valorUn = atual.querySelector('.aviamento-valor-unidade');
-                        const qtdUn = atual.querySelector('.aviamento-unidades-utilizadas');
-                        if (valorUn) valorUn.value = formatarMoedaNumero(item?.detalhes?.valor_unitario ?? 0);
-                        if (qtdUn) qtdUn.value = item?.detalhes?.unidades_utilizadas ?? 0;
-                    } else {
-                        const valorTotal = atual.querySelector('.aviamento-valor');
-                        const metrosTotais = atual.querySelector('.aviamento-metros-total');
-                        const metrosUsados = atual.querySelector('.aviamento-metros-utilizados');
-                        if (valorTotal) valorTotal.value = formatarMoedaNumero(item?.detalhes?.valor_total ?? 0);
-                        if (metrosTotais) metrosTotais.value = formatarNumero(item?.detalhes?.metros_total ?? 0);
-                        if (metrosUsados) metrosUsados.value = formatarNumero(item?.detalhes?.metros_utilizados ?? 0);
-                    }
-
-                    atual.querySelectorAll('input, select').forEach((el) => {
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                    });
-                });
-            }
-
-            function carregarProdutoParaRecalculo() {
-                const params = new URLSearchParams(window.location.search);
-                const deveRecalcular = params.get('recalculate') === '1';
-                if (!deveRecalcular) return;
-
-                const raw = sessionStorage.getItem('pc_recalculate_product');
-                if (!raw) return;
-
-                let produto;
-                try {
-                    produto = JSON.parse(raw);
-                } catch (_) {
-                    return;
-                }
-                sessionStorage.removeItem('pc_recalculate_product');
-                carregandoRecalculo = true;
-
-                const setText = (id, valor) => {
-                    const el = document.getElementById(id);
-                    if (!el || valor === undefined || valor === null) return;
-                    el.value = String(valor);
-                    el.dispatchEvent(new Event('input', { bubbles: true }));
-                    el.dispatchEvent(new Event('change', { bubbles: true }));
-                };
-                const setNumber = (id, valor) => {
-                    if (valor === undefined || valor === null || valor === '') return;
-                    setText(id, formatarNumero(valor));
-                };
-                const setMoney = (id, valor) => {
-                    if (valor === undefined || valor === null || valor === '') return;
-                    setText(id, formatarMoedaNumero(valor));
-                };
-                const setToggle = (id, ativo) => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.checked = !!ativo;
-                    el.dispatchEvent(new Event('change'));
-                };
-
-                setText('nomeProduto', produto.nome_produto || '');
-                setNumber('quantidadeProdutos', produto.quantidade_produtos || 1);
-                setText('tipoTecido', produto.tecido_tipo || '');
-                tecidoSelecionado = produto.tecido_tipo || '';
-                tecidoSelecionadoNome.textContent = tecidoSelecionado;
-                tecidosSelected.classList.toggle('active', !!tecidoSelecionado);
-
-                setMoney('valorTotalTecido', produto.valor_total_tecido);
-                setNumber('comprimentoTotalTecido', produto.comprimento_total_tecido);
-                setNumber('larguraTecido', produto.largura_tecido);
-                setNumber('larguraUtilizada', produto.largura_utilizada);
-                setNumber('comprimentoUtilizado', produto.comprimento_utilizado);
-
-                const usaTecido2 = !!(produto.tecido_tipo2 || produto.valor_total_tecido2 || produto.comprimento_total_tecido2);
-                setToggle('usarTecido2Checkbox', usaTecido2);
-                if (usaTecido2) {
-                    setText('tipoTecido2', produto.tecido_tipo2 || '');
-                    tecidoSelecionado2 = produto.tecido_tipo2 || '';
-                    tecidoSelecionadoNome2.textContent = tecidoSelecionado2;
-                    tecidosSelected2.classList.toggle('active', !!tecidoSelecionado2);
-                    setMoney('valorTotalTecido2', produto.valor_total_tecido2);
-                    setNumber('comprimentoTotalTecido2', produto.comprimento_total_tecido2);
-                    setNumber('larguraTecido2', produto.largura_tecido2);
-                    setNumber('larguraUtilizada2', produto.largura_utilizada2);
-                    setNumber('comprimentoUtilizado2', produto.comprimento_utilizado2);
-                }
-
-                const usaTecido3 = !!(produto.tecido_tipo3 || produto.valor_total_tecido3 || produto.comprimento_total_tecido3);
-                setToggle('usarTecido3Checkbox', usaTecido3);
-                if (usaTecido3) {
-                    setText('tipoTecido3', produto.tecido_tipo3 || '');
-                    tecidoSelecionado3 = produto.tecido_tipo3 || '';
-                    tecidoSelecionadoNome3.textContent = tecidoSelecionado3;
-                    tecidosSelected3.classList.toggle('active', !!tecidoSelecionado3);
-                    setMoney('valorTotalTecido3', produto.valor_total_tecido3);
-                    setNumber('comprimentoTotalTecido3', produto.comprimento_total_tecido3);
-                    setNumber('larguraTecido3', produto.largura_tecido3);
-                    setNumber('larguraUtilizada3', produto.largura_utilizada3);
-                    setNumber('comprimentoUtilizado3', produto.comprimento_utilizado3);
-                }
-
-                const usaForro = !!(produto.tecido_tipo_forro || produto.valor_total_forro || produto.comprimento_total_forro);
-                setToggle('usarForroCheckbox', usaForro);
-                if (usaForro) {
-                    setText('tipoForro', produto.tecido_tipo_forro || '');
-                    forroSelecionado = produto.tecido_tipo_forro || '';
-                    forroSelecionadoNome.textContent = forroSelecionado;
-                    forrosSelected.classList.toggle('active', !!forroSelecionado);
-                    setMoney('valorTotalForro', produto.valor_total_forro);
-                    setNumber('comprimentoTotalForro', produto.comprimento_total_forro);
-                    setNumber('larguraForro', produto.largura_forro);
-                    setNumber('larguraUtilizadaForro', produto.largura_utilizada_forro);
-                    setNumber('comprimentoUtilizadoForro', produto.comprimento_utilizado_forro);
-                }
-
-                setMoney('valorHora', produto.valor_hora);
-                setNumber('tempoGasto', produto.tempo_gasto_minutos);
-                setMoney('valorEmbalagem', produto.valor_embalagem_total || produto.custo_unitario_embalagem);
-                setMoney('custoTransporte', produto.custo_unitario_transporte);
-                setNumber('porcentagemLucro', produto.porcentagem_lucro);
-
-                const usaSublimacao = !!(
-                    produto.sublimacao_qtd_folhas ||
-                    produto.sublimacao_valor_folhas ||
-                    produto.sublimacao_folhas_usadas
-                );
-                setToggle('temSublimacao', usaSublimacao);
-                if (usaSublimacao) {
-                    setNumber('sublimacaoQtdFolhas', produto.sublimacao_qtd_folhas);
-                    setMoney('sublimacaoValorFolhas', produto.sublimacao_valor_folhas);
-                    setNumber('sublimacaoFolhasUsadas', produto.sublimacao_folhas_usadas);
-                    setMoney('sublimacaoTinta', produto.sublimacao_tinta);
-                    setMoney('sublimacaoEnergia', produto.sublimacao_energia);
-                }
-
-                preencherAviamentosRecalculo(produto.aviamentos_data);
-                carregandoRecalculo = false;
-                atualizarPrevia();
-                mostrarAlerta('Produto carregado para recálculo.', 'success');
             }
             
             function carregarTecidos() {
@@ -2513,7 +2384,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidosSelected.classList.add('active');
                         tecidosList.classList.remove('active');
                         limparErro('tipoTecido');
-                        aplicarPrecoConfiguradoTecido(tecido, 'valorTotalTecido');
                     } else if (parentId === 'tecidosList2') {
                         tecidoSelecionado2 = tecido;
                         tipoTecidoInput2.value = tecido;
@@ -2521,7 +2391,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidosSelected2.classList.add('active');
                         tecidosList2.classList.remove('active');
                         limparErro('tipoTecido2');
-                        aplicarPrecoConfiguradoTecido(tecido, 'valorTotalTecido2');
                     } else if (parentId === 'tecidosList3') {
                         tecidoSelecionado3 = tecido;
                         tipoTecidoInput3.value = tecido;
@@ -2529,7 +2398,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tecidosSelected3.classList.add('active');
                         tecidosList3.classList.remove('active');
                         limparErro('tipoTecido3');
-                        aplicarPrecoConfiguradoTecido(tecido, 'valorTotalTecido3');
                     } else if (parentId === 'forrosList') {
                         forroSelecionado = tecido;
                         tipoForroInput.value = tecido;
@@ -2537,7 +2405,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         forrosSelected.classList.add('active');
                         forrosList.classList.remove('active');
                         limparErro('tipoForro');
-                        aplicarPrecoConfiguradoForro(tecido);
                     }
                     atualizarPrevia();
                 }
@@ -2552,7 +2419,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 const camposObrigatorios = [
                     'nomeProduto', 'valorTotalTecido', 'comprimentoTotalTecido', 'larguraTecido',
                     'tipoTecido', 'larguraUtilizada', 'comprimentoUtilizado',
-                    'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro',
+                    'margemErro', 'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro',
                     'custoTransporte', 'quantidadeProdutos'
                     // segundo tecido  opcional, no est na lista
                 ];
@@ -2567,15 +2434,17 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     }
                 });
                 
-                const camposNumericos = ['valorTotalTecido', 'comprimentoTotalTecido', 'larguraTecido', 'larguraUtilizada', 'comprimentoUtilizado', 'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro', 'custoTransporte', 'quantidadeProdutos',
-                    'valorTotalTecido2', 'comprimentoTotalTecido2', 'larguraTecido2', 'larguraUtilizada2', 'comprimentoUtilizado2',
-                    'valorTotalTecido3', 'comprimentoTotalTecido3', 'larguraTecido3', 'larguraUtilizada3', 'comprimentoUtilizado3',
-                    'valorTotalForro', 'comprimentoTotalForro', 'larguraForro', 'larguraUtilizadaForro', 'comprimentoUtilizadoForro'];
+                const camposNumericos = ['valorTotalTecido', 'comprimentoTotalTecido', 'larguraTecido', 'larguraUtilizada', 'comprimentoUtilizado', 'margemErro', 'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro', 'custoTransporte', 'quantidadeProdutos',
+                    'partesReaisTecido',
+                    'valorTotalTecido2', 'comprimentoTotalTecido2', 'larguraTecido2', 'larguraUtilizada2', 'comprimentoUtilizado2', 'partesReaisTecido2',
+                    'valorTotalTecido3', 'comprimentoTotalTecido3', 'larguraTecido3', 'larguraUtilizada3', 'comprimentoUtilizado3', 'partesReaisTecido3',
+                    'valorTotalForro', 'comprimentoTotalForro', 'larguraForro', 'larguraUtilizadaForro', 'comprimentoUtilizadoForro', 'partesReaisForro'];
                 camposNumericos.forEach(campoId => {
                     const campo = document.getElementById(campoId);
                     if (campo && campo.value.trim()) {
                         const valor = campoId.includes('valor') || campoId === 'custoTransporte' ? parseMoeda(campo.value) : parseNumero(campo.value);
-                        if (isNaN(valor) || valor < 0 || (campoId === 'quantidadeProdutos' && valor === 0)) {
+                        const campoRendimento = campoId.startsWith('partesReais');
+                        if (isNaN(valor) || valor < 0 || (campoId === 'quantidadeProdutos' && valor === 0) || (campoRendimento && valor <= 0)) {
                             mostrarErro(campoId, 'Por favor, insira um valor válido');
                             valido = false;
                         }
@@ -2840,33 +2709,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     limparErro('tipoForro');
                 });
             }
-
-            tipoTecidoInput.addEventListener('change', function() {
-                tecidoSelecionado = this.value.trim();
-                aplicarPrecoConfiguradoTecido(tecidoSelecionado, 'valorTotalTecido');
-                atualizarPrevia();
-            });
-            if (tipoTecidoInput2) {
-                tipoTecidoInput2.addEventListener('change', function() {
-                    tecidoSelecionado2 = this.value.trim();
-                    aplicarPrecoConfiguradoTecido(tecidoSelecionado2, 'valorTotalTecido2');
-                    atualizarPrevia();
-                });
-            }
-            if (tipoTecidoInput3) {
-                tipoTecidoInput3.addEventListener('change', function() {
-                    tecidoSelecionado3 = this.value.trim();
-                    aplicarPrecoConfiguradoTecido(tecidoSelecionado3, 'valorTotalTecido3');
-                    atualizarPrevia();
-                });
-            }
-            if (tipoForroInput) {
-                tipoForroInput.addEventListener('change', function() {
-                    forroSelecionado = this.value.trim();
-                    aplicarPrecoConfiguradoForro(forroSelecionado);
-                    atualizarPrevia();
-                });
-            }
             
             tipoTecidoInput.addEventListener('focus', function() { tecidosList.classList.add('active'); });
             tipoTecidoInput.addEventListener('click', function() { tecidosList.classList.add('active'); });
@@ -2904,7 +2746,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tipoTecidoInput2.value = '';
                         tecidoSelecionadoNome2.textContent = '';
                         limparErro('tipoTecido2');
-                        ['valorTotalTecido2','comprimentoTotalTecido2','larguraTecido2','larguraUtilizada2','comprimentoUtilizado2'].forEach(id => {
+                        ['valorTotalTecido2','comprimentoTotalTecido2','larguraTecido2','larguraUtilizada2','comprimentoUtilizado2','partesReaisTecido2'].forEach(id => {
                             const el = document.getElementById(id);
                             if (el) {
                                 el.value = '';
@@ -2923,7 +2765,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tipoTecidoInput3.value = '';
                         tecidoSelecionadoNome3.textContent = '';
                         limparErro('tipoTecido3');
-                        ['valorTotalTecido3','comprimentoTotalTecido3','larguraTecido3','larguraUtilizada3','comprimentoUtilizado3'].forEach(id => {
+                        ['valorTotalTecido3','comprimentoTotalTecido3','larguraTecido3','larguraUtilizada3','comprimentoUtilizado3','partesReaisTecido3'].forEach(id => {
                             const el = document.getElementById(id);
                             if (el) {
                                 el.value = '';
@@ -2942,7 +2784,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         tipoForroInput.value = '';
                         forroSelecionadoNome.textContent = '';
                         limparErro('tipoForro');
-                        ['valorTotalForro','comprimentoTotalForro','larguraForro','larguraUtilizadaForro','comprimentoUtilizadoForro'].forEach(id => {
+                        ['valorTotalForro','comprimentoTotalForro','larguraForro','larguraUtilizadaForro','comprimentoUtilizadoForro','partesReaisForro'].forEach(id => {
                             const el = document.getElementById(id);
                             if (el) {
                                 el.value = '';
@@ -3026,12 +2868,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 aviamentoItem.querySelectorAll('.money-input').forEach(input => input.addEventListener('input', function() { if(this.value) this.value=formatarMoeda(this.value); atualizarPrevia(); atualizarInfoAviamento(aviamentoItem); }));
                 aviamentoItem.querySelectorAll('.number-input').forEach(input => input.addEventListener('input', function() { this.value=this.value.replace(/[^\d,.]/g, ''); atualizarPrevia(); atualizarInfoAviamento(aviamentoItem); }));
                 aviamentoItem.querySelectorAll('input, select').forEach(input => input.addEventListener('change', function() { atualizarPrevia(); atualizarInfoAviamento(aviamentoItem); }));
-                const nomeAviamentoInput = aviamentoItem.querySelector('.aviamento-nome');
-                if (nomeAviamentoInput) {
-                    nomeAviamentoInput.addEventListener('change', function() {
-                        aplicarPrecoAviamentoConfigurado(aviamentoItem);
-                    });
-                }
                 
                 const tipoSelect = aviamentoItem.querySelector('.tipo-aviamento-select');
                 tipoSelect.addEventListener('change', function() {
@@ -3039,7 +2875,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const camposUnidade = aviamentoItem.querySelector('.campos-por-unidade');
                     if (this.value === 'metro') { camposMetro.style.display = 'grid'; camposUnidade.style.display = 'none'; }
                     else { camposMetro.style.display = 'none'; camposUnidade.style.display = 'grid'; }
-                    aplicarPrecoAviamentoConfigurado(aviamentoItem);
                     atualizarPrevia(); atualizarInfoAviamento(aviamentoItem);
                 });
                 
@@ -3072,10 +2907,11 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 }
             }
             
-            const camposPrincipais = ['nomeProduto', 'valorTotalTecido', 'comprimentoTotalTecido', 'larguraTecido', 'larguraUtilizada', 'comprimentoUtilizado', 'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro', 'custoTransporte', 'quantidadeProdutos',
-                'valorTotalTecido2', 'comprimentoTotalTecido2', 'larguraTecido2', 'larguraUtilizada2', 'comprimentoUtilizado2', 'tipoTecido2',
-                'valorTotalTecido3', 'comprimentoTotalTecido3', 'larguraTecido3', 'larguraUtilizada3', 'comprimentoUtilizado3', 'tipoTecido3',
-                'valorTotalForro', 'comprimentoTotalForro', 'larguraForro', 'larguraUtilizadaForro', 'comprimentoUtilizadoForro', 'tipoForro',
+            const camposPrincipais = ['nomeProduto', 'valorTotalTecido', 'comprimentoTotalTecido', 'larguraTecido', 'larguraUtilizada', 'comprimentoUtilizado', 'margemErro', 'valorHora', 'tempoGasto', 'valorEmbalagem', 'porcentagemLucro', 'custoTransporte', 'quantidadeProdutos',
+                'partesReaisTecido',
+                'valorTotalTecido2', 'comprimentoTotalTecido2', 'larguraTecido2', 'larguraUtilizada2', 'comprimentoUtilizado2', 'partesReaisTecido2', 'tipoTecido2',
+                'valorTotalTecido3', 'comprimentoTotalTecido3', 'larguraTecido3', 'larguraUtilizada3', 'comprimentoUtilizado3', 'partesReaisTecido3', 'tipoTecido3',
+                'valorTotalForro', 'comprimentoTotalForro', 'larguraForro', 'larguraUtilizadaForro', 'comprimentoUtilizadoForro', 'partesReaisForro', 'tipoForro',
                 'sublimacaoQtdFolhas', 'sublimacaoValorFolhas', 'sublimacaoFolhasUsadas'];
             camposPrincipais.forEach(id => {
                 const campo = document.getElementById(id);
@@ -3096,6 +2932,10 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const larguraTotal = parseNumero(document.getElementById('larguraTecido').value) || 0;
                     const larguraUtilizada = parseNumero(document.getElementById('larguraUtilizada').value) || 0;
                     const comprimentoUtilizado = parseNumero(document.getElementById('comprimentoUtilizado').value) || 0;
+                    const margemErro = parseNumero(document.getElementById('margemErro')?.value || '') || 0;
+                    const larguraUtilizadaCalc = aplicarMargemDimensao(larguraUtilizada, margemErro);
+                    const comprimentoUtilizadoCalc = aplicarMargemDimensao(comprimentoUtilizado, margemErro);
+                    const partesReaisTecido = parseNumero(document.getElementById('partesReaisTecido')?.value || '') || 0;
                     const valorHora = parseMoeda(document.getElementById('valorHora').value) || 0;
                     const tempoGasto = parseNumero(document.getElementById('tempoGasto').value) || 0;
                     const valorEmbalagemTotal = parseMoeda(document.getElementById('valorEmbalagem').value) || 0; // Valor TOTAL do Lote
@@ -3124,68 +2964,78 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const larguraTotal2 = parseNumero(document.getElementById('larguraTecido2')?.value || '') || 0;
                     const larguraUtilizada2 = parseNumero(document.getElementById('larguraUtilizada2')?.value || '') || 0;
                     const comprimentoUtilizado2 = parseNumero(document.getElementById('comprimentoUtilizado2')?.value || '') || 0;
+                    const larguraUtilizada2Calc = aplicarMargemDimensao(larguraUtilizada2, margemErro);
+                    const comprimentoUtilizado2Calc = aplicarMargemDimensao(comprimentoUtilizado2, margemErro);
+                    const partesReaisTecido2 = parseNumero(document.getElementById('partesReaisTecido2')?.value || '') || 0;
                     // terceiro tecido inputs
                     const valorTotalTecido3 = parseMoeda(document.getElementById('valorTotalTecido3')?.value || '') || 0;
                     const comprimentoTotal3 = parseNumero(document.getElementById('comprimentoTotalTecido3')?.value || '') || 0;
                     const larguraTotal3 = parseNumero(document.getElementById('larguraTecido3')?.value || '') || 0;
                     const larguraUtilizada3 = parseNumero(document.getElementById('larguraUtilizada3')?.value || '') || 0;
                     const comprimentoUtilizado3 = parseNumero(document.getElementById('comprimentoUtilizado3')?.value || '') || 0;
+                    const larguraUtilizada3Calc = aplicarMargemDimensao(larguraUtilizada3, margemErro);
+                    const comprimentoUtilizado3Calc = aplicarMargemDimensao(comprimentoUtilizado3, margemErro);
+                    const partesReaisTecido3 = parseNumero(document.getElementById('partesReaisTecido3')?.value || '') || 0;
                     // forro inputs
                     const valorTotalForro = parseMoeda(document.getElementById('valorTotalForro')?.value || '') || 0;
                     const comprimentoTotalForro = parseNumero(document.getElementById('comprimentoTotalForro')?.value || '') || 0;
                     const larguraTotalForro = parseNumero(document.getElementById('larguraForro')?.value || '') || 0;
                     const larguraUtilizadaForro = parseNumero(document.getElementById('larguraUtilizadaForro')?.value || '') || 0;
                     const comprimentoUtilizadoForro = parseNumero(document.getElementById('comprimentoUtilizadoForro')?.value || '') || 0;
-
-                    if (comprimentoTotal > 0 && larguraTotal > 0 && larguraUtilizada > 0 && comprimentoUtilizado > 0) {
-                        const areaTotal = comprimentoTotal * larguraTotal; // cm
-                        const areaUsada = larguraUtilizada * comprimentoUtilizado;
-                        const custoCm2 = valorTotalTecido / areaTotal;
-                        custoTecido = custoCm2 * areaUsada;
-                    }
-
-                    if (comprimentoTotal2 > 0 && larguraTotal2 > 0 && larguraUtilizada2 > 0 && comprimentoUtilizado2 > 0) {
-                        const areaTotalB = comprimentoTotal2 * larguraTotal2;
-                        const areaUsadaB = larguraUtilizada2 * comprimentoUtilizado2;
-                        const custoCm2B = valorTotalTecido2 / areaTotalB;
-                        custoTecido2 = custoCm2B * areaUsadaB;
-                    }
-
-                    if (comprimentoTotal3 > 0 && larguraTotal3 > 0 && larguraUtilizada3 > 0 && comprimentoUtilizado3 > 0) {
-                        const areaTotalC = comprimentoTotal3 * larguraTotal3;
-                        const areaUsadaC = larguraUtilizada3 * comprimentoUtilizado3;
-                        const custoCm2C = valorTotalTecido3 / areaTotalC;
-                        custoTecido3 = custoCm2C * areaUsadaC;
-                    }
-
-                    if (comprimentoTotalForro > 0 && larguraTotalForro > 0 && larguraUtilizadaForro > 0 && comprimentoUtilizadoForro > 0) {
-                        const areaTotalD = comprimentoTotalForro * larguraTotalForro;
-                        const areaUsadaD = larguraUtilizadaForro * comprimentoUtilizadoForro;
-                        const custoCm2D = valorTotalForro / areaTotalD;
-                        custoForro = custoCm2D * areaUsadaD;
-                    }
+                    const larguraUtilizadaForroCalc = aplicarMargemDimensao(larguraUtilizadaForro, margemErro);
+                    const comprimentoUtilizadoForroCalc = aplicarMargemDimensao(comprimentoUtilizadoForro, margemErro);
+                    const partesReaisForro = parseNumero(document.getElementById('partesReaisForro')?.value || '') || 0;
+                    const calcTecido1 = calcularCustoMaterial({ valorTotal: valorTotalTecido, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, partesReais: partesReaisTecido });
+                    const calcTecido2 = calcularCustoMaterial({ valorTotal: valorTotalTecido2, comprimentoTotal: comprimentoTotal2, larguraTotal: larguraTotal2, larguraUtilizada: larguraUtilizada2Calc, comprimentoUtilizado: comprimentoUtilizado2Calc, partesReais: partesReaisTecido2 });
+                    const calcTecido3 = calcularCustoMaterial({ valorTotal: valorTotalTecido3, comprimentoTotal: comprimentoTotal3, larguraTotal: larguraTotal3, larguraUtilizada: larguraUtilizada3Calc, comprimentoUtilizado: comprimentoUtilizado3Calc, partesReais: partesReaisTecido3 });
+                    const calcForro = calcularCustoMaterial({ valorTotal: valorTotalForro, comprimentoTotal: comprimentoTotalForro, larguraTotal: larguraTotalForro, larguraUtilizada: larguraUtilizadaForroCalc, comprimentoUtilizado: comprimentoUtilizadoForroCalc, partesReais: partesReaisForro });
+                    custoTecido = calcTecido1.custo;
+                    custoTecido2 = calcTecido2.custo;
+                    custoTecido3 = calcTecido3.custo;
+                    custoForro = calcForro.custo;
 
                     // montar info de clculo para todos os materiais
-                    if ((valorTotalTecido > 0 && larguraUtilizada > 0 && comprimentoUtilizado > 0 && larguraTotal > 0 && comprimentoTotal > 0) ||
-                        (valorTotalTecido2 > 0 && larguraUtilizada2 > 0 && comprimentoUtilizado2 > 0 && larguraTotal2 > 0 && comprimentoTotal2 > 0) ||
-                        (valorTotalTecido3 > 0 && larguraUtilizada3 > 0 && comprimentoUtilizado3 > 0 && larguraTotal3 > 0 && comprimentoTotal3 > 0) ||
-                        (valorTotalForro > 0 && larguraUtilizadaForro > 0 && comprimentoUtilizadoForro > 0 && larguraTotalForro > 0 && comprimentoTotalForro > 0)) {
+                    if (calcTecido1.custo > 0 || calcTecido2.custo > 0 || calcTecido3.custo > 0 || calcForro.custo > 0) {
                         tecidoCalcInfo.style.display = 'block';
                         let detalhes = '';
-                        if (valorTotalTecido > 0 && larguraUtilizada > 0 && comprimentoUtilizado > 0 && larguraTotal > 0 && comprimentoTotal > 0) {
-                            detalhes += `(1) (R$ ${valorTotalTecido.toFixed(2)}  (${comprimentoTotal}${larguraTotal} cm))  (${larguraUtilizada}${comprimentoUtilizado} cm) = R$ ${custoTecido.toFixed(2)}`;
+                        if (calcTecido1.custo > 0) {
+                            if (calcTecido1.metodo === 'rendimento_real') {
+                                detalhes += `(1) R$ ${valorTotalTecido.toFixed(2)} / ${partesReaisTecido.toFixed(0)} partes (real) = R$ ${custoTecido.toFixed(2)}`;
+                            } else if (calcTecido1.metodo === 'rendimento_estimado') {
+                                detalhes += `(1) R$ ${valorTotalTecido.toFixed(2)} / ${calcTecido1.partesConsideradas} partes (auto ${calcTecido1.estimado.colunas}x${calcTecido1.estimado.linhas}, ${calcTecido1.estimado.orientacao}) = R$ ${custoTecido.toFixed(2)}`;
+                            } else {
+                                detalhes += `(1) (R$ ${valorTotalTecido.toFixed(2)} | ${comprimentoTotal}x${larguraTotal} cm) x (${larguraUtilizadaCalc.toFixed(2)}x${comprimentoUtilizadoCalc.toFixed(2)} cm c/ margem) = R$ ${custoTecido.toFixed(2)}`;
+                            }
                         }
-                        if (valorTotalTecido2 > 0 && larguraUtilizada2 > 0 && comprimentoUtilizado2 > 0 && larguraTotal2 > 0 && comprimentoTotal2 > 0) {
+                        if (calcTecido2.custo > 0) {
                             if (detalhes) detalhes += '<br/>';
-                            detalhes += `(2) (R$ ${valorTotalTecido2.toFixed(2)}  (${comprimentoTotal2}${larguraTotal2} cm))  (${larguraUtilizada2}${comprimentoUtilizado2} cm) = R$ ${custoTecido2.toFixed(2)}`;
+                            if (calcTecido2.metodo === 'rendimento_real') {
+                                detalhes += `(2) R$ ${valorTotalTecido2.toFixed(2)} / ${partesReaisTecido2.toFixed(0)} partes (real) = R$ ${custoTecido2.toFixed(2)}`;
+                            } else if (calcTecido2.metodo === 'rendimento_estimado') {
+                                detalhes += `(2) R$ ${valorTotalTecido2.toFixed(2)} / ${calcTecido2.partesConsideradas} partes (auto ${calcTecido2.estimado.colunas}x${calcTecido2.estimado.linhas}, ${calcTecido2.estimado.orientacao}) = R$ ${custoTecido2.toFixed(2)}`;
+                            } else {
+                                detalhes += `(2) (R$ ${valorTotalTecido2.toFixed(2)} | ${comprimentoTotal2}x${larguraTotal2} cm) x (${larguraUtilizada2Calc.toFixed(2)}x${comprimentoUtilizado2Calc.toFixed(2)} cm c/ margem) = R$ ${custoTecido2.toFixed(2)}`;
+                            }
                         }
-                        if (valorTotalTecido3 > 0 && larguraUtilizada3 > 0 && comprimentoUtilizado3 > 0 && larguraTotal3 > 0 && comprimentoTotal3 > 0) {
+                        if (calcTecido3.custo > 0) {
                             if (detalhes) detalhes += '<br/>';
-                            detalhes += `(3) (R$ ${valorTotalTecido3.toFixed(2)}  (${comprimentoTotal3}${larguraTotal3} cm))  (${larguraUtilizada3}${comprimentoUtilizado3} cm) = R$ ${custoTecido3.toFixed(2)}`;
+                            if (calcTecido3.metodo === 'rendimento_real') {
+                                detalhes += `(3) R$ ${valorTotalTecido3.toFixed(2)} / ${partesReaisTecido3.toFixed(0)} partes (real) = R$ ${custoTecido3.toFixed(2)}`;
+                            } else if (calcTecido3.metodo === 'rendimento_estimado') {
+                                detalhes += `(3) R$ ${valorTotalTecido3.toFixed(2)} / ${calcTecido3.partesConsideradas} partes (auto ${calcTecido3.estimado.colunas}x${calcTecido3.estimado.linhas}, ${calcTecido3.estimado.orientacao}) = R$ ${custoTecido3.toFixed(2)}`;
+                            } else {
+                                detalhes += `(3) (R$ ${valorTotalTecido3.toFixed(2)} | ${comprimentoTotal3}x${larguraTotal3} cm) x (${larguraUtilizada3Calc.toFixed(2)}x${comprimentoUtilizado3Calc.toFixed(2)} cm c/ margem) = R$ ${custoTecido3.toFixed(2)}`;
+                            }
                         }
-                        if (valorTotalForro > 0 && larguraUtilizadaForro > 0 && comprimentoUtilizadoForro > 0 && larguraTotalForro > 0 && comprimentoTotalForro > 0) {
+                        if (calcForro.custo > 0) {
                             if (detalhes) detalhes += '<br/>';
-                            detalhes += `(Forro) (R$ ${valorTotalForro.toFixed(2)}  (${comprimentoTotalForro}${larguraTotalForro} cm))  (${larguraUtilizadaForro}${comprimentoUtilizadoForro} cm) = R$ ${custoForro.toFixed(2)}`;
+                            if (calcForro.metodo === 'rendimento_real') {
+                                detalhes += `(Forro) R$ ${valorTotalForro.toFixed(2)} / ${partesReaisForro.toFixed(0)} partes (real) = R$ ${custoForro.toFixed(2)}`;
+                            } else if (calcForro.metodo === 'rendimento_estimado') {
+                                detalhes += `(Forro) R$ ${valorTotalForro.toFixed(2)} / ${calcForro.partesConsideradas} partes (auto ${calcForro.estimado.colunas}x${calcForro.estimado.linhas}, ${calcForro.estimado.orientacao}) = R$ ${custoForro.toFixed(2)}`;
+                            } else {
+                                detalhes += `(Forro) (R$ ${valorTotalForro.toFixed(2)} | ${comprimentoTotalForro}x${larguraTotalForro} cm) x (${larguraUtilizadaForroCalc.toFixed(2)}x${comprimentoUtilizadoForroCalc.toFixed(2)} cm c/ margem) = R$ ${custoForro.toFixed(2)}`;
+                            }
                         }
                         tecidoCalcInfo.innerHTML = detalhes;
                     } else {
@@ -3217,41 +3067,22 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoEmbalagemUnitario = valorEmbalagemTotal / (qtdProdutos || 1);
                     
                     // 5. Custo Unitário Total
-                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos; // inclui tecidos adicionais e forro
-                    const custoMateriaisParaCalculoTotal = baseLucro + custoEmbalagemUnitario + custoTransporte + custoSublimacaoUnitario;
+                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimacaoUnitario; // inclui sublimação na base de lucro
+                    const custoMateriaisParaCalculoTotal = baseLucro + custoEmbalagemUnitario + custoTransporte;
                     const custoTotalUnitario = custoMateriaisParaCalculoTotal + custoMaoDeObra;
-                    const areaUsadaUnit = larguraUtilizada * comprimentoUtilizado;
-                    let comprimentoNecessarioCm = 0;
-                    let comprimentoNecessarioM = 0;
-                    if (larguraTotal > 0 && areaUsadaUnit > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm = (areaUsadaUnit * qtdProdutos) / larguraTotal;
-                        comprimentoNecessarioM = comprimentoNecessarioCm / 100;
-                    }
-                    const areaUsadaUnit2 = larguraUtilizada2 * comprimentoUtilizado2;
-                    let comprimentoNecessarioCm2 = 0;
-                    let comprimentoNecessarioM2 = 0;
-                    if (larguraTotal2 > 0 && areaUsadaUnit2 > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm2 = (areaUsadaUnit2 * qtdProdutos) / larguraTotal2;
-                        comprimentoNecessarioM2 = comprimentoNecessarioCm2 / 100;
-                    }
-                    const areaUsadaUnit3 = larguraUtilizada3 * comprimentoUtilizado3;
-                    let comprimentoNecessarioCm3 = 0;
-                    let comprimentoNecessarioM3 = 0;
-                    if (larguraTotal3 > 0 && areaUsadaUnit3 > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm3 = (areaUsadaUnit3 * qtdProdutos) / larguraTotal3;
-                        comprimentoNecessarioM3 = comprimentoNecessarioCm3 / 100;
-                    }
-                    const areaUsadaUnitForro = larguraUtilizadaForro * comprimentoUtilizadoForro;
-                    let comprimentoNecessarioCmForro = 0;
-                    let comprimentoNecessarioMForro = 0;
-                    if (larguraTotalForro > 0 && areaUsadaUnitForro > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCmForro = (areaUsadaUnitForro * qtdProdutos) / larguraTotalForro;
-                        comprimentoNecessarioMForro = comprimentoNecessarioCmForro / 100;
-                    }
+                    const comprimentoNecessarioM = calcularMetragemLote({ qtdProdutos, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, calculoMaterial: calcTecido1 });
+                    const comprimentoNecessarioM2 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal2, larguraTotal: larguraTotal2, larguraUtilizada: larguraUtilizada2Calc, comprimentoUtilizado: comprimentoUtilizado2Calc, calculoMaterial: calcTecido2 });
+                    const comprimentoNecessarioM3 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal3, larguraTotal: larguraTotal3, larguraUtilizada: larguraUtilizada3Calc, comprimentoUtilizado: comprimentoUtilizado3Calc, calculoMaterial: calcTecido3 });
+                    const comprimentoNecessarioMForro = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotalForro, larguraTotal: larguraTotalForro, larguraUtilizada: larguraUtilizadaForroCalc, comprimentoUtilizado: comprimentoUtilizadoForroCalc, calculoMaterial: calcForro });
                     const custoTecido1Total = custoTecido * qtdProdutos;
                     const custoTecido2Total = custoTecido2 * qtdProdutos;
                     const custoTecido3Total = custoTecido3 * qtdProdutos;
                     const custoForroTotal = custoForro * qtdProdutos;
+                    const custoAvTotal = custoAviamentos * qtdProdutos;
+                    const custoFolhaTotal = custoFolhaUnitario * qtdProdutos;
+                    const custoTintaTotal = custoTintaUnitario * qtdProdutos;
+                    const custoEnergiaTotal = custoEnergiaUnitario * qtdProdutos;
+                    const custoSublimacaoTotal = custoSublimacaoUnitario * qtdProdutos;
 
                     if (sublimacaoCalcInfo) {
                         if (sublimacaoAtiva && sublimacaoQtdFolhas > 0 && sublimacaoValorFolhas > 0) {
@@ -3268,28 +3099,34 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         <div class="previa-section-header">Custos de Materiais (Base para Lucro: R$ ${baseLucro.toFixed(2)})</div> <!-- inclui custos do 2 tecido -->
                         <div class="previa-item"><span>Medida do tecido:</span><span>${comprimentoTotal} cm  ${larguraTotal} cm</span></div>
                         <div class="previa-item"><span>Valor total pago:</span><span>R$ ${valorTotalTecido.toFixed(2)}</span></div>
+                        <div class="previa-item"><span>Partes por tecido (cálculo):</span><span>${calcTecido1.partesConsideradas ? `${calcTecido1.partesConsideradas} (${calcTecido1.metodo === 'rendimento_real' ? 'real' : calcTecido1.metodo === 'rendimento_estimado' ? 'auto' : 'área'})` : '-'}</span></div>
                         <div class="previa-item"><span>Comprimento total comprado:</span><span>${comprimentoTotal} cm</span></div>
                         <div class="previa-item"><span>Metragem usada tecido 1 (lote):</span><span>${comprimentoNecessarioM > 0 ? `${comprimentoNecessarioM.toFixed(2)} m` : '-'}</span></div>
                         <div class="previa-item"><span>Valor usado tecido 1 (lote):</span><span>R$ ${custoTecido1Total.toFixed(2)}</span></div>
                         ${valorTotalTecido2 > 0 ? `<div class="previa-item"><span>Valor total pago 2:</span><span>R$ ${valorTotalTecido2.toFixed(2)}</span></div>` : ''}
+                        ${calcTecido2.partesConsideradas ? `<div class="previa-item"><span>Partes por tecido 2:</span><span>${calcTecido2.partesConsideradas} (${calcTecido2.metodo === 'rendimento_real' ? 'real' : calcTecido2.metodo === 'rendimento_estimado' ? 'auto' : 'área'})</span></div>` : ''}
                         ${comprimentoTotal2 > 0 ? `<div class="previa-item"><span>Comprimento total comprado 2:</span><span>${comprimentoTotal2} cm</span></div>` : ''}
                         ${comprimentoNecessarioM2 > 0 ? `<div class="previa-item"><span>Metragem usada tecido 2 (lote):</span><span>${comprimentoNecessarioM2.toFixed(2)} m</span></div>` : ''}
                         ${custoTecido2Total > 0 ? `<div class="previa-item"><span>Valor usado tecido 2 (lote):</span><span>R$ ${custoTecido2Total.toFixed(2)}</span></div>` : ''}
                         ${valorTotalTecido3 > 0 ? `<div class="previa-item"><span>Valor total pago 3:</span><span>R$ ${valorTotalTecido3.toFixed(2)}</span></div>` : ''}
+                        ${calcTecido3.partesConsideradas ? `<div class="previa-item"><span>Partes por tecido 3:</span><span>${calcTecido3.partesConsideradas} (${calcTecido3.metodo === 'rendimento_real' ? 'real' : calcTecido3.metodo === 'rendimento_estimado' ? 'auto' : 'área'})</span></div>` : ''}
                         ${comprimentoTotal3 > 0 ? `<div class="previa-item"><span>Comprimento total comprado 3:</span><span>${comprimentoTotal3} cm</span></div>` : ''}
                         ${comprimentoNecessarioM3 > 0 ? `<div class="previa-item"><span>Metragem usada tecido 3 (lote):</span><span>${comprimentoNecessarioM3.toFixed(2)} m</span></div>` : ''}
                         ${custoTecido3Total > 0 ? `<div class="previa-item"><span>Valor usado tecido 3 (lote):</span><span>R$ ${custoTecido3Total.toFixed(2)}</span></div>` : ''}
+                        ${calcForro.partesConsideradas ? `<div class="previa-item"><span>Partes por forro:</span><span>${calcForro.partesConsideradas} (${calcForro.metodo === 'rendimento_real' ? 'real' : calcForro.metodo === 'rendimento_estimado' ? 'auto' : 'área'})</span></div>` : ''}
                         ${comprimentoNecessarioMForro > 0 ? `<div class="previa-item"><span>Metragem usada forro (lote):</span><span>${comprimentoNecessarioMForro.toFixed(2)} m</span></div>` : ''}
                         ${custoForroTotal > 0 ? `<div class="previa-item"><span>Valor usado forro (lote):</span><span>R$ ${custoForroTotal.toFixed(2)}</span></div>` : ''}
-                        <div class="previa-item"><span>Área usada:</span><span>${(larguraUtilizada*comprimentoUtilizado).toFixed(0)} cm</span></div>
+                        <div class="previa-item"><span>Margem aplicada (por lado):</span><span>${margemErro.toFixed(2)} cm</span></div>
+                        <div class="previa-item"><span>Área usada (c/ margem):</span><span>${(larguraUtilizadaCalc*comprimentoUtilizadoCalc).toFixed(0)} cm²</span></div>
                         <div class="previa-item"><span>Tecido 1:</span><span>R$ ${custoTecido.toFixed(2)}</span></div>
                         <div class="previa-item"><span>Tecido 2:</span><span>R$ ${custoTecido2.toFixed(2)}</span></div>
                         <div class="previa-item"><span>Tecido 3:</span><span>R$ ${custoTecido3.toFixed(2)}</span></div>
                         <div class="previa-item"><span>Forro:</span><span>R$ ${custoForro.toFixed(2)}</span></div>
                         <div class="previa-item"><span>Largura do forro:</span><span>${larguraTotalForro || '-'} cm</span></div>
                         <div class="previa-item"><span>Aviamentos:</span><span>R$ ${custoAviamentos.toFixed(2)}</span></div>
+                        <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Aviamentos (Lote ${qtdProdutos} un):</span><span>R$ ${custoAvTotal.toFixed(2)}</span></div>
                         <div class="previa-item highlight" style="border-top:1px dashed rgba(255,255,255,0.2); margin-top:5px; padding-top:5px; margin-bottom: 5px;">
-                            <span>Base de Lucro (Tecidos + Aviamentos):</span><span>R$ ${baseLucro.toFixed(2)}</span>
+                            <span>Base de Lucro (Tecidos + Aviamentos + Sublimação):</span><span>R$ ${baseLucro.toFixed(2)}</span>
                         </div>
                         <div class="previa-item">
                             <span>Embalagem (Unitário: R$ ${valorEmbalagemTotal.toFixed(2)} / ${qtdProdutos} un):</span>
@@ -3301,6 +3138,10 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Folhas (Unitário):</span><span>R$ ${custoFolhaUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Tinta (Unitário):</span><span>R$ ${custoTintaUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Energia (Unitário):</span><span>R$ ${custoEnergiaUnitario.toFixed(2)}</span></div>
+                        <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Folhas (Lote):</span><span>R$ ${custoFolhaTotal.toFixed(2)}</span></div>
+                        <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Tinta (Lote):</span><span>R$ ${custoTintaTotal.toFixed(2)}</span></div>
+                        <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Energia (Lote):</span><span>R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
+                        <div class="previa-item"><span>Sublimação (Lote ${qtdProdutos} un):</span><span>R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
                         ` : ''}
                         <div class="previa-item highlight" style="border-top:1px dashed rgba(255,255,255,0.2); margin-top:5px; padding-top:5px;">
                             <span>Custo Total Materiais (Unitário):</span><span>R$ ${(custoMateriaisParaCalculoTotal).toFixed(2)}</span>
@@ -3363,24 +3204,31 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 try {
                     const dadosParaEnvio = {
                         ...ultimoResultadoCalculado,
+                        margem_erro_cm: parseNumero(document.getElementById('margemErro')?.value || ''),
                         valor_total_tecido: parseMoeda(document.getElementById('valorTotalTecido').value),
                         comprimento_total_tecido: parseNumero(document.getElementById('comprimentoTotalTecido').value),
                         largura_tecido: parseNumero(document.getElementById('larguraTecido').value),
                         largura_utilizada: parseNumero(document.getElementById('larguraUtilizada').value),
                         comprimento_utilizado: parseNumero(document.getElementById('comprimentoUtilizado').value),
+                        partes_reais_tecido: parseNumero(document.getElementById('partesReaisTecido')?.value || ''),
                         metragem_utilizada: (parseNumero(document.getElementById('larguraUtilizada').value) || 0) * (parseNumero(document.getElementById('comprimentoUtilizado').value) || 0),
+                        metragem_utilizada_com_margem: aplicarMargemDimensao(parseNumero(document.getElementById('larguraUtilizada').value) || 0, parseNumero(document.getElementById('margemErro')?.value || '')) * aplicarMargemDimensao(parseNumero(document.getElementById('comprimentoUtilizado').value) || 0, parseNumero(document.getElementById('margemErro')?.value || '')),
                         valor_total_tecido2: parseMoeda(document.getElementById('valorTotalTecido2')?.value || ''),
                         comprimento_total_tecido2: parseNumero(document.getElementById('comprimentoTotalTecido2')?.value || ''),
                         largura_tecido2: parseNumero(document.getElementById('larguraTecido2')?.value || ''),
                         largura_utilizada2: parseNumero(document.getElementById('larguraUtilizada2')?.value || ''),
                         comprimento_utilizado2: parseNumero(document.getElementById('comprimentoUtilizado2')?.value || ''),
+                        partes_reais_tecido2: parseNumero(document.getElementById('partesReaisTecido2')?.value || ''),
                         metragem_utilizada2: (parseNumero(document.getElementById('larguraUtilizada2')?.value || '') || 0) * (parseNumero(document.getElementById('comprimentoUtilizado2')?.value || '') || 0),
+                        metragem_utilizada2_com_margem: aplicarMargemDimensao(parseNumero(document.getElementById('larguraUtilizada2')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')) * aplicarMargemDimensao(parseNumero(document.getElementById('comprimentoUtilizado2')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')),
                         valor_total_tecido3: parseMoeda(document.getElementById('valorTotalTecido3')?.value || ''),
                         comprimento_total_tecido3: parseNumero(document.getElementById('comprimentoTotalTecido3')?.value || ''),
                         largura_tecido3: parseNumero(document.getElementById('larguraTecido3')?.value || ''),
                         largura_utilizada3: parseNumero(document.getElementById('larguraUtilizada3')?.value || ''),
                         comprimento_utilizado3: parseNumero(document.getElementById('comprimentoUtilizado3')?.value || ''),
+                        partes_reais_tecido3: parseNumero(document.getElementById('partesReaisTecido3')?.value || ''),
                         metragem_utilizada3: (parseNumero(document.getElementById('larguraUtilizada3')?.value || '') || 0) * (parseNumero(document.getElementById('comprimentoUtilizado3')?.value || '') || 0),
+                        metragem_utilizada3_com_margem: aplicarMargemDimensao(parseNumero(document.getElementById('larguraUtilizada3')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')) * aplicarMargemDimensao(parseNumero(document.getElementById('comprimentoUtilizado3')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')),
                         tecido_tipo2: tecidoSelecionado2 || null,
                         tecido_tipo3: tecidoSelecionado3 || null,
                         valor_total_forro: parseMoeda(document.getElementById('valorTotalForro')?.value || ''),
@@ -3388,7 +3236,9 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         largura_forro: parseNumero(document.getElementById('larguraForro')?.value || ''),
                         largura_utilizada_forro: parseNumero(document.getElementById('larguraUtilizadaForro')?.value || ''),
                         comprimento_utilizado_forro: parseNumero(document.getElementById('comprimentoUtilizadoForro')?.value || ''),
+                        partes_reais_forro: parseNumero(document.getElementById('partesReaisForro')?.value || ''),
                         metragem_utilizada_forro: (parseNumero(document.getElementById('larguraUtilizadaForro')?.value || '') || 0) * (parseNumero(document.getElementById('comprimentoUtilizadoForro')?.value || '') || 0),
+                        metragem_utilizada_forro_com_margem: aplicarMargemDimensao(parseNumero(document.getElementById('larguraUtilizadaForro')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')) * aplicarMargemDimensao(parseNumero(document.getElementById('comprimentoUtilizadoForro')?.value || '') || 0, parseNumero(document.getElementById('margemErro')?.value || '')),
                         tecido_tipo_forro: forroSelecionado || null,
                         foto_base64: produtoFotoBase64 || null,
                         foto_nome: produtoFotoFile ? produtoFotoFile.name : null,
@@ -3467,6 +3317,10 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const larguraTotal = parseNumero(document.getElementById('larguraTecido').value);
                     const larguraUtilizada = parseNumero(document.getElementById('larguraUtilizada').value) || 0;
                     const comprimentoUtilizado = parseNumero(document.getElementById('comprimentoUtilizado').value) || 0;
+                    const margemErro = parseNumero(document.getElementById('margemErro')?.value || '') || 0;
+                    const larguraUtilizadaCalc = aplicarMargemDimensao(larguraUtilizada, margemErro);
+                    const comprimentoUtilizadoCalc = aplicarMargemDimensao(comprimentoUtilizado, margemErro);
+                    const partesReaisTecido = parseNumero(document.getElementById('partesReaisTecido')?.value || '') || 0;
                     const valorHora = parseMoeda(document.getElementById('valorHora').value);
                     const tempoGasto = parseNumero(document.getElementById('tempoGasto').value);
                     const valorEmbalagemTotal = parseMoeda(document.getElementById('valorEmbalagem').value); // TOTAL LOTE
@@ -3495,41 +3349,33 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const larguraTotal2 = parseNumero(document.getElementById('larguraTecido2')?.value || '') || 0;
                     const larguraUtilizada2 = parseNumero(document.getElementById('larguraUtilizada2')?.value || '') || 0;
                     const comprimentoUtilizado2 = parseNumero(document.getElementById('comprimentoUtilizado2')?.value || '') || 0;
+                    const larguraUtilizada2Calc = aplicarMargemDimensao(larguraUtilizada2, margemErro);
+                    const comprimentoUtilizado2Calc = aplicarMargemDimensao(comprimentoUtilizado2, margemErro);
+                    const partesReaisTecido2 = parseNumero(document.getElementById('partesReaisTecido2')?.value || '') || 0;
                     const valorTotalTecido3 = parseMoeda(document.getElementById('valorTotalTecido3')?.value || '') || 0;
                     const comprimentoTotal3 = parseNumero(document.getElementById('comprimentoTotalTecido3')?.value || '') || 0;
                     const larguraTotal3 = parseNumero(document.getElementById('larguraTecido3')?.value || '') || 0;
                     const larguraUtilizada3 = parseNumero(document.getElementById('larguraUtilizada3')?.value || '') || 0;
                     const comprimentoUtilizado3 = parseNumero(document.getElementById('comprimentoUtilizado3')?.value || '') || 0;
+                    const larguraUtilizada3Calc = aplicarMargemDimensao(larguraUtilizada3, margemErro);
+                    const comprimentoUtilizado3Calc = aplicarMargemDimensao(comprimentoUtilizado3, margemErro);
+                    const partesReaisTecido3 = parseNumero(document.getElementById('partesReaisTecido3')?.value || '') || 0;
                     const valorTotalForro = parseMoeda(document.getElementById('valorTotalForro')?.value || '') || 0;
                     const comprimentoTotalForro = parseNumero(document.getElementById('comprimentoTotalForro')?.value || '') || 0;
                     const larguraTotalForro = parseNumero(document.getElementById('larguraForro')?.value || '') || 0;
                     const larguraUtilizadaForro = parseNumero(document.getElementById('larguraUtilizadaForro')?.value || '') || 0;
                     const comprimentoUtilizadoForro = parseNumero(document.getElementById('comprimentoUtilizadoForro')?.value || '') || 0;
-
-                    if (comprimentoTotal > 0 && larguraTotal > 0 && larguraUtilizada > 0 && comprimentoUtilizado > 0) {
-                        const areaTotal = comprimentoTotal * larguraTotal;
-                        const areaUsada = larguraUtilizada * comprimentoUtilizado;
-                        const custoCm2 = valorTotalTecido / areaTotal;
-                        custoTecido = custoCm2 * areaUsada;
-                    }
-                    if (comprimentoTotal2 > 0 && larguraTotal2 > 0 && larguraUtilizada2 > 0 && comprimentoUtilizado2 > 0) {
-                        const areaTotalB = comprimentoTotal2 * larguraTotal2;
-                        const areaUsadaB = larguraUtilizada2 * comprimentoUtilizado2;
-                        const custoCm2B = valorTotalTecido2 / areaTotalB;
-                        custoTecido2 = custoCm2B * areaUsadaB;
-                    }
-                    if (comprimentoTotal3 > 0 && larguraTotal3 > 0 && larguraUtilizada3 > 0 && comprimentoUtilizado3 > 0) {
-                        const areaTotalC = comprimentoTotal3 * larguraTotal3;
-                        const areaUsadaC = larguraUtilizada3 * comprimentoUtilizado3;
-                        const custoCm2C = valorTotalTecido3 / areaTotalC;
-                        custoTecido3 = custoCm2C * areaUsadaC;
-                    }
-                    if (comprimentoTotalForro > 0 && larguraTotalForro > 0 && larguraUtilizadaForro > 0 && comprimentoUtilizadoForro > 0) {
-                        const areaTotalD = comprimentoTotalForro * larguraTotalForro;
-                        const areaUsadaD = larguraUtilizadaForro * comprimentoUtilizadoForro;
-                        const custoCm2D = valorTotalForro / areaTotalD;
-                        custoForro = custoCm2D * areaUsadaD;
-                    }
+                    const larguraUtilizadaForroCalc = aplicarMargemDimensao(larguraUtilizadaForro, margemErro);
+                    const comprimentoUtilizadoForroCalc = aplicarMargemDimensao(comprimentoUtilizadoForro, margemErro);
+                    const partesReaisForro = parseNumero(document.getElementById('partesReaisForro')?.value || '') || 0;
+                    const calcTecido1 = calcularCustoMaterial({ valorTotal: valorTotalTecido, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, partesReais: partesReaisTecido });
+                    const calcTecido2 = calcularCustoMaterial({ valorTotal: valorTotalTecido2, comprimentoTotal: comprimentoTotal2, larguraTotal: larguraTotal2, larguraUtilizada: larguraUtilizada2Calc, comprimentoUtilizado: comprimentoUtilizado2Calc, partesReais: partesReaisTecido2 });
+                    const calcTecido3 = calcularCustoMaterial({ valorTotal: valorTotalTecido3, comprimentoTotal: comprimentoTotal3, larguraTotal: larguraTotal3, larguraUtilizada: larguraUtilizada3Calc, comprimentoUtilizado: comprimentoUtilizado3Calc, partesReais: partesReaisTecido3 });
+                    const calcForro = calcularCustoMaterial({ valorTotal: valorTotalForro, comprimentoTotal: comprimentoTotalForro, larguraTotal: larguraTotalForro, larguraUtilizada: larguraUtilizadaForroCalc, comprimentoUtilizado: comprimentoUtilizadoForroCalc, partesReais: partesReaisForro });
+                    custoTecido = calcTecido1.custo;
+                    custoTecido2 = calcTecido2.custo;
+                    custoTecido3 = calcTecido3.custo;
+                    custoForro = calcForro.custo;
                     const custoMaoDeObra = (tempoGasto / 60) * valorHora;
                     
                     let custoAviamentos = 0;
@@ -3546,13 +3392,21 @@ input:not([type="file"]):not([type="checkbox"]), select {
                                 const u = parseNumero(item.querySelector('.aviamento-metros-utilizados').value);
                                 custo = (v / t) * u;
                                 if (/ziper|z?per|zipper/i.test(nome || '')) metrosZiperUnit += u;
+                                const metrosLote = u * (qtdProdutos || 0);
+                                detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} - Metros (unitário):</span><span>${u > 0 ? `${u.toFixed(2)} m` : '-'}</span></div>`;
+                                detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} - Metros (lote):</span><span>${metrosLote > 0 ? `${metrosLote.toFixed(2)} m` : '-'}</span></div>`;
                             } else {
                                 const v = parseMoeda(item.querySelector('.aviamento-valor-unidade').value);
                                 const u = parseFloat(item.querySelector('.aviamento-unidades-utilizadas').value);
                                 custo = v * u;
+                                const unidadesLote = u * (qtdProdutos || 0);
+                                detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} - Quantidade (unitário):</span><span>${u > 0 ? u.toFixed(2) : '-'}</span></div>`;
+                                detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} - Quantidade (lote):</span><span>${unidadesLote > 0 ? unidadesLote.toFixed(2) : '-'}</span></div>`;
                             }
                             custoAviamentos += custo;
-                            detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome}:</span><span>R$ ${custo.toFixed(2)}</span></div>`;
+                            const custoItemTotal = custo * (qtdProdutos || 0);
+                            detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} (Unitário):</span><span>R$ ${custo.toFixed(2)}</span></div>`;
+                            detalhesAviamentos += `<div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>${nome} (Lote):</span><span>R$ ${custoItemTotal.toFixed(2)}</span></div>`;
                         });
                     }
                     const metrosZiperLote = metrosZiperUnit * (qtdProdutos || 0);
@@ -3561,10 +3415,10 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoEmbalagemUnitario = valorEmbalagemTotal / (qtdProdutos || 1); 
 
                     // Lógica Final Unitária
-                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos; // Lucro incide só sobre Tecidos/Forro + Aviamentos
+                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimacaoUnitario; // Lucro incide também sobre sublimação
                     const valorLucroUnitario = baseLucro * (porcentagemLucro / 100);
 
-                    const custoOutrosUnitario = custoEmbalagemUnitario + custoTransporte + custoSublimacaoUnitario;
+                    const custoOutrosUnitario = custoEmbalagemUnitario + custoTransporte;
                     const custoMateriais = baseLucro + custoOutrosUnitario; // Custo Total de Materiais (a ser coberto)
                     
                     const valorVendaUnitario = custoMateriais + valorLucroUnitario + custoMaoDeObra;
@@ -3580,70 +3434,59 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoTranspTotal = custoTransporte * qtdProdutos;
                     const custoAvTotal = custoAviamentos * qtdProdutos;
                     const custoSublimacaoTotal = custoSublimacaoUnitario * qtdProdutos;
+                    const custoFolhaTotal = custoFolhaUnitario * qtdProdutos;
+                    const custoTintaTotal = custoTintaUnitario * qtdProdutos;
+                    const custoEnergiaTotal = custoEnergiaUnitario * qtdProdutos;
+                    const folhasUsadasLote = sublimacaoFolhasUsadas * qtdProdutos;
                     const lucroTotal = valorLucroUnitario * qtdProdutos;
                     const vendaTotal = valorVendaUnitario * qtdProdutos;
                     const custoProducaoTotal = custoTecidoTotal + custoAvTotal + custoMOTotal + custoEmbTotal + custoTranspTotal + (sublimacaoAtiva ? custoSublimacaoTotal : 0);
-                    const areaUsadaUnit = larguraUtilizada * comprimentoUtilizado;
-                    let comprimentoNecessarioCm = 0;
-                    let comprimentoNecessarioM = 0;
-                    if (larguraTotal > 0 && areaUsadaUnit > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm = (areaUsadaUnit * qtdProdutos) / larguraTotal;
-                        comprimentoNecessarioM = comprimentoNecessarioCm / 100;
-                    }
-                    const areaUsadaUnit2 = larguraUtilizada2 * comprimentoUtilizado2;
-                    let comprimentoNecessarioCm2 = 0;
-                    let comprimentoNecessarioM2 = 0;
-                    if (larguraTotal2 > 0 && areaUsadaUnit2 > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm2 = (areaUsadaUnit2 * qtdProdutos) / larguraTotal2;
-                        comprimentoNecessarioM2 = comprimentoNecessarioCm2 / 100;
-                    }
-                    const areaUsadaUnit3 = larguraUtilizada3 * comprimentoUtilizado3;
-                    let comprimentoNecessarioCm3 = 0;
-                    let comprimentoNecessarioM3 = 0;
-                    if (larguraTotal3 > 0 && areaUsadaUnit3 > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCm3 = (areaUsadaUnit3 * qtdProdutos) / larguraTotal3;
-                        comprimentoNecessarioM3 = comprimentoNecessarioCm3 / 100;
-                    }
-                    const areaUsadaUnitForro = larguraUtilizadaForro * comprimentoUtilizadoForro;
-                    let comprimentoNecessarioCmForro = 0;
-                    let comprimentoNecessarioMForro = 0;
-                    if (larguraTotalForro > 0 && areaUsadaUnitForro > 0 && qtdProdutos > 0) {
-                        comprimentoNecessarioCmForro = (areaUsadaUnitForro * qtdProdutos) / larguraTotalForro;
-                        comprimentoNecessarioMForro = comprimentoNecessarioCmForro / 100;
-                    }
+                    const comprimentoNecessarioM = calcularMetragemLote({ qtdProdutos, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, calculoMaterial: calcTecido1 });
+                    const comprimentoNecessarioM2 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal2, larguraTotal: larguraTotal2, larguraUtilizada: larguraUtilizada2Calc, comprimentoUtilizado: comprimentoUtilizado2Calc, calculoMaterial: calcTecido2 });
+                    const comprimentoNecessarioM3 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal3, larguraTotal: larguraTotal3, larguraUtilizada: larguraUtilizada3Calc, comprimentoUtilizado: comprimentoUtilizado3Calc, calculoMaterial: calcTecido3 });
+                    const comprimentoNecessarioMForro = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotalForro, larguraTotal: larguraTotalForro, larguraUtilizada: larguraUtilizadaForroCalc, comprimentoUtilizado: comprimentoUtilizadoForroCalc, calculoMaterial: calcForro });
 
                     resultadoDetalhes.innerHTML = `
                         <div class="resultado-item"><span>Produto:</span><span>${nomeProduto}</span></div>
                         <div class="resultado-item"><span>Quantidade no Lote:</span><span>${qtdProdutos}</span></div>
                         <div class="resultado-item"><span>Medida do tecido 1:</span><span>${comprimentoTotal}${larguraTotal} cm</span></div>
                         <div class="resultado-item"><span>Valor pago tecido 1:</span><span>R$ ${valorTotalTecido.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Partes por tecido 1 (cálculo):</span><span>${calcTecido1.partesConsideradas ? `${calcTecido1.partesConsideradas} (${calcTecido1.metodo === 'rendimento_real' ? 'real' : calcTecido1.metodo === 'rendimento_estimado' ? 'auto' : 'área'})` : '-'}</span></div>
                         <div class="resultado-item"><span>Comprimento total comprado 1:</span><span>${comprimentoTotal} cm</span></div>
                         <div class="resultado-item"><span>Metragem usada tecido 1 (lote):</span><span>${comprimentoNecessarioM > 0 ? `${comprimentoNecessarioM.toFixed(2)} m` : '-'}</span></div>
                         <div class="resultado-item"><span>Valor usado tecido 1 (lote):</span><span>R$ ${custoTecido1Total.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Medida do tecido 2:</span><span>${comprimentoTotal2 || '-'}${larguraTotal2 || '-'} cm</span></div>
                         <div class="resultado-item"><span>Valor pago tecido 2:</span><span>R$ ${valorTotalTecido2.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Partes por tecido 2 (cálculo):</span><span>${calcTecido2.partesConsideradas ? `${calcTecido2.partesConsideradas} (${calcTecido2.metodo === 'rendimento_real' ? 'real' : calcTecido2.metodo === 'rendimento_estimado' ? 'auto' : 'área'})` : '-'}</span></div>
                         <div class="resultado-item"><span>Comprimento total comprado 2:</span><span>${comprimentoTotal2 || '-'} cm</span></div>
                         <div class="resultado-item"><span>Metragem usada tecido 2 (lote):</span><span>${comprimentoNecessarioM2 > 0 ? `${comprimentoNecessarioM2.toFixed(2)} m` : '-'}</span></div>
                         <div class="resultado-item"><span>Valor usado tecido 2 (lote):</span><span>R$ ${custoTecido2Total.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Medida do tecido 3:</span><span>${comprimentoTotal3 || '-'}${larguraTotal3 || '-'} cm</span></div>
                         <div class="resultado-item"><span>Valor pago tecido 3:</span><span>R$ ${valorTotalTecido3.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Partes por tecido 3 (cálculo):</span><span>${calcTecido3.partesConsideradas ? `${calcTecido3.partesConsideradas} (${calcTecido3.metodo === 'rendimento_real' ? 'real' : calcTecido3.metodo === 'rendimento_estimado' ? 'auto' : 'área'})` : '-'}</span></div>
                         <div class="resultado-item"><span>Comprimento total comprado 3:</span><span>${comprimentoTotal3 || '-'} cm</span></div>
                         <div class="resultado-item"><span>Metragem usada tecido 3 (lote):</span><span>${comprimentoNecessarioM3 > 0 ? `${comprimentoNecessarioM3.toFixed(2)} m` : '-'}</span></div>
                         <div class="resultado-item"><span>Valor usado tecido 3 (lote):</span><span>R$ ${custoTecido3Total.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Medida do forro:</span><span>${comprimentoTotalForro || '-'}${larguraTotalForro || '-'} cm</span></div>
                         <div class="resultado-item"><span>Largura do forro:</span><span>${larguraTotalForro || '-'} cm</span></div>
+                        <div class="resultado-item"><span>Partes por forro (cálculo):</span><span>${calcForro.partesConsideradas ? `${calcForro.partesConsideradas} (${calcForro.metodo === 'rendimento_real' ? 'real' : calcForro.metodo === 'rendimento_estimado' ? 'auto' : 'área'})` : '-'}</span></div>
                         <div class="resultado-item"><span>Metragem usada forro (lote):</span><span>${comprimentoNecessarioMForro > 0 ? `${comprimentoNecessarioMForro.toFixed(2)} m` : '-'}</span></div>
                         <div class="resultado-item"><span>Valor usado forro (lote):</span><span>R$ ${custoForroTotal.toFixed(2)}</span></div>
-                        <div class="resultado-item"><span>Área usada por peça:</span><span>${(larguraUtilizada*comprimentoUtilizado).toFixed(0)} cm</span></div>
+                        <div class="resultado-item"><span>Margem aplicada (por lado):</span><span>${margemErro.toFixed(2)} cm</span></div>
+                        <div class="resultado-item"><span>Dimensão peça c/ margem:</span><span>${larguraUtilizadaCalc.toFixed(2)} x ${comprimentoUtilizadoCalc.toFixed(2)} cm</span></div>
+                        <div class="resultado-item"><span>Área usada por peça (c/ margem):</span><span>${(larguraUtilizadaCalc*comprimentoUtilizadoCalc).toFixed(0)} cm²</span></div>
                         
                         <div class="resultado-item result-header" style="background: rgba(255, 255, 255, 0.04); font-weight:bold; margin-top:10px; border: 1px solid rgba(255,255,255,0.08);">Custo Unitário</div>
-                        <div class="resultado-item"><span>Base de Lucro (Tecidos + Aviamentos):</span><span>R$ ${baseLucro.toFixed(2)}</span></div>
-                        <div class="resultado-item"><span>Outros Custos (Emb + Transp + Sublim.):</span><span>R$ ${custoOutrosUnitario.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Base de Lucro (Tecidos + Aviamentos + Sublimação):</span><span>R$ ${baseLucro.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Outros Custos (Emb + Transp):</span><span>R$ ${custoOutrosUnitario.toFixed(2)}</span></div>
                         ${sublimacaoAtiva ? `
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Sublimação (Unitário):</span><span>R$ ${custoSublimacaoUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Folhas (Unitário):</span><span>R$ ${custoFolhaUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Tinta (Unitário):</span><span>R$ ${custoTintaUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Energia (Unitário):</span><span>R$ ${custoEnergiaUnitario.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Folhas (Lote):</span><span>R$ ${custoFolhaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Tinta (Lote):</span><span>R$ ${custoTintaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Energia (Lote):</span><span>R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
                         ` : ''}
                         <div class="resultado-item"><span>Mão de Obra:</span><span>R$ ${custoMaoDeObra.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Lucro (${porcentagemLucro}% s/ Base Lucro):</span><span>R$ ${valorLucroUnitario.toFixed(2)}</span></div>
@@ -3651,18 +3494,53 @@ input:not([type="file"]):not([type="checkbox"]), select {
 
                         <div class="resultado-item result-header" style="background: rgba(34, 197, 94, 0.08); font-weight:bold; margin-top:15px; border-top:2px solid rgba(255,255,255,0.12);">Totais do Lote (${qtdProdutos} un)</div>
                         <div class="resultado-item"><span>Total Tecidos/Forro:</span><span>R$ ${custoTecidoTotal.toFixed(2)}</span></div>
-                        <div class="resultado-item"><span>Total tecido 1 (lote):</span><span>R$ ${custoTecido1Total.toFixed(2)}</span></div>
-                        <div class="resultado-item"><span>Total tecido 2 (lote):</span><span>R$ ${custoTecido2Total.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-weight:bold;"><span>Tecido 1 (${tecidoSelecionado || '-'})</span><span></span></div>
+                        <div class="resultado-item"><span>Custo tecido 1 (unitário):</span><span>R$ ${custoTecido.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Metragem usada tecido 1 (lote):</span><span>${comprimentoNecessarioM > 0 ? `${comprimentoNecessarioM.toFixed(2)} m` : '-'}</span></div>
+                        <div class="resultado-item"><span>Gasto tecido 1 (lote):</span><span>R$ ${custoTecido1Total.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-weight:bold;"><span>Tecido 2 (${tecidoSelecionado2 || '-'})</span><span></span></div>
+                        <div class="resultado-item"><span>Custo tecido 2 (unitário):</span><span>R$ ${custoTecido2.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Metragem usada tecido 2 (lote):</span><span>${comprimentoNecessarioM2 > 0 ? `${comprimentoNecessarioM2.toFixed(2)} m` : '-'}</span></div>
-                        <div class="resultado-item"><span>Total tecido 3 (lote):</span><span>R$ ${custoTecido3Total.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Gasto tecido 2 (lote):</span><span>R$ ${custoTecido2Total.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-weight:bold;"><span>Tecido 3 (${tecidoSelecionado3 || '-'})</span><span></span></div>
+                        <div class="resultado-item"><span>Custo tecido 3 (unitário):</span><span>R$ ${custoTecido3.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Metragem usada tecido 3 (lote):</span><span>${comprimentoNecessarioM3 > 0 ? `${comprimentoNecessarioM3.toFixed(2)} m` : '-'}</span></div>
-                        <div class="resultado-item"><span>Total forro (lote):</span><span>R$ ${custoForroTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Gasto tecido 3 (lote):</span><span>R$ ${custoTecido3Total.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-weight:bold;"><span>Forro (${forroSelecionado || '-'})</span><span></span></div>
+                        <div class="resultado-item"><span>Custo forro (unitário):</span><span>R$ ${custoForro.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Metragem usada forro (lote):</span><span>${comprimentoNecessarioMForro > 0 ? `${comprimentoNecessarioMForro.toFixed(2)} m` : '-'}</span></div>
+                        <div class="resultado-item"><span>Gasto forro (lote):</span><span>R$ ${custoForroTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Metros usados de Ziper (lote):</span><span>${metrosZiperLote > 0 ? `${metrosZiperLote.toFixed(2)} m` : '-'}</span></div>
                         <div class="resultado-item"><span>Total Aviamentos:</span><span>R$ ${custoAvTotal.toFixed(2)}</span></div>
+                        ${detalhesAviamentos}
                         <div class="resultado-item"><span>Total Mão de Obra:</span><span>R$ ${custoMOTotal.toFixed(2)}</span></div>
-                        <div class="resultado-item"><span>Total Embalagem (Fixo):</span><span>R$ ${custoEmbTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Sacola/Embalagem (unitário):</span><span>R$ ${custoEmbalagemUnitario.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Total Sacola/Embalagem:</span><span>R$ ${custoEmbTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Total Transporte:</span><span>R$ ${custoTranspTotal.toFixed(2)}</span></div>
-                        ${sublimacaoAtiva ? `<div class="resultado-item"><span>Total Sublimação:</span><span>R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>` : ''}
+                        ${sublimacaoAtiva ? `
+                        <div class="resultado-item"><span>Total Sublimação:</span><span>R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Folhas usadas (lote):</span><span>${folhasUsadasLote > 0 ? folhasUsadasLote.toFixed(2) : '-'}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Total Folhas:</span><span>R$ ${custoFolhaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Total Tinta:</span><span>R$ ${custoTintaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Total Energia:</span><span>R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
+                        ` : ''}
+                        <div class="resultado-item result-header" style="background: rgba(59, 130, 246, 0.08); font-weight:bold; margin-top:15px; border-top:2px solid rgba(255,255,255,0.12);">Conferência Atacado (Unitário x ${qtdProdutos} = Lote)</div>
+                        <div class="resultado-item"><span>Tecido 1 (${tecidoSelecionado || '-'}):</span><span>R$ ${custoTecido.toFixed(2)} x ${qtdProdutos} = R$ ${custoTecido1Total.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Tecido 2 (${tecidoSelecionado2 || '-'}):</span><span>R$ ${custoTecido2.toFixed(2)} x ${qtdProdutos} = R$ ${custoTecido2Total.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Tecido 3 (${tecidoSelecionado3 || '-'}):</span><span>R$ ${custoTecido3.toFixed(2)} x ${qtdProdutos} = R$ ${custoTecido3Total.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Forro (${forroSelecionado || '-'}):</span><span>R$ ${custoForro.toFixed(2)} x ${qtdProdutos} = R$ ${custoForroTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Aviamentos:</span><span>R$ ${custoAviamentos.toFixed(2)} x ${qtdProdutos} = R$ ${custoAvTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Mão de Obra:</span><span>R$ ${custoMaoDeObra.toFixed(2)} x ${qtdProdutos} = R$ ${custoMOTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Sacola/Embalagem:</span><span>R$ ${custoEmbalagemUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoEmbTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item"><span>Transporte:</span><span>R$ ${custoTransporte.toFixed(2)} x ${qtdProdutos} = R$ ${custoTranspTotal.toFixed(2)}</span></div>
+                        ${sublimacaoAtiva ? `
+                        <div class="resultado-item"><span>Sublimação:</span><span>R$ ${custoSublimacaoUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Folhas:</span><span>R$ ${custoFolhaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoFolhaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Tinta:</span><span>R$ ${custoTintaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoTintaTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Energia:</span><span>R$ ${custoEnergiaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
+                        ` : ''}
+                        <div class="resultado-item"><span>Lucro:</span><span>R$ ${valorLucroUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${lucroTotal.toFixed(2)}</span></div>
+                        <div class="resultado-item" style="font-weight:bold;"><span>Venda:</span><span>R$ ${valorVendaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${vendaTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Custo Total de Produção (lote):</span><span>R$ ${custoProducaoTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Lucro Total:</span><span>R$ ${lucroTotal.toFixed(2)}</span></div>
                         <div class="resultado-item resultado-total"><span>Valor Total da Venda:</span><span>R$ ${vendaTotal.toFixed(2)}</span></div>
@@ -3680,6 +3558,11 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         custo_unitario_tecido2: parseFloat(custoTecido2.toFixed(2)),
                         custo_unitario_tecido3: parseFloat(custoTecido3.toFixed(2)),
                         custo_unitario_forro: parseFloat(custoForro.toFixed(2)),
+                        margem_erro_cm: parseFloat(margemErro.toFixed(2)),
+                        partes_reais_tecido: partesReaisTecido || null,
+                        partes_reais_tecido2: partesReaisTecido2 || null,
+                        partes_reais_tecido3: partesReaisTecido3 || null,
+                        partes_reais_forro: partesReaisForro || null,
                         largura_utilizada: larguraUtilizada,
                         comprimento_utilizado: comprimentoUtilizado,
                         area_utilizada: (larguraUtilizada * comprimentoUtilizado),
@@ -3917,15 +3800,8 @@ input:not([type="file"]):not([type="checkbox"]), select {
             
             // Inicializar
             carregarTecidos();
-            carregarProdutoParaRecalculo();
             atualizarPrevia();
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-

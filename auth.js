@@ -1,24 +1,42 @@
 ﻿(function () {
-  const CLERK_SESSION_KEY = 'tp_clerk_session';
+  const SESSION_KEY = 'tp_auth_session';
 
-  function now() {
-    return Date.now();
-  }
+  function nowMs() { return Date.now(); }
 
   function parseJSON(raw) {
-    try {
-      return JSON.parse(raw || 'null');
-    } catch (err) {
-      return null;
-    }
+    try { return JSON.parse(raw || 'null'); } catch (_) { return null; }
   }
 
-  function parseClerkSession() {
-    return parseJSON(localStorage.getItem(CLERK_SESSION_KEY));
+  function getAuthBase() {
+    return String(window.AUTH_API_BASE || '').replace(/\/+$/, '');
   }
 
-  function isClerkEnabled() {
-    return window.CLERK_ENABLED === true && !!window.CLERK_PUBLISHABLE_KEY;
+  function getStoredSession() {
+    return parseJSON(localStorage.getItem(SESSION_KEY));
+  }
+
+  function saveSession(data, remember) {
+    const rememberDays = Number(window.AUTH_TTL_DAYS || 30);
+    const shortHours = Number(window.AUTH_SHORT_TTL_HOURS || 12);
+    const ttlMs = remember
+      ? rememberDays * 24 * 60 * 60 * 1000
+      : shortHours * 60 * 60 * 1000;
+
+    const exp = nowMs() + ttlMs;
+    const payload = {
+      provider: 'fastapi',
+      exp,
+      token: data && data.token ? data.token : null,
+      user: data && data.user ? data.user : null,
+      allowedPages: Array.isArray(data && data.allowed_pages) ? data.allowed_pages : []
+    };
+
+    localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+    return payload;
+  }
+
+  function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
   }
 
   function isLoginPage() {
@@ -26,10 +44,40 @@
     return path.endsWith('/login.html') || path.endsWith('login.html');
   }
 
+  function getCurrentPageFile() {
+    const path = (window.location.pathname || '').split('/').filter(Boolean);
+    const last = path.length ? path[path.length - 1] : 'index.html';
+    if (!last || !last.includes('.')) return 'index.html';
+    return last;
+  }
+
   function isLoggedIn() {
-    const s = parseClerkSession();
-    if (!s || !s.exp || s.provider !== 'clerk') return false;
-    return s.exp > now();
+    const session = getStoredSession();
+    return !!(session && session.provider === 'fastapi' && session.token && session.exp && session.exp > nowMs());
+  }
+
+  function roleValue(raw) {
+    const value = String(raw || '').toLowerCase().trim();
+    if (value === 'developer' || value === 'desenvolvedor') return 'desenvolvedor';
+    if (value === 'admin' || value === 'administrador') return 'administrador';
+    return 'usuario';
+  }
+
+  function getCurrentRole(sessionObj) {
+    const session = sessionObj || getStoredSession();
+    return roleValue(session && session.user && session.user.role);
+  }
+
+  function canAccessPage(pageFile, sessionObj) {
+    const session = sessionObj || getStoredSession();
+    if (!session || !session.user) return false;
+
+    const role = roleValue(session.user.role);
+    if (role === 'desenvolvedor') return true;
+
+    const allowed = Array.isArray(session.allowedPages) ? session.allowedPages : [];
+    if (allowed.includes('*')) return true;
+    return allowed.includes(pageFile);
   }
 
   function getNextFromUrl() {
@@ -37,65 +85,52 @@
     return params.get('next');
   }
 
-  function buildTarget(pageName) {
+  function buildLoginTarget() {
     const next = window.location.pathname + window.location.search + window.location.hash;
-    return pageName + '?next=' + encodeURIComponent(next);
+    return 'login.html?next=' + encodeURIComponent(next);
+  }
+
+  function getFallbackPage(session) {
+    if (!session) return 'index.html';
+    const role = roleValue(session.user && session.user.role);
+    if (role === 'desenvolvedor') return 'index.html';
+
+    const allowed = Array.isArray(session.allowedPages) ? session.allowedPages : [];
+    const first = allowed.find((p) => typeof p === 'string' && p.endsWith('.html'));
+    return first || 'index.html';
   }
 
   function requireAuth() {
     if (window.AUTH_DISABLED === true) return;
     if (isLoginPage()) return;
 
+    const session = getStoredSession();
     if (!isLoggedIn()) {
-      window.location.replace(buildTarget('login.html'));
-    }
-  }
-
-  function setClerkSession(sessionData) {
-    const ttlMs = window.AUTH_TTL_MS || (30 * 24 * 60 * 60 * 1000);
-    const payload = {
-      provider: 'clerk',
-      exp: now() + ttlMs,
-      userId: sessionData && sessionData.userId ? sessionData.userId : null,
-      email: sessionData && sessionData.email ? sessionData.email : null,
-      firstName: sessionData && sessionData.firstName ? sessionData.firstName : null,
-      lastName: sessionData && sessionData.lastName ? sessionData.lastName : null,
-      imageUrl: sessionData && sessionData.imageUrl ? sessionData.imageUrl : null,
-      group: sessionData && sessionData.group ? sessionData.group : 'Usuario'
-    };
-
-    localStorage.setItem(CLERK_SESSION_KEY, JSON.stringify(payload));
-  }
-
-  function clearClerkSession() {
-    localStorage.removeItem(CLERK_SESSION_KEY);
-  }
-
-  function logout() {
-    clearClerkSession();
-  }
-
-  function getRequestIdentity() {
-    const clerk = parseClerkSession();
-    if (!clerk || clerk.provider !== 'clerk' || !clerk.userId) {
-      return { userId: null, email: null, name: null };
+      window.location.replace(buildLoginTarget());
+      return;
     }
 
-    const fullName = [clerk.firstName, clerk.lastName].filter(Boolean).join(' ').trim() || null;
-    return {
-      userId: clerk.userId,
-      email: clerk.email || null,
-      name: fullName
-    };
+    const page = getCurrentPageFile();
+    const role = getCurrentRole(session);
+
+    if (page === 'controle-usuarios.html' && role !== 'desenvolvedor') {
+      window.location.replace(getFallbackPage(session));
+      return;
+    }
+
+    if (!canAccessPage(page, session)) {
+      window.location.replace(getFallbackPage(session));
+    }
   }
 
   function getSessionProfile() {
-    const clerk = parseClerkSession();
-    if (!clerk || clerk.provider !== 'clerk' || !clerk.userId || !clerk.exp || clerk.exp <= now()) return null;
+    const session = getStoredSession();
+    if (!isLoggedIn() || !session || !session.user) return null;
 
-    const fullName = [clerk.firstName, clerk.lastName].filter(Boolean).join(' ').trim();
-    const name = fullName || clerk.email || 'Usuario';
-    const initials = name
+    const u = session.user;
+    const fullName = String(u.name || '').trim();
+    const labelName = fullName || u.email || u.phone || 'Usuario';
+    const initials = labelName
       .split(' ')
       .filter(Boolean)
       .slice(0, 2)
@@ -103,11 +138,12 @@
       .join('') || 'U';
 
     return {
-      name,
-      email: clerk.email || '',
-      group: clerk.group || 'Usuario',
-      imageUrl: clerk.imageUrl || '',
-      initials
+      name: labelName,
+      email: u.email || '',
+      group: roleValue(u.role),
+      imageUrl: u.image_url || '',
+      initials,
+      allowedPages: Array.isArray(session.allowedPages) ? session.allowedPages : []
     };
   }
 
@@ -120,6 +156,19 @@
       .replace(/'/g, '&#39;');
   }
 
+  function getRequestIdentity() {
+    const session = getStoredSession();
+    const user = session && session.user ? session.user : null;
+
+    return {
+      token: session && session.token ? session.token : null,
+      userId: user && user.id ? user.id : null,
+      email: user && user.email ? user.email : null,
+      name: user && user.name ? user.name : null,
+      role: user && user.role ? roleValue(user.role) : null
+    };
+  }
+
   function patchFetchWithUserHeaders() {
     if (window.__TP_FETCH_PATCHED__) return;
     if (typeof window.fetch !== 'function') return;
@@ -130,9 +179,11 @@
       const headers = new Headers(requestInit.headers || {});
       const identity = getRequestIdentity();
 
+      if (identity.token) headers.set('Authorization', 'Bearer ' + identity.token);
       if (identity.userId) headers.set('X-User-Id', identity.userId);
       if (identity.email) headers.set('X-User-Email', identity.email);
       if (identity.name) headers.set('X-User-Name', identity.name);
+      if (identity.role) headers.set('X-User-Role', identity.role);
 
       requestInit.headers = headers;
       return originalFetch(input, requestInit);
@@ -141,25 +192,176 @@
     window.__TP_FETCH_PATCHED__ = true;
   }
 
+  async function login(identifier, password, remember) {
+    const base = getAuthBase();
+    if (!base) throw new Error('AUTH_API_BASE nao configurada.');
+
+    const response = await fetch(base + '/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, password })
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload || !payload.success) {
+      throw new Error(payload && payload.error ? payload.error : 'Falha no login.');
+    }
+
+    saveSession(payload.data, !!remember);
+    return payload.data;
+  }
+
+  async function register(data) {
+    const base = getAuthBase();
+    if (!base) throw new Error('AUTH_API_BASE nao configurada.');
+
+    const identity = getRequestIdentity();
+    const headers = { 'Content-Type': 'application/json' };
+    if (identity.token) headers.Authorization = 'Bearer ' + identity.token;
+
+    const response = await fetch(base + '/auth/register', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload || !payload.success) {
+      throw new Error(payload && payload.error ? payload.error : 'Falha no cadastro.');
+    }
+
+    return payload.data;
+  }
+
+  async function refreshCurrentUser() {
+    if (!isLoggedIn()) return null;
+
+    const base = getAuthBase();
+    const session = getStoredSession();
+    if (!base || !session || !session.token) return null;
+
+    try {
+      const response = await fetch(base + '/auth/me', {
+        method: 'GET',
+        headers: { Authorization: 'Bearer ' + session.token }
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload || !payload.success) return null;
+
+      saveSession({
+        token: session.token,
+        user: payload.data.user,
+        allowed_pages: payload.data.allowed_pages
+      }, true);
+      return payload.data;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function updateMyProfile(data) {
+    if (!isLoggedIn()) throw new Error('Sessao expirada.');
+
+    const base = getAuthBase();
+    const session = getStoredSession();
+    if (!base || !session || !session.token) throw new Error('AUTH_API_BASE nao configurada.');
+
+    const response = await fetch(base + '/auth/me', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + session.token
+      },
+      body: JSON.stringify(data || {})
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload || !payload.success) {
+      throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Falha ao atualizar perfil.'));
+    }
+
+    const remember = session.exp && (session.exp - nowMs()) > (24 * 60 * 60 * 1000);
+    saveSession({
+      token: session.token,
+      user: payload.data.user,
+      allowed_pages: payload.data.allowed_pages
+    }, remember);
+
+    return payload.data;
+  }
+
+  function applyNavigationPermissions() {
+    if (isLoginPage()) return;
+    if (!isLoggedIn()) return;
+
+    const session = getStoredSession();
+    const role = roleValue(session && session.user && session.user.role);
+    if (role === 'desenvolvedor') return;
+
+    const links = document.querySelectorAll('a[href]');
+    links.forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      if (!href || href.startsWith('#') || href.startsWith('http') || !href.includes('.html')) return;
+      const file = href.split('?')[0].split('/').pop();
+      if (!file) return;
+
+      if (!canAccessPage(file, session) && !href.endsWith('login.html')) {
+        a.style.display = 'none';
+      }
+    });
+  }
+
+  function mountDeveloperSidebarLink() {
+    if (isLoginPage()) return;
+    if (!isLoggedIn()) return;
+
+    const session = getStoredSession();
+    const role = getCurrentRole(session);
+    const existing = document.querySelector('.tp-dev-sidebar-link');
+
+    if (role !== 'desenvolvedor') {
+      if (existing) existing.remove();
+      return;
+    }
+
+    if (existing) return;
+
+    const nav = document.querySelector('.sidebar-nav');
+    if (!nav) return;
+
+    const anchor = document.createElement('a');
+    anchor.href = 'controle-usuarios.html';
+    anchor.className = 'nav-item tp-dev-sidebar-link';
+    anchor.innerHTML = '<i class="fas fa-user-shield"></i><span>Controle de Usuarios</span>';
+
+    const current = getCurrentPageFile();
+    if (current === 'controle-usuarios.html') {
+      anchor.classList.add('active');
+    }
+
+    nav.appendChild(anchor);
+  }
+
   function ensureMenuStyles() {
     if (document.getElementById('tpUserMenuStyle')) return;
     const style = document.createElement('style');
     style.id = 'tpUserMenuStyle';
     style.textContent = `
       .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: Inter, sans-serif; }
-      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: rgba(10,10,11,.92); color:#fafafa; border-radius:12px; padding:8px 10px; min-width: 220px; cursor:pointer; }
+      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: rgba(10,10,11,.92); color:#fafafa; border-radius:12px; padding:8px 10px; min-width:220px; cursor:pointer; }
       .tp-user-avatar { width:34px; height:34px; border-radius:50%; background:#fbbf24; color:#111; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; flex-shrink:0; }
       .tp-user-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
       .tp-user-meta { line-height:1.25; min-width:0; flex:1; text-align:left; }
       .tp-user-name { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .tp-user-group { font-size:11px; color:#a1a1aa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .tp-user-group { font-size:11px; color:#a1a1aa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:capitalize; }
       .tp-user-caret { color:#a1a1aa; font-size:12px; }
-      .tp-user-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; width:280px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:#10131c; box-shadow:0 16px 34px rgba(0,0,0,.4); overflow:hidden; }
+      .tp-user-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; width:290px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:#10131c; box-shadow:0 16px 34px rgba(0,0,0,.4); overflow:hidden; }
       .tp-user-menu.open .tp-user-dropdown { display:block; }
       .tp-user-profile { padding:12px; border-bottom:1px solid rgba(255,255,255,.08); }
       .tp-user-profile .tp-user-name { font-size:14px; }
       .tp-user-profile .tp-user-email { color:#a1a1aa; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .tp-user-profile .tp-user-group { margin-top:6px; font-size:12px; color:#fbbf24; font-weight:600; }
+      .tp-user-pages { margin-top:8px; color:#a1a1aa; font-size:11px; }
       .tp-user-actions a, .tp-user-actions button { width:100%; border:0; border-top:1px solid rgba(255,255,255,.06); background:transparent; color:#fafafa; text-decoration:none; text-align:left; padding:11px 12px; cursor:pointer; font-size:13px; display:block; }
       .tp-user-actions a:hover, .tp-user-actions button:hover { background:rgba(255,255,255,.06); }
     `;
@@ -184,6 +386,14 @@
       ? `<img src="${escapeHtml(profile.imageUrl)}" alt="Foto do usuario">`
       : `<span>${escapeHtml(profile.initials)}</span>`;
 
+    const allowedPreview = profile.group === 'desenvolvedor'
+      ? 'Acesso total'
+      : (profile.allowedPages.slice(0, 5).join(', ') || 'Sem paginas liberadas');
+
+    const devLink = profile.group === 'desenvolvedor'
+      ? '<a href="controle-usuarios.html">Controle de usuarios</a>'
+      : '';
+
     menu.innerHTML = `
       <button type="button" class="tp-user-menu-btn" id="tpUserMenuBtn" aria-haspopup="menu" aria-expanded="false">
         <span class="tp-user-avatar">${avatarHtml}</span>
@@ -197,10 +407,13 @@
         <div class="tp-user-profile">
           <div class="tp-user-name">${escapeHtml(profile.name)}</div>
           <div class="tp-user-email">${escapeHtml(profile.email || 'Sem e-mail')}</div>
-          <div class="tp-user-group">Permissao: ${escapeHtml(profile.group)}</div>
+          <div class="tp-user-group">Nivel: ${escapeHtml(profile.group)}</div>
+          <div class="tp-user-pages">Paginas: ${escapeHtml(allowedPreview)}</div>
         </div>
         <div class="tp-user-actions">
-          <a href="configuracoes.html">Configuracoes de precos</a>
+          ${devLink}
+          <a href="perfil-usuario.html">Perfil do usuario</a>
+          <a href="configuracoes.html">Configuracoes</a>
           <button type="button" id="tpUserLogoutBtn">Sair</button>
         </div>
       </div>
@@ -223,34 +436,30 @@
       }
     });
 
-    logoutBtn.addEventListener('click', async function () {
-      try {
-        if (window.Clerk && typeof window.Clerk.signOut === 'function') {
-          await window.Clerk.signOut();
-        }
-      } catch (err) {
-        console.warn('Falha ao encerrar sessao no Clerk:', err);
-      } finally {
-        logout();
-        window.location.replace('login.html');
-      }
+    logoutBtn.addEventListener('click', function () {
+      clearSession();
+      window.location.replace('login.html');
     });
   }
 
   window.requireAuth = requireAuth;
-  window.authLogin = function () { return false; };
-  window.authLogout = logout;
   window.authIsLoggedIn = isLoggedIn;
   window.authGetNext = getNextFromUrl;
-  window.authSetClerkSession = setClerkSession;
-  window.authClearClerkSession = clearClerkSession;
-  window.authIsClerkEnabled = isClerkEnabled;
+  window.authSetSession = saveSession;
+  window.authClearSession = clearSession;
+  window.authLogout = clearSession;
   window.authGetSessionProfile = getSessionProfile;
+  window.authLogin = login;
+  window.authRegister = register;
+  window.authRefreshCurrentUser = refreshCurrentUser;
+  window.authUpdateMyProfile = updateMyProfile;
 
   patchFetchWithUserHeaders();
 
   document.addEventListener('DOMContentLoaded', function () {
     requireAuth();
+    applyNavigationPermissions();
+    mountDeveloperSidebarLink();
     mountUserMenu();
   });
 })();

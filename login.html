@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acesso - Preço Certo</title>
+  <title>Acesso - Preco Certo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -13,6 +13,8 @@
       --text: #f4f4f5;
       --muted: #a1a1aa;
       --danger: #ef4444;
+      --ok: #22c55e;
+      --line: rgba(255, 255, 255, 0.12);
       --radius: 12px;
     }
 
@@ -31,7 +33,7 @@
 
     .card {
       width: 100%;
-      max-width: 430px;
+      max-width: 520px;
       background: var(--card);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: var(--radius);
@@ -51,31 +53,6 @@
       line-height: 1.5;
     }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .tab {
-      flex: 1;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: transparent;
-      color: var(--text);
-      border-radius: 10px;
-      padding: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 0;
-      width: auto;
-    }
-
-    .tab.active {
-      background: var(--accent);
-      color: #111;
-      border-color: transparent;
-    }
-
     .status {
       min-height: 20px;
       color: var(--muted);
@@ -84,13 +61,185 @@
     }
 
     .status.error { color: var(--danger); }
+    .status.ok { color: var(--ok); }
 
-    #clerkRoot {
-      min-height: 380px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 8px;
-      background: #10131c;
+    form { display: none; }
+    form.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #e4e4e7;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 12px;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      border-color: rgba(251, 191, 36, 0.7);
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+    }
+
+    .password-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .show-btn {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .remember input { width: auto; }
+
+    .signup-callout {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(251, 191, 36, 0.45);
+      border-radius: 10px;
+      background: rgba(251, 191, 36, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      color: #fef3c7;
+    }
+
+    .signup-callout .cta-btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--accent);
+      color: #111;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .signin-callout {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      color: #e4e4e7;
+    }
+
+    .signin-callout .cta-btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .password-strength {
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0;
+      transition: width 0.2s ease;
+      background: #6b7280;
+    }
+
+    .strength-fill.s1 { width: 25%; background: #ef4444; }
+    .strength-fill.s2 { width: 50%; background: #f59e0b; }
+    .strength-fill.s3 { width: 75%; background: #fbbf24; }
+    .strength-fill.s4 { width: 100%; background: #22c55e; }
+
+    .strength-text {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .submit {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--accent);
+      color: #111;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .submit[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
 
     .hint {
@@ -99,24 +248,124 @@
       font-size: 12px;
       line-height: 1.5;
     }
+
+    @media (max-width: 620px) {
+      .card { padding: 20px; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
 <body>
   <div class="card">
-    <h1>Entrar</h1>
-    <p>Crie sua conta ou faca login com Google, Apple e Facebook.</p>
+    <h1>Acesso</h1>
+    <p>Entre com e-mail ou telefone e senha para acessar seu painel.</p>
 
-    <div class="tabs" id="tabs">
-      <button type="button" id="tabSignIn" class="tab">Entrar</button>
-      <button type="button" id="tabSignUp" class="tab">Criar conta</button>
-    </div>
+    <div id="status" class="status"></div>
 
-    <div id="status" class="status">Carregando autenticacao...</div>
-    <div id="clerkRoot"></div>
+    <form id="signInForm" class="active" autocomplete="on">
+      <div class="grid">
+        <div class="field">
+          <label for="identifier">E-mail ou telefone</label>
+          <input id="identifier" name="identifier" type="text" placeholder="email@dominio.com ou +55999999999" required>
+        </div>
 
-    <div class="hint">As opcoes sociais aparecem automaticamente conforme configuradas no Clerk.</div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" placeholder="Sua senha" required>
+            <button class="show-btn" type="button" data-toggle="password">Ver</button>
+          </div>
+        </div>
+      </div>
+
+      <label class="remember">
+        <input id="rememberMe" type="checkbox" checked>
+        Manter conectado
+      </label>
+
+      <div class="signup-callout">
+        <span>Ainda nao tem conta? Crie sua conta agora mesmo.</span>
+        <button id="btnGoSignUp" class="cta-btn" type="button">Criar conta</button>
+      </div>
+
+      <button id="btnLogin" class="submit" type="submit">Entrar</button>
+    </form>
+
+    <form id="signUpForm" autocomplete="off">
+      <div class="grid">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" name="nome" type="text" required>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone</label>
+            <input id="telefone" name="telefone" type="tel" placeholder="+55 (00) 00000-0000" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="senhaCadastro">Senha</label>
+          <div class="password-wrap">
+            <input id="senhaCadastro" name="senha" type="password" minlength="6" required>
+            <button class="show-btn" type="button" data-toggle="senhaCadastro">Ver</button>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
+            <div id="strengthText" class="strength-text">Forca da senha: -</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input id="cep" name="cep" type="text" placeholder="00000-000" required>
+          </div>
+          <div class="field">
+            <label for="rua">Rua</label>
+            <input id="rua" name="rua" type="text" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="cidade">Cidade</label>
+            <input id="cidade" name="cidade" type="text" required>
+          </div>
+          <div class="field">
+            <label for="estado">Estado (UF)</label>
+            <input id="estado" name="estado" type="text" maxlength="2" placeholder="Ex: SP" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" name="sexo" required>
+              <option value="">Selecione</option>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button id="btnRegister" class="submit" type="submit">Criar usuario</button>
+
+      <div class="signin-callout">
+        <span>Ja tem conta? Entre agora.</span>
+        <button id="btnGoSignIn" class="cta-btn" type="button">Entrar</button>
+      </div>
+    </form>
+
+    <div class="hint">Observacao: novos cadastros entram como usuario. O nivel de acesso e alterado somente pelo desenvolvedor na pagina de controle de usuarios.</div>
   </div>
 
   <script>
@@ -126,211 +375,243 @@
         return;
       }
 
-      if (!window.authIsClerkEnabled || !window.authIsClerkEnabled()) {
-        const status = document.getElementById('status');
-        status.textContent = 'Clerk nao configurado. Defina CLERK_PUBLISHABLE_KEY em public/config.js.';
-        status.className = 'status error';
-        return;
-      }
+      const params = new URLSearchParams(window.location.search || '');
+      const requestedNext = params.get('next');
+      const next = requestedNext || 'index.html';
 
-      const next = (window.authGetNext && window.authGetNext()) || 'index.html';
       if (window.authIsLoggedIn && window.authIsLoggedIn()) {
         window.location.replace(next);
         return;
       }
 
-      const status = document.getElementById('status');
-      const params = new URLSearchParams(window.location.search || '');
-      const mode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+      const statusEl = document.getElementById('status');
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
 
-      function setActiveTab(currentMode) {
-        document.getElementById('tabSignIn').classList.toggle('active', currentMode === 'signin');
-        document.getElementById('tabSignUp').classList.toggle('active', currentMode === 'signup');
+      function setStatus(message, isError, isOk) {
+        statusEl.textContent = message || '';
+        statusEl.className = 'status' + (isError ? ' error' : '') + (isOk ? ' ok' : '');
       }
 
-      function modeUrl(nextMode) {
-        return 'login.html?mode=' + nextMode + '&next=' + encodeURIComponent(next);
+      function setMode(mode) {
+        const signin = mode !== 'signup';
+        signInForm.classList.toggle('active', signin);
+        signUpForm.classList.toggle('active', !signin);
       }
 
-      function getUserEmail(user) {
-        if (!user) return null;
-        if (user.primaryEmailAddress && user.primaryEmailAddress.emailAddress) return user.primaryEmailAddress.emailAddress;
-        if (Array.isArray(user.emailAddresses) && user.emailAddresses.length > 0) return user.emailAddresses[0].emailAddress || null;
-        return null;
+      document.getElementById('btnGoSignUp').addEventListener('click', function () {
+        setMode('signup');
+        setStatus('');
+      });
+      document.getElementById('btnGoSignIn').addEventListener('click', function () {
+        setMode('signin');
+        setStatus('');
+      });
+
+      const initialMode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+      setMode(initialMode);
+
+      document.querySelectorAll('[data-toggle]').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          const targetId = btn.getAttribute('data-toggle');
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const nextType = input.type === 'password' ? 'text' : 'password';
+          input.type = nextType;
+          btn.textContent = nextType === 'password' ? 'Ver' : 'Ocultar';
+        });
+      });
+
+      function onlyDigits(value) {
+        return String(value || '').replace(/\D+/g, '');
       }
 
-      function getUserGroup(user) {
-        if (!user) return 'Usuario';
-        const sources = [
-          user.publicMetadata || {},
-          user.unsafeMetadata || {},
-          user.privateMetadata || {}
-        ];
-        for (const source of sources) {
-          const value = source.grupo || source.group || source.role || source.permissao;
-          if (typeof value === 'string' && value.trim()) return value.trim();
-        }
-        return 'Usuario';
+      function formatCep(value) {
+        const digits = onlyDigits(value).slice(0, 8);
+        if (digits.length <= 5) return digits;
+        return digits.slice(0, 5) + '-' + digits.slice(5);
       }
 
-      function getUserImage(user) {
-        if (!user) return null;
-        return user.imageUrl || user.profileImageUrl || null;
+      function formatPhoneBr(value) {
+        let digits = onlyDigits(value);
+        if (digits.startsWith('55')) digits = digits.slice(2);
+        digits = digits.slice(0, 11);
+
+        const ddd = digits.slice(0, 2);
+        const rest = digits.slice(2);
+        const p1Len = rest.length > 8 ? 5 : 4;
+        const p1 = rest.slice(0, p1Len);
+        const p2 = rest.slice(p1Len, p1Len + 4);
+
+        let text = '+55';
+        if (ddd) text += ' (' + ddd;
+        if (ddd.length === 2) text += ')';
+        if (p1) text += ' ' + p1;
+        if (p2) text += '-' + p2;
+        return text;
       }
 
-      function decodeBase64UrlSafe(value) {
-        try {
-          let base64 = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
-          const pad = base64.length % 4;
-          if (pad) base64 += '='.repeat(4 - pad);
-          return atob(base64);
-        } catch (_) {
-          return '';
-        }
+      function normalizePhoneForApi(value) {
+        let digits = onlyDigits(value);
+        if (digits.startsWith('55')) digits = digits.slice(2);
+        if (digits.length < 10 || digits.length > 11) return null;
+        return '55' + digits;
       }
 
-      function getClerkHostedScriptUrlFromKey() {
-        const pk = String(window.CLERK_PUBLISHABLE_KEY || '');
-        const parts = pk.split('_');
-        if (parts.length < 3) return '';
-
-        const encodedHost = parts.slice(2).join('_');
-        const decoded = decodeBase64UrlSafe(encodedHost).replace(/\$/g, '').trim();
-        if (!decoded || !decoded.includes('clerk.')) return '';
-
-        return 'https://' + decoded + '/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+      function normalizeCep(value) {
+        const digits = onlyDigits(value);
+        if (digits.length !== 8) return null;
+        return digits;
       }
 
-      function getClerkHostedBaseFromKey() {
-        const pk = String(window.CLERK_PUBLISHABLE_KEY || '');
-        const parts = pk.split('_');
-        if (parts.length < 3) return '';
+      async function buscarEnderecoPorCep(rawCep) {
+        const cep = normalizeCep(rawCep);
+        if (!cep) return null;
 
-        const encodedHost = parts.slice(2).join('_');
-        const decoded = decodeBase64UrlSafe(encodedHost).replace(/\$/g, '').trim();
-        if (!decoded) return '';
+        const response = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.erro) return null;
 
-        // Hosted auth pages usually use *.accounts.dev
-        return 'https://' + decoded.replace('.clerk.accounts.dev', '.accounts.dev');
+        return {
+          cep: cep,
+          rua: data.logradouro || '',
+          cidade: data.localidade || '',
+          estado: (data.uf || '').toUpperCase()
+        };
       }
 
-      function toAbsoluteUrl(pathOrUrl) {
-        try {
-          return new URL(pathOrUrl, window.location.origin).href;
-        } catch (_) {
-          return window.location.origin + '/';
-        }
+      function calcPasswordStrength(password) {
+        const p = String(password || '');
+        let score = 0;
+        if (p.length >= 8) score++;
+        if (/[A-Z]/.test(p) && /[a-z]/.test(p)) score++;
+        if (/\d/.test(p)) score++;
+        if (/[^A-Za-z0-9]/.test(p) || p.length >= 12) score++;
+        return Math.max(0, Math.min(4, score));
       }
 
-      function redirectToHostedAuth(currentMode, nextUrl) {
-        const hostedBase = getClerkHostedBaseFromKey();
-        if (!hostedBase) return false;
-
-        const targetPath = currentMode === 'signup' ? '/sign-up' : '/sign-in';
-        const redirectUrl = encodeURIComponent(toAbsoluteUrl(nextUrl || 'index.html'));
-        window.location.replace(`${hostedBase}${targetPath}?redirect_url=${redirectUrl}`);
-        return true;
+      function strengthLabel(score) {
+        if (score <= 1) return 'Fraca';
+        if (score === 2) return 'Media';
+        if (score === 3) return 'Boa';
+        return 'Forte';
       }
 
-      function loadClerkScript() {
-        return new Promise(function (resolve, reject) {
-          if (window.Clerk) return resolve();
-
-          const existing = document.querySelector('script[data-tp-clerk="1"]');
-          if (existing) {
-            existing.addEventListener('load', function () { resolve(); }, { once: true });
-            existing.addEventListener('error', function () { reject(new Error('Falha ao carregar Clerk')); }, { once: true });
-            return;
-          }
-
-          const script = document.createElement('script');
-          script.async = true;
-          script.setAttribute('data-tp-clerk', '1');
-          script.setAttribute('crossorigin', 'anonymous');
-          script.setAttribute('data-clerk-publishable-key', window.CLERK_PUBLISHABLE_KEY || '');
-          script.src = getClerkHostedScriptUrlFromKey() || 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
-          script.onload = function () { resolve(); };
-          script.onerror = function () { reject(new Error('Falha ao carregar Clerk')); };
-          document.head.appendChild(script);
+      const telefoneInput = document.getElementById('telefone');
+      if (telefoneInput) {
+        telefoneInput.addEventListener('input', function () {
+          telefoneInput.value = formatPhoneBr(telefoneInput.value);
         });
       }
 
-      async function init() {
-        try {
-          setActiveTab(mode);
+      const cepInput = document.getElementById('cep');
+      const ruaInput = document.getElementById('rua');
+      const cidadeInput = document.getElementById('cidade');
+      const estadoInput = document.getElementById('estado');
+      if (cepInput) {
+        cepInput.addEventListener('input', function () {
+          cepInput.value = formatCep(cepInput.value);
+        });
 
-          document.getElementById('tabSignIn').addEventListener('click', function () {
-            window.location.replace(modeUrl('signin'));
-          });
+        cepInput.addEventListener('blur', async function () {
+          const cepNormalizado = normalizeCep(cepInput.value);
+          if (!cepNormalizado) return;
 
-          document.getElementById('tabSignUp').addEventListener('click', function () {
-            window.location.replace(modeUrl('signup'));
-          });
+          try {
+            setStatus('Buscando endereco pelo CEP...');
+            const endereco = await buscarEnderecoPorCep(cepNormalizado);
+            if (!endereco) {
+              setStatus('CEP nao encontrado. Preencha os campos manualmente.', true, false);
+              return;
+            }
 
-          await loadClerkScript();
-          await window.Clerk.load({ publishableKey: window.CLERK_PUBLISHABLE_KEY || '' });
-
-          if (window.Clerk.user && window.authSetClerkSession) {
-            window.authSetClerkSession({
-              userId: window.Clerk.user.id,
-              email: getUserEmail(window.Clerk.user),
-              firstName: window.Clerk.user.firstName || null,
-              lastName: window.Clerk.user.lastName || null,
-              imageUrl: getUserImage(window.Clerk.user),
-              group: getUserGroup(window.Clerk.user)
-            });
-            window.location.replace(next);
-            return;
+            cepInput.value = formatCep(endereco.cep);
+            if (ruaInput && !ruaInput.value.trim()) ruaInput.value = endereco.rua;
+            if (cidadeInput && !cidadeInput.value.trim()) cidadeInput.value = endereco.cidade;
+            if (estadoInput && !estadoInput.value.trim()) estadoInput.value = endereco.estado;
+            setStatus('Endereco preenchido pelo CEP.', false, true);
+          } catch (_) {
+            setStatus('Nao foi possivel consultar o CEP agora. Preencha manualmente.', true, false);
           }
-
-          const common = {
-            signInUrl: modeUrl('signin'),
-            signUpUrl: modeUrl('signup'),
-            afterSignInUrl: next,
-            afterSignUpUrl: next,
-            afterSignInForceRedirectUrl: next,
-            afterSignUpForceRedirectUrl: next
-          };
-
-          if (typeof window.Clerk.mountSignIn !== 'function' || typeof window.Clerk.mountSignUp !== 'function') {
-            if (redirectToHostedAuth(mode, next)) return;
-            throw new Error('Clerk foi carregado sem componentes de UI.');
-          }
-
-          if (mode === 'signup') {
-            window.Clerk.mountSignUp(document.getElementById('clerkRoot'), common);
-          } else {
-            window.Clerk.mountSignIn(document.getElementById('clerkRoot'), common);
-          }
-
-          if (typeof window.Clerk.addListener === 'function') {
-            window.Clerk.addListener(function () {
-              if (window.Clerk.user && window.authSetClerkSession) {
-                window.authSetClerkSession({
-                  userId: window.Clerk.user.id,
-                  email: getUserEmail(window.Clerk.user),
-                  firstName: window.Clerk.user.firstName || null,
-                  lastName: window.Clerk.user.lastName || null,
-                  imageUrl: getUserImage(window.Clerk.user),
-                  group: getUserGroup(window.Clerk.user)
-                });
-                window.location.replace(next);
-              }
-            });
-          }
-
-          status.textContent = '';
-        } catch (err) {
-          const msg = err && err.message ? err.message : '';
-          if (msg.toLowerCase().includes('ui components')) {
-            if (redirectToHostedAuth(mode, next)) return;
-          }
-          status.textContent = err && err.message ? err.message : 'Falha ao iniciar login Clerk';
-          status.className = 'status error';
-        }
+        });
       }
 
-      init();
+      const senhaCadastroInput = document.getElementById('senhaCadastro');
+      const strengthFill = document.getElementById('strengthFill');
+      const strengthText = document.getElementById('strengthText');
+      if (senhaCadastroInput && strengthFill && strengthText) {
+        senhaCadastroInput.addEventListener('input', function () {
+          const score = calcPasswordStrength(senhaCadastroInput.value);
+          strengthFill.className = 'strength-fill' + (score > 0 ? ' s' + score : '');
+          strengthText.textContent = 'Forca da senha: ' + (senhaCadastroInput.value ? strengthLabel(score) : '-');
+        });
+      }
+
+      signInForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('btnLogin');
+        const identifier = document.getElementById('identifier').value.trim();
+        const password = document.getElementById('password').value;
+        const remember = document.getElementById('rememberMe').checked;
+
+        if (!identifier || !password) {
+          setStatus('Preencha e-mail/telefone e senha.', true, false);
+          return;
+        }
+
+        btn.disabled = true;
+        setStatus('Autenticando...');
+
+        try {
+          await window.authLogin(identifier, password, remember);
+          setStatus('Login realizado com sucesso.', false, true);
+          window.location.replace(next);
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao autenticar.', true, false);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      signUpForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('btnRegister');
+        const payload = {
+          nome: document.getElementById('nome').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          senha: document.getElementById('senhaCadastro').value,
+          telefone: normalizePhoneForApi(document.getElementById('telefone').value),
+          cep: normalizeCep(document.getElementById('cep').value),
+          rua: document.getElementById('rua').value.trim(),
+          cidade: document.getElementById('cidade').value.trim(),
+          estado: document.getElementById('estado').value.trim().toUpperCase(),
+          sexo: document.getElementById('sexo').value
+        };
+
+        payload.endereco = `${payload.rua} - ${payload.cidade}/${payload.estado} - CEP ${payload.cep || ''}`.trim();
+
+        if (!payload.nome || !payload.email || !payload.senha || !payload.telefone || !payload.cep || !payload.rua || !payload.cidade || !payload.estado || !payload.sexo) {
+          setStatus('Preencha todos os campos do cadastro. CEP, rua, cidade e estado sao obrigatorios.', true, false);
+          return;
+        }
+
+        btn.disabled = true;
+        setStatus('Criando usuario...');
+
+        try {
+          await window.authRegister(payload);
+          setStatus('Usuario criado com sucesso. Faca login agora.', false, true);
+          setMode('signin');
+          document.getElementById('identifier').value = payload.email;
+          document.getElementById('password').focus();
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao criar usuario.', true, false);
+        } finally {
+          btn.disabled = false;
+        }
+      });
     })();
   </script>
 </body>

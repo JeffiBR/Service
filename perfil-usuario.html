@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Usuario - Preco Certo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #151821;
+      --line: rgba(255,255,255,0.12);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .wrap { max-width: 920px; margin: 0 auto; }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-right: 300px;
+    }
+
+    .title { margin: 0; font-size: 1.65rem; font-weight: 800; }
+    .subtitle { margin-top: 6px; color: var(--muted); font-size: 0.92rem; }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111;
+      border-color: transparent;
+    }
+
+    .status { min-height: 22px; margin-bottom: 12px; color: var(--muted); }
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--danger); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .profile-top {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .avatar-box {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #111;
+      position: relative;
+    }
+
+    .avatar-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .file {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .file input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 13px; font-weight: 700; color: #e5e7eb; }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 11px;
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: rgba(251,191,36,0.7);
+      box-shadow: 0 0 0 3px rgba(251,191,36,0.15);
+    }
+
+    .actions { margin-top: 12px; display: flex; gap: 8px; }
+
+    .password-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .toggle-btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .header { padding-right: 0; }
+      .profile-top { grid-template-columns: 1fr; }
+      .avatar-box { width: 100px; height: 100px; }
+    }
+
+    @media (max-width: 760px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1 class="title">Perfil do Usuario</h1>
+        <div class="subtitle">Atualize seus dados pessoais e foto de perfil.</div>
+      </div>
+      <a class="btn" href="index.html">Voltar</a>
+    </div>
+
+    <div id="status" class="status">Carregando perfil...</div>
+
+    <section class="card">
+      <div class="profile-top">
+        <div class="avatar-box" id="avatarBox">U</div>
+        <div class="avatar-actions">
+          <label class="btn file">Selecionar foto
+            <input id="photoInput" type="file" accept="image/*">
+          </label>
+          <button id="btnRemovePhoto" class="btn" type="button">Remover foto</button>
+          <span style="color:var(--muted);font-size:12px;">A foto sera salva no seu perfil.</span>
+        </div>
+      </div>
+
+      <form id="profileForm" class="grid" autocomplete="off">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" required>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" required>
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone</label>
+            <input id="telefone" type="tel" placeholder="+55 (00) 00000-0000" required>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input id="cep" type="text" placeholder="00000-000" required>
+          </div>
+          <div class="field">
+            <label for="cidade">Cidade</label>
+            <input id="cidade" type="text" required>
+          </div>
+          <div class="field">
+            <label for="estado">Estado (UF)</label>
+            <input id="estado" type="text" maxlength="2" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="rua">Rua</label>
+          <input id="rua" type="text" required>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="sexo">Sexo</label>
+            <select id="sexo" required>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="endereco">Endereco completo</label>
+            <input id="endereco" type="text" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="senhaAtual">Senha atual (opcional)</label>
+            <div class="password-wrap">
+              <input id="senhaAtual" type="password" placeholder="Digite para alterar senha">
+              <button class="toggle-btn" type="button" data-toggle="senhaAtual">Ver</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="senhaNova">Nova senha (opcional)</label>
+            <div class="password-wrap">
+              <input id="senhaNova" type="password" placeholder="Nova senha (minimo 6 caracteres)">
+              <button class="toggle-btn" type="button" data-toggle="senhaNova">Ver</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="btnSave" class="btn btn-primary" type="submit">Salvar perfil</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const statusEl = document.getElementById('status');
+      const avatarBox = document.getElementById('avatarBox');
+      const photoInput = document.getElementById('photoInput');
+      const btnRemovePhoto = document.getElementById('btnRemovePhoto');
+      const form = document.getElementById('profileForm');
+
+      let imageDataUrl = '';
+
+      function setStatus(message, kind) {
+        statusEl.textContent = message || '';
+        statusEl.className = 'status' + (kind ? ' ' + kind : '');
+      }
+
+      function onlyDigits(value) {
+        return String(value || '').replace(/\D+/g, '');
+      }
+
+      function formatPhoneBr(value) {
+        let digits = onlyDigits(value);
+        if (digits.startsWith('55')) digits = digits.slice(2);
+        digits = digits.slice(0, 11);
+
+        const ddd = digits.slice(0, 2);
+        const rest = digits.slice(2);
+        const p1Len = rest.length > 8 ? 5 : 4;
+        const p1 = rest.slice(0, p1Len);
+        const p2 = rest.slice(p1Len, p1Len + 4);
+
+        let text = '+55';
+        if (ddd) text += ' (' + ddd;
+        if (ddd.length === 2) text += ')';
+        if (p1) text += ' ' + p1;
+        if (p2) text += '-' + p2;
+        return text;
+      }
+
+      function normalizePhoneForApi(value) {
+        let digits = onlyDigits(value);
+        if (digits.startsWith('55')) digits = digits.slice(2);
+        if (digits.length < 10 || digits.length > 11) return null;
+        return '55' + digits;
+      }
+
+      function formatCep(value) {
+        const digits = onlyDigits(value).slice(0, 8);
+        if (digits.length <= 5) return digits;
+        return digits.slice(0, 5) + '-' + digits.slice(5);
+      }
+
+      function normalizeCep(value) {
+        const digits = onlyDigits(value);
+        return digits.length === 8 ? digits : null;
+      }
+
+      async function buscarEnderecoPorCep(rawCep) {
+        const cep = normalizeCep(rawCep);
+        if (!cep) return null;
+
+        const response = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.erro) return null;
+
+        return {
+          cep,
+          rua: data.logradouro || '',
+          cidade: data.localidade || '',
+          estado: (data.uf || '').toUpperCase()
+        };
+      }
+
+      function renderAvatar(name, imageUrl) {
+        const initials = String(name || 'Usuario')
+          .split(' ')
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((p) => p.charAt(0).toUpperCase())
+          .join('') || 'U';
+
+        if (imageUrl) {
+          avatarBox.innerHTML = '<img src="' + imageUrl + '" alt="Foto de perfil">';
+        } else {
+          avatarBox.textContent = initials;
+        }
+      }
+
+      function dataUrlFromFile(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error || new Error('Falha ao ler arquivo'));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function resizeImage(dataUrl, maxSize) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            let w = img.width;
+            let h = img.height;
+            if (w > h && w > maxSize) { h = Math.round((h * maxSize) / w); w = maxSize; }
+            if (h >= w && h > maxSize) { w = Math.round((w * maxSize) / h); h = maxSize; }
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.82));
+          };
+          img.onerror = reject;
+          img.src = dataUrl;
+        });
+      }
+
+      function fillForm(user) {
+        document.getElementById('nome').value = user.name || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('telefone').value = formatPhoneBr(user.phone || '');
+        document.getElementById('cep').value = formatCep(user.cep || '');
+        document.getElementById('rua').value = user.street || '';
+        document.getElementById('cidade').value = user.city || '';
+        document.getElementById('estado').value = (user.state || '').toUpperCase();
+        document.getElementById('sexo').value = (user.sex || 'masculino').toLowerCase();
+        document.getElementById('endereco').value = user.address || '';
+        imageDataUrl = user.image_url || '';
+        renderAvatar(user.name, imageDataUrl);
+      }
+
+      async function loadProfile() {
+        const payload = await window.authRefreshCurrentUser();
+        const profile = window.authGetSessionProfile && window.authGetSessionProfile();
+        if (!profile) throw new Error('Sessao invalida. Faca login novamente.');
+
+        const user = payload && payload.user ? payload.user : null;
+        if (!user) throw new Error('Nao foi possivel carregar os dados do usuario.');
+
+        fillForm(user);
+      }
+
+      photoInput.addEventListener('change', async function () {
+        const file = photoInput.files && photoInput.files[0];
+        if (!file) return;
+
+        try {
+          setStatus('Processando foto...');
+          const raw = await dataUrlFromFile(file);
+          const compact = await resizeImage(raw, 512);
+          if (compact.length > 900000) {
+            setStatus('A imagem ficou grande demais. Use uma foto menor.', 'error');
+            return;
+          }
+          imageDataUrl = compact;
+          renderAvatar(document.getElementById('nome').value, imageDataUrl);
+          setStatus('Foto pronta para salvar.', 'ok');
+        } catch (_) {
+          setStatus('Falha ao processar foto.', 'error');
+        }
+      });
+
+      document.querySelectorAll('[data-toggle]').forEach((btn) => {
+        btn.addEventListener('click', function () {
+          const id = btn.getAttribute('data-toggle');
+          const input = document.getElementById(id);
+          if (!input) return;
+          const nextType = input.type === 'password' ? 'text' : 'password';
+          input.type = nextType;
+          btn.textContent = nextType === 'password' ? 'Ver' : 'Ocultar';
+        });
+      });
+
+      btnRemovePhoto.addEventListener('click', function () {
+        imageDataUrl = '';
+        renderAvatar(document.getElementById('nome').value, '');
+        setStatus('Foto removida. Clique em salvar para aplicar.', 'ok');
+      });
+
+      document.getElementById('telefone').addEventListener('input', function () {
+        this.value = formatPhoneBr(this.value);
+      });
+
+      document.getElementById('cep').addEventListener('input', function () {
+        this.value = formatCep(this.value);
+      });
+
+      document.getElementById('cep').addEventListener('blur', async function () {
+        const cep = normalizeCep(this.value);
+        if (!cep) return;
+
+        try {
+          setStatus('Consultando CEP...');
+          const data = await buscarEnderecoPorCep(cep);
+          if (!data) {
+            setStatus('CEP nao encontrado. Preencha manualmente.', 'error');
+            return;
+          }
+          this.value = formatCep(data.cep);
+          if (!document.getElementById('rua').value.trim()) document.getElementById('rua').value = data.rua;
+          if (!document.getElementById('cidade').value.trim()) document.getElementById('cidade').value = data.cidade;
+          if (!document.getElementById('estado').value.trim()) document.getElementById('estado').value = data.estado;
+          setStatus('Endereco atualizado pelo CEP.', 'ok');
+        } catch (_) {
+          setStatus('Falha ao consultar CEP.', 'error');
+        }
+      });
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('btnSave');
+        const payload = {
+          nome: document.getElementById('nome').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          telefone: normalizePhoneForApi(document.getElementById('telefone').value),
+          cep: normalizeCep(document.getElementById('cep').value),
+          rua: document.getElementById('rua').value.trim(),
+          cidade: document.getElementById('cidade').value.trim(),
+          estado: document.getElementById('estado').value.trim().toUpperCase(),
+          sexo: document.getElementById('sexo').value,
+          endereco: document.getElementById('endereco').value.trim(),
+          image_url: imageDataUrl || ''
+        };
+
+        const senhaAtual = document.getElementById('senhaAtual').value;
+        const senhaNova = document.getElementById('senhaNova').value;
+        if (senhaAtual || senhaNova) {
+          payload.senha_atual = senhaAtual;
+          payload.senha_nova = senhaNova;
+        }
+
+        if (!payload.nome || !payload.email || !payload.telefone || !payload.cep || !payload.rua || !payload.cidade || !payload.estado || !payload.endereco || !payload.sexo) {
+          setStatus('Preencha todos os campos obrigatorios do perfil.', 'error');
+          return;
+        }
+
+        btn.disabled = true;
+        setStatus('Salvando perfil...');
+
+        try {
+          const updated = await window.authUpdateMyProfile(payload);
+          fillForm(updated.user);
+          document.getElementById('senhaAtual').value = '';
+          document.getElementById('senhaNova').value = '';
+          setStatus('Perfil atualizado com sucesso.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao salvar perfil.', 'error');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      (async function init() {
+        try {
+          await loadProfile();
+          setStatus('Perfil carregado.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar perfil.', 'error');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

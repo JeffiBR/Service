@@ -17,15 +17,25 @@
     window.API_BASE = 'https://certobackend.onrender.com/api';
   }
 
+  // FastAPI auth service base URL
+  const runtimeAuthBase = window.__AUTH_API_BASE__ || localStorage.getItem('tp_auth_api_base');
+  if (runtimeAuthBase) {
+    window.AUTH_API_BASE = runtimeAuthBase.replace(/\/+$/, '');
+  } else if (isLocalHost) {
+    window.AUTH_API_BASE = 'http://localhost:8000';
+  } else {
+    // Ajuste para a URL do servico FastAPI em producao
+    window.AUTH_API_BASE = 'https://certoauth.onrender.com';
+  }
+
   // Session duration in ms (default 30 days)
   window.AUTH_TTL_MS = window.AUTH_TTL_MS || (30 * 24 * 60 * 60 * 1000);
 
-  // Clerk config (set your publishable key to enable)
-  window.CLERK_PUBLISHABLE_KEY =
-    window.CLERK_PUBLISHABLE_KEY || 'pk_test_dW5pZmllZC1hbHBhY2EtMjMuY2xlcmsuYWNjb3VudHMuZGV2JA';
-  window.CLERK_ENABLED = window.CLERK_ENABLED === true || !!window.CLERK_PUBLISHABLE_KEY;
-  window.CLERK_AFTER_SIGN_IN_URL = window.CLERK_AFTER_SIGN_IN_URL || 'index.html';
-  window.CLERK_AFTER_SIGN_UP_URL = window.CLERK_AFTER_SIGN_UP_URL || 'index.html';
+  // Legacy Clerk flags kept disabled (auth now uses FastAPI)
+  window.CLERK_PUBLISHABLE_KEY = '';
+  window.CLERK_ENABLED = false;
+  window.CLERK_AFTER_SIGN_IN_URL = 'index.html';
+  window.CLERK_AFTER_SIGN_UP_URL = 'index.html';
 
   // Set to true to disable auth checks
   if (typeof window.AUTH_DISABLED !== 'boolean') {

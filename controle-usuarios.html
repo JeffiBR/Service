@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Usuarios - Preco Certo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #151821;
+      --panel-soft: #10131c;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, #1a1f2b 0%, #0b0c10 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-right: 300px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--danger); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 14px 16px;
+      background: var(--panel-soft);
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111;
+      border-color: transparent;
+    }
+
+    .btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .users-table th,
+    .users-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .users-table th {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    select,
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: rgba(0,0,0,0.22);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.4;
+    }
+
+    .perm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .perm-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .perm-title {
+      margin: 0 0 8px;
+      text-transform: capitalize;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1080px) {
+      .header { padding-right: 0; }
+      .perm-grid { grid-template-columns: 1fr; }
+      .users-table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 class="title">Controle de Usuarios</h1>
+        <p class="subtitle">Somente usuarios com role <strong>desenvolvedor</strong> conseguem acessar e alterar permissoes.</p>
+      </div>
+      <a class="btn" href="index.html">Voltar</a>
+    </div>
+
+    <div id="status" class="status">Carregando dados...</div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Usuarios cadastrados</h2>
+          <button id="btnReloadUsers" class="btn" type="button">Atualizar</button>
+        </div>
+        <div class="card-body">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Sexo</th>
+                <th>Endereco</th>
+                <th>Nivel</th>
+                <th>Acoes</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">Paginas por grupo</h2>
+          <button id="btnReloadPerms" class="btn" type="button">Recarregar</button>
+        </div>
+        <div class="card-body">
+          <div class="perm-grid" id="permGrid"></div>
+          <p class="hint">Informe uma pagina por linha (ex.: index.html). Para acesso total, use <code>*</code>.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const statusEl = document.getElementById('status');
+      const usersBody = document.getElementById('usersBody');
+      const permGrid = document.getElementById('permGrid');
+      const authBase = String(window.AUTH_API_BASE || '').replace(/\/+$/, '');
+
+      function setStatus(message, kind) {
+        statusEl.textContent = message || '';
+        statusEl.className = 'status' + (kind ? ' ' + kind : '');
+      }
+
+      function getRoleLabel(role) {
+        const v = String(role || '').toLowerCase();
+        if (v === 'desenvolvedor') return 'desenvolvedor';
+        if (v === 'administrador') return 'administrador';
+        return 'usuario';
+      }
+
+      function ensureDeveloper() {
+        const profile = window.authGetSessionProfile && window.authGetSessionProfile();
+        if (!profile || String(profile.group || '').toLowerCase() !== 'desenvolvedor') {
+          window.location.replace('index.html');
+          return false;
+        }
+        return true;
+      }
+
+      function getRoleSelect(currentRole) {
+        const role = getRoleLabel(currentRole);
+        return `
+          <select>
+            <option value="usuario" ${role === 'usuario' ? 'selected' : ''}>usuario</option>
+            <option value="administrador" ${role === 'administrador' ? 'selected' : ''}>administrador</option>
+            <option value="desenvolvedor" ${role === 'desenvolvedor' ? 'selected' : ''}>desenvolvedor</option>
+          </select>
+        `;
+      }
+
+      function getSexSelect(currentSex) {
+        const sex = String(currentSex || '').toLowerCase();
+        return `
+          <select>
+            <option value="masculino" ${sex === 'masculino' ? 'selected' : ''}>masculino</option>
+            <option value="feminino" ${sex === 'feminino' ? 'selected' : ''}>feminino</option>
+          </select>
+        `;
+      }
+
+      async function fetchJson(path, options) {
+        const response = await fetch(authBase + path, options || {});
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || !payload || !payload.success) {
+          throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Erro na requisicao'));
+        }
+        return payload.data;
+      }
+
+      async function loadUsers() {
+        const users = await fetchJson('/auth/users');
+        usersBody.innerHTML = '';
+
+        if (!Array.isArray(users) || users.length === 0) {
+          usersBody.innerHTML = '<tr><td colspan="6">Nenhum usuario encontrado.</td></tr>';
+          return;
+        }
+
+        users.forEach((user) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><input type="text" class="u-name" value="${(user.name || '').replace(/"/g, '&quot;')}"></td>
+            <td><input type="email" class="u-email" value="${(user.email || '').replace(/"/g, '&quot;')}"></td>
+            <td><input type="text" class="u-phone" value="${(user.phone || '').replace(/"/g, '&quot;')}"></td>
+            <td>${getSexSelect(user.sex)}</td>
+            <td><input type="text" class="u-address" value="${(user.address || '').replace(/"/g, '&quot;')}"></td>
+            <td class="role-cell">${getRoleSelect(user.role)}</td>
+            <td>
+              <button class="btn btn-primary btn-save-user" type="button">Salvar dados</button>
+              <button class="btn btn-primary btn-save-role" type="button" style="margin-top:8px;">Salvar nivel</button>
+            </td>
+          `;
+
+          const nameInput = tr.querySelector('.u-name');
+          const emailInput = tr.querySelector('.u-email');
+          const phoneInput = tr.querySelector('.u-phone');
+          const addressInput = tr.querySelector('.u-address');
+          const sexSelect = tr.querySelector('td:nth-child(4) select');
+          const roleSelect = tr.querySelector('td:nth-child(6) select');
+          const saveUserBtn = tr.querySelector('.btn-save-user');
+          const saveRoleBtn = tr.querySelector('.btn-save-role');
+
+          saveUserBtn.addEventListener('click', async function () {
+            saveUserBtn.disabled = true;
+            try {
+              await fetchJson(`/auth/users/${encodeURIComponent(user.id)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  nome: nameInput.value.trim(),
+                  email: emailInput.value.trim(),
+                  telefone: phoneInput.value.trim(),
+                  endereco: addressInput.value.trim(),
+                  sexo: sexSelect.value
+                })
+              });
+              setStatus(`Dados de ${nameInput.value || user.name} atualizados.`, 'ok');
+            } catch (err) {
+              setStatus(err && err.message ? err.message : 'Falha ao salvar dados do usuario.', 'error');
+            } finally {
+              saveUserBtn.disabled = false;
+            }
+          });
+
+          saveRoleBtn.addEventListener('click', async function () {
+            saveRoleBtn.disabled = true;
+            try {
+              const role = roleSelect.value;
+              await fetchJson(`/auth/users/${encodeURIComponent(user.id)}/role?role=${encodeURIComponent(role)}`, { method: 'POST' });
+              setStatus(`Nivel de ${nameInput.value || user.name} atualizado para ${role}.`, 'ok');
+            } catch (err) {
+              setStatus(err && err.message ? err.message : 'Falha ao atualizar nivel.', 'error');
+            } finally {
+              saveRoleBtn.disabled = false;
+            }
+          });
+
+          usersBody.appendChild(tr);
+        });
+      }
+
+      function permissionsToText(pages) {
+        if (!Array.isArray(pages)) return '';
+        return pages.join('\n');
+      }
+
+      function textToPermissions(value) {
+        return String(value || '')
+          .split(/\r?\n/)
+          .map((v) => v.trim())
+          .filter(Boolean);
+      }
+
+      async function loadPermissions() {
+        const data = await fetchJson('/auth/permissions');
+        const roles = ['usuario', 'administrador', 'desenvolvedor'];
+        permGrid.innerHTML = '';
+
+        roles.forEach((role) => {
+          const item = document.createElement('div');
+          item.className = 'perm-item';
+          item.innerHTML = `
+            <h3 class="perm-title">${role}</h3>
+            <textarea>${permissionsToText(data[role])}</textarea>
+            <button class="btn btn-primary" type="button" style="margin-top:8px;">Salvar paginas</button>
+          `;
+
+          const textarea = item.querySelector('textarea');
+          const saveBtn = item.querySelector('button');
+
+          saveBtn.addEventListener('click', async function () {
+            saveBtn.disabled = true;
+            try {
+              const pages = textToPermissions(textarea.value);
+              await fetchJson(`/auth/permissions/${encodeURIComponent(role)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pages })
+              });
+              setStatus(`Permissoes do grupo ${role} atualizadas.`, 'ok');
+            } catch (err) {
+              setStatus(err && err.message ? err.message : 'Falha ao salvar permissoes.', 'error');
+            } finally {
+              saveBtn.disabled = false;
+            }
+          });
+
+          permGrid.appendChild(item);
+        });
+      }
+
+      async function init() {
+        if (!ensureDeveloper()) return;
+        if (!authBase) {
+          setStatus('AUTH_API_BASE nao configurada em config.js.', 'error');
+          return;
+        }
+
+        try {
+          setStatus('Carregando usuarios e permissoes...');
+          await Promise.all([loadUsers(), loadPermissions()]);
+          setStatus('Dados carregados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar dados.', 'error');
+        }
+      }
+
+      document.getElementById('btnReloadUsers').addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando usuarios...');
+          await loadUsers();
+          setStatus('Usuarios atualizados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar usuarios.', 'error');
+        }
+      });
+
+      document.getElementById('btnReloadPerms').addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando permissoes...');
+          await loadPermissions();
+          setStatus('Permissoes atualizadas.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar permissoes.', 'error');
+        }
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>
