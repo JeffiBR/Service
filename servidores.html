@@ -230,11 +230,12 @@
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 20px 32px;
+            padding: 20px 340px 20px 32px;
             z-index: 50;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
         }
 
         .page-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
@@ -647,6 +648,7 @@
         /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 1200px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-header { padding-right: 32px; }
         }
 
         @media (max-width: 768px) {

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recarga de Celular - Preço Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #151821;
+      --panel-soft: #10131c;
+      --line: rgba(255,255,255,.12);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+      --warn: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px;
+      background: rgba(10,10,11,.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,.05);
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .brand { display:flex; gap:14px; align-items:center; }
+    .brand-icon {
+      width: 48px; height: 48px; border-radius: 14px; display:flex; align-items:center; justify-content:center;
+      color: #111; font-size: 22px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 0 32px rgba(251,191,36,.25);
+    }
+    .brand-name { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-tag { font-size: .65rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,.05); }
+    .server-status { display:flex; gap:12px; align-items:center; padding:12px; border: 1px solid rgba(255,255,255,.05); border-radius: 12px; background: rgba(255,255,255,.02); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+    .status-info { font-size: .75rem; color: var(--muted); }
+    .status-value { font-size: .85rem; font-weight: 700; color: var(--text); }
+
+    .main { flex: 1; margin-left: 260px; padding: 24px; }
+    .container { max-width: 1180px; margin: 0 auto; }
+    .header { margin-bottom: 16px; padding-right: 300px; }
+    .title { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .subtitle { margin-top: 6px; color: var(--muted); }
+    .status-box {
+      min-height: 44px; border: 1px solid var(--line); border-radius: 10px; display:flex; align-items:center;
+      padding: 0 12px; margin-bottom: 14px; color: #d1d5db; background: rgba(255,255,255,.02);
+    }
+    .status-box.ok { border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.09); color: #86efac; }
+    .status-box.error { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.09); color: #fca5a5; }
+
+    .grid { display: grid; gap: 14px; }
+    .card { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,.24); }
+    .card-head { padding: 14px 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
+    .card-body { padding: 14px 16px; background: var(--panel-soft); }
+
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .field { display:flex; flex-direction:column; gap: 6px; }
+    label { font-size: .84rem; font-weight: 700; color: #e5e7eb; }
+    input, select, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.22); color: var(--text);
+      padding: 10px 11px; outline: none; font-size: .9rem;
+    }
+    input:focus, select:focus, textarea:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
+    textarea { min-height: 90px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+
+    .btn {
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: rgba(255,255,255,.05);
+      color: var(--text); font-weight: 700; cursor: pointer; transition: .18s ease; text-decoration:none;
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+    }
+    .btn:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+    .btn-primary { border-color: transparent; color: #111; background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); }
+    .btn-primary:hover { box-shadow: 0 8px 18px rgba(245,158,11,.25); transform: translateY(-1px); }
+
+    .actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+    .list-head { display:flex; justify-content: space-between; align-items:center; gap:8px; margin-bottom: 10px; }
+    .list-count { color: var(--muted); font-size: .85rem; }
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 860px; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; vertical-align: top; }
+    th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: rgba(16,19,28,.96); position: sticky; top: 0; z-index: 1; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; font-size: .74rem; font-weight: 700;
+      border: 1px solid var(--line); background: rgba(255,255,255,.03);
+    }
+    .badge.aguardando_pagamento { color: #fcd34d; border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.14); }
+    .badge.em_processo { color: #fde68a; border-color: rgba(234,179,8,.38); background: rgba(234,179,8,.14); }
+    .badge.concluido { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
+    .badge.erro { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
+    .muted { color: var(--muted); font-size: .85rem; }
+    .pix-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1500;
+      padding: 16px;
+    }
+    .pix-modal-overlay.open { display: flex; }
+    .pix-modal {
+      width: 100%;
+      max-width: 520px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #0f1420;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      overflow: hidden;
+    }
+    .pix-modal-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pix-modal-title { margin: 0; font-size: 1rem; font-weight: 800; }
+    .pix-modal-body { padding: 16px; display: grid; gap: 12px; }
+    .pix-box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+    }
+    .pix-qr-wrap { text-align: center; }
+    .pix-qr {
+      width: 260px;
+      height: 260px;
+      max-width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: #fff;
+      object-fit: contain;
+    }
+    .pix-copy-grid { display: grid; gap: 8px; }
+    .pix-copy-field {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      padding: 10px;
+      min-height: 84px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .8rem;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 1080px) {
+      .header { padding-right: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="pix-recarga.js"></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
+        <div class="header">
+          <h1 class="title">Recarga de Celular</h1>
+          <div class="subtitle">Solicite sua recarga e acompanhe o andamento em tempo real.</div>
+        </div>
+
+        <div id="status" class="status-box">Carregando...</div>
+
+        <div class="grid">
+          <section class="card">
+            <div class="card-head">
+              <h2 class="card-title">Nova solicitação</h2>
+            </div>
+            <div class="card-body">
+              <form id="formRecarga" class="form-grid">
+                <div class="field">
+                  <label for="numero">Número com DDD</label>
+                  <input id="numero" type="text" placeholder="(82) 99999-9999" required>
+                </div>
+                <div class="field">
+                  <label for="operadora">Operadora</label>
+                  <select id="operadora" required>
+                    <option value="">Selecione...</option>
+                    <option>Tim</option>
+                    <option>Vivo</option>
+                    <option>Claro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="valor">Credito da recarga (R$)</label>
+                  <select id="valor" required>
+                    <option value="">Selecione...</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label>Resumo de preco</label>
+                  <input id="resumoPreco" type="text" value="Selecione operadora e credito para ver quanto o cliente paga." readonly>
+                </div>
+                <div class="field full">
+                  <label for="comentario">Comentário (opcional)</label>
+                  <textarea id="comentario" placeholder="Ex: recarga para uso imediato"></textarea>
+                </div>
+                <div class="actions full">
+                  <button class="btn btn-primary" id="btnSalvar" type="submit"><i class="fas fa-paper-plane"></i> Solicitar recarga</button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card-head">
+              <h2 class="card-title">Minhas recargas</h2>
+              <button class="btn" id="btnRefresh" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+            </div>
+            <div class="card-body">
+              <div class="list-head">
+                <div class="list-count" id="count">0 solicitação(ões)</div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Número</th>
+                      <th>Operadora</th>
+                      <th>Credito</th>
+                      <th>Valor pago</th>
+                      <th>Status</th>
+                      <th>Comentário</th>
+                      <th>Atualizado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bodyRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="pixModalOverlay" class="pix-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pixModalTitle">
+    <div class="pix-modal">
+      <div class="pix-modal-head">
+        <h3 id="pixModalTitle" class="pix-modal-title">Pagamento PIX da recarga</h3>
+        <button id="pixCloseBtn" class="btn" type="button">Fechar</button>
+      </div>
+      <div class="pix-modal-body">
+        <div class="pix-box">
+          <div id="pixResumo" class="muted">Carregando dados de pagamento...</div>
+          <div id="pixTimer" class="muted" style="margin-top:6px;color:#fde68a;font-weight:700;">Tempo para pagar: 05:00</div>
+        </div>
+        <div class="pix-box pix-qr-wrap">
+          <img id="pixQrImage" class="pix-qr" alt="QR Code PIX">
+        </div>
+        <div class="pix-box pix-copy-grid">
+          <label for="pixCodeField">PIX copia e cola</label>
+          <textarea id="pixCodeField" class="pix-copy-field" readonly></textarea>
+          <button id="pixCopyBtn" type="button" class="btn btn-primary"><i class="fas fa-copy"></i> Copiar codigo PIX</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script>
+    (function () {
+      const statusEl = document.getElementById('status');
+      const bodyRows = document.getElementById('bodyRows');
+      const countEl = document.getElementById('count');
+      const form = document.getElementById('formRecarga');
+      const btnSalvar = document.getElementById('btnSalvar');
+      const btnRefresh = document.getElementById('btnRefresh');
+      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular';
+      const API_CONFIG = API + '/config';
+      const API_PIX_CONFIG = API + '/pix-config';
+      const operadoraEl = document.getElementById('operadora');
+      const valorEl = document.getElementById('valor');
+      const resumoPrecoEl = document.getElementById('resumoPreco');
+      const pixModalOverlay = document.getElementById('pixModalOverlay');
+      const pixCloseBtn = document.getElementById('pixCloseBtn');
+      const pixResumo = document.getElementById('pixResumo');
+      const pixTimer = document.getElementById('pixTimer');
+      const pixQrImage = document.getElementById('pixQrImage');
+      const pixCodeField = document.getElementById('pixCodeField');
+      const pixCopyBtn = document.getElementById('pixCopyBtn');
+      let configOperadoras = {};
+      let pixConfig = { pix_key: '', pix_merchant_name: 'PRECO CERTO', pix_city: 'ARAPIRACA' };
+      let pixUi = null;
+
+      function setStatus(msg, kind) {
+        statusEl.textContent = msg || '';
+        statusEl.className = 'status-box' + (kind ? ' ' + kind : '');
+      }
+
+      function onlyDigits(v) { return String(v || '').replace(/\D+/g, ''); }
+      function formatMoney(v) { return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function formatDate(v) {
+        if (!v) return '-';
+        const d = new Date(v);
+        if (Number.isNaN(d.getTime())) return '-';
+        return d.toLocaleString('pt-BR');
+      }
+
+      function statusBadge(status) {
+        const value = String(status || '').toLowerCase();
+        const label = value === 'aguardando_pagamento'
+          ? 'Aguardando pagamento'
+          : (value === 'concluido'
+            ? 'Concluido'
+            : (value === 'erro' ? 'Erro' : 'Em processo'));
+        return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
+      }
+
+      async function fetchJson(url, options) {
+        const r = await fetch(url, options || {});
+        const p = await r.json().catch(() => ({}));
+        if (!r.ok || !p || !p.success) {
+          throw new Error(p && p.error ? p.error : 'Erro na requisicao');
+        }
+        return p.data;
+      }
+
+      pixUi = (window.PixRecarga && typeof window.PixRecarga.createUI === 'function')
+        ? window.PixRecarga.createUI({
+          elements: {
+            overlay: pixModalOverlay,
+            closeBtn: pixCloseBtn,
+            resumo: pixResumo,
+            timer: pixTimer,
+            qrImage: pixQrImage,
+            codeField: pixCodeField,
+            copyBtn: pixCopyBtn
+          },
+          onStatus: setStatus,
+          formatMoney
+        })
+        : null;
+
+      function getActiveOperadoras() {
+        return Object.keys(configOperadoras).filter((name) => {
+          const op = configOperadoras[name] || {};
+          return op.ativa !== false;
+        });
+      }
+
+      function getPlanosByOperadora(operadora) {
+        const op = configOperadoras[operadora] || {};
+        return Array.isArray(op.planos) ? op.planos : [];
+      }
+
+      function renderOperadorasSelect() {
+        const options = ['<option value="">Selecione...</option>']
+          .concat(getActiveOperadoras().map((op) => `<option value="${op}">${op}</option>`));
+        operadoraEl.innerHTML = options.join('');
+      }
+
+      function renderPlanosSelect(operadora) {
+        const planos = getPlanosByOperadora(operadora);
+        const options = ['<option value="">Selecione...</option>']
+          .concat(planos.map((p) => `<option value="${p.credito}">Credito R$ ${formatMoney(p.credito)} -> paga R$ ${formatMoney(p.paga)}</option>`));
+        valorEl.innerHTML = options.join('');
+      }
+
+      function updateResumoPreco() {
+        const operadora = operadoraEl.value;
+        const credito = Number(valorEl.value);
+        if (!operadora || !Number.isFinite(credito) || credito <= 0) {
+          resumoPrecoEl.value = 'Selecione operadora e credito para ver quanto o cliente paga.';
+          return;
+        }
+        const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === credito);
+        if (!plano) {
+          resumoPrecoEl.value = 'Plano nao disponivel para essa operadora.';
+          return;
+        }
+        resumoPrecoEl.value = `Credito R$ ${formatMoney(plano.credito)} | Cliente paga R$ ${formatMoney(plano.paga)}`;
+      }
+
+      async function loadConfig() {
+        const cfg = await fetchJson(API_CONFIG);
+        configOperadoras = (cfg && cfg.operadoras && typeof cfg.operadoras === 'object') ? cfg.operadoras : {};
+        renderOperadorasSelect();
+        renderPlanosSelect('');
+        updateResumoPreco();
+      }
+
+      async function loadPixConfig() {
+        const cfg = await fetchJson(API_PIX_CONFIG);
+        pixConfig = {
+          pix_key: String(cfg && cfg.pix_key ? cfg.pix_key : '').trim(),
+          pix_merchant_name: String(cfg && cfg.pix_merchant_name ? cfg.pix_merchant_name : 'PRECO CERTO').trim(),
+          pix_city: String(cfg && cfg.pix_city ? cfg.pix_city : 'ARAPIRACA').trim()
+        };
+      }
+
+      function renderRows(items) {
+        const list = Array.isArray(items) ? items : [];
+        countEl.textContent = `${list.length} solicitacao(oes)`;
+        if (!list.length) {
+          bodyRows.innerHTML = '<tr><td colspan="8" class="muted">Nenhuma recarga solicitada.</td></tr>';
+          return;
+        }
+        bodyRows.innerHTML = list.map((r) => {
+          const credito = Number.isFinite(Number(r.valor_credito)) && Number(r.valor_credito) > 0 ? Number(r.valor_credito) : Number(r.valor || 0);
+          const pago = Number.isFinite(Number(r.valor_pago)) && Number(r.valor_pago) > 0 ? Number(r.valor_pago) : Number(r.valor || 0);
+          return `
+            <tr>
+              <td>#${r.id}</td>
+              <td>${r.numero || '-'}</td>
+              <td>${r.operadora || '-'}</td>
+              <td>R$ ${formatMoney(credito)}</td>
+              <td>R$ ${formatMoney(pago)}</td>
+              <td>${statusBadge(r.status)}</td>
+              <td>${r.comentario_desenvolvedor ? r.comentario_desenvolvedor : (r.comentario_cliente || '-')}</td>
+              <td>${formatDate(r.updated_at || r.created_at)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async function loadRecargas() {
+        const items = await fetchJson(API);
+        renderRows(items);
+      }
+
+      operadoraEl.addEventListener('change', function () {
+        renderPlanosSelect(operadoraEl.value);
+        updateResumoPreco();
+      });
+      valorEl.addEventListener('change', updateResumoPreco);
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        btnSalvar.disabled = true;
+        try {
+          setStatus('Enviando solicitacao...');
+          const operadora = operadoraEl.value;
+          const valorCredito = Number(valorEl.value);
+          if (!operadora) throw new Error('Selecione a operadora.');
+          if (!Number.isFinite(valorCredito) || valorCredito <= 0) throw new Error('Selecione um credito valido.');
+
+          const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === valorCredito);
+          if (!plano) throw new Error('Esse plano nao esta disponivel para a operadora selecionada.');
+
+          const created = await fetchJson(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              numero: onlyDigits(document.getElementById('numero').value),
+              operadora,
+              valor_credito: valorCredito,
+              comentario_cliente: document.getElementById('comentario').value.trim()
+            })
+          });
+          form.reset();
+          renderPlanosSelect('');
+          updateResumoPreco();
+          await loadRecargas();
+          setStatus('Recarga solicitada com sucesso.', 'ok');
+          if (!pixUi) {
+            throw new Error('Modulo PIX nao carregado.');
+          }
+          const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
+          pixUi.open({
+            recarga: created || {},
+            pixConfig,
+            clienteNome: profile && profile.name ? profile.name : 'Cliente',
+            timeoutSeconds: 300
+          });
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao solicitar recarga.', 'error');
+        } finally {
+          btnSalvar.disabled = false;
+        }
+      });
+
+      btnRefresh.addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando solicitacoes...');
+          await loadRecargas();
+          setStatus('Lista atualizada.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar lista.', 'error');
+        }
+      });
+
+      (async function init() {
+        try {
+          setStatus('Carregando configuracoes de recarga...');
+          await loadConfig();
+          await loadPixConfig();
+          const hasPlanoAtivo = getActiveOperadoras().some((op) => getPlanosByOperadora(op).length > 0);
+          if (!hasPlanoAtivo) {
+            setStatus('Nenhuma recarga disponivel no momento. Avise o desenvolvedor.', 'error');
+            return;
+          }
+          setStatus('Carregando suas recargas...');
+          await loadRecargas();
+          setStatus('Dados carregados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar recargas.', 'error');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
+

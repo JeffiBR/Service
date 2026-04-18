@@ -194,7 +194,7 @@
     const page = getCurrentPageFile();
     const role = getCurrentRole(session);
 
-    if (page === 'controle-usuarios.html' && role !== 'desenvolvedor') {
+    if ((page === 'controle-usuarios.html' || page === 'controle-recargas-celular.html' || page === 'configuracoes-pix-dev.html') && role !== 'desenvolvedor') {
       window.location.replace(getFallbackPage(session));
       return;
     }
@@ -471,10 +471,14 @@
       { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebiveis Ateli' },
       { href: 'dindin.html', icon: 'fas fa-sack-dollar', label: 'Dindin pra Receber' },
       { href: 'produtos-atelie.html', icon: 'fas fa-box-archive', label: 'Produtos Registrados' },
+      { href: 'recarga-celular.html', icon: 'fas fa-mobile-screen-button', label: 'Recarga Celular' },
+      { href: 'historico-compras.html', icon: 'fas fa-receipt', label: 'Historico Compras' },
       { href: 'historico-renovacoes.html', icon: 'fas fa-clock-rotate-left', label: 'Historico Renovacoes' },
       { href: 'configuracoes.html', icon: 'fas fa-sliders', label: 'Configuracoes' },
       { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do Usuario' },
-      { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de Usuarios', devOnly: true }
+      { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de Usuarios', devOnly: true },
+      { href: 'controle-recargas-celular.html', icon: 'fas fa-sim-card', label: 'Controle Recargas', devOnly: true },
+      { href: 'configuracoes-pix-dev.html', icon: 'fas fa-qrcode', label: 'Configuracoes PIX (Dev)', devOnly: true }
     ];
 
     nav.innerHTML = '';
@@ -635,7 +639,7 @@
       : (profile.allowedPages.slice(0, 5).join(', ') || 'Sem paginas liberadas');
 
     const devLink = profile.group === 'desenvolvedor'
-      ? '<a href="controle-usuarios.html">Controle de usuarios</a>'
+      ? '<a href="controle-usuarios.html">Controle de usuarios</a><a href="controle-recargas-celular.html">Controle recargas</a><a href="configuracoes-pix-dev.html">Configuracoes PIX (Dev)</a>'
       : '';
 
     menu.innerHTML = `

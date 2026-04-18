@@ -394,48 +394,109 @@
         }
         .produtos-cards {
             display: none;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            padding: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+            padding: 20px;
         }
         .produto-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%),
+                rgba(255,255,255,0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--radius-lg);
-            padding: 14px;
+            padding: 16px;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.32);
+            transition: var(--transition);
+        }
+        .produto-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(251, 191, 36, 0.35);
+            box-shadow: 0 18px 34px rgba(0,0,0,0.4);
         }
         .produto-card-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .produto-card-head-left {
+            min-width: 0;
+            flex: 1;
         }
         .produto-card-title {
-            font-size: 0.95rem;
+            font-size: 1.08rem;
             font-weight: 800;
             line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        .produto-card-sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            color: var(--white-600);
         }
         .produto-card-list {
             display: grid;
-            gap: 6px;
-            margin-bottom: 12px;
+            gap: 7px;
+            margin-bottom: 14px;
         }
         .produto-card-row {
             display: flex;
             justify-content: space-between;
             gap: 10px;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             color: var(--white-600);
+            border-bottom: 1px dashed rgba(255,255,255,0.08);
+            padding-bottom: 6px;
         }
         .produto-card-row strong {
             color: var(--white);
             font-weight: 700;
         }
-        .produto-card-actions {
-            display: flex;
-            flex-wrap: wrap;
+        .produto-card-kpis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
+            margin-bottom: 12px;
+        }
+        .kpi-chip {
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.025);
+        }
+        .kpi-label {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--white-600);
+            margin-bottom: 2px;
+        }
+        .kpi-value {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+        .kpi-profit .kpi-value {
+            color: #86efac;
+        }
+        .produto-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .produto-card-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        .produto-card-actions .btn.btn-gold {
+            grid-column: 1 / -1;
         }
 
         .badge {
@@ -452,9 +513,9 @@
         }
 
         .thumb {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
+            width: 62px;
+            height: 62px;
+            border-radius: 12px;
             object-fit: cover;
             border: 1px solid rgba(255,255,255,0.1);
             background: rgba(255,255,255,0.03);
@@ -844,6 +905,10 @@
             .sidebar.open { transform: translateX(0); }
             .main { margin-left: 0; }
             .stats-grid { grid-template-columns: 1fr; }
+            .produtos-cards { grid-template-columns: 1fr; padding: 14px; }
+            .produto-card-actions { grid-template-columns: 1fr; }
+            .produto-card-actions .btn.btn-gold { grid-column: auto; }
+            .produto-card-kpis { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 900px) {
@@ -1443,14 +1508,24 @@
                 return `
                     <article class="produto-card">
                         <div class="produto-card-head">
-                            <div class="produto-card-title">${p.nome_produto || '-'}</div>
+                            <div class="produto-card-head-left">
+                                <div class="produto-card-title">${p.nome_produto || '-'}</div>
+                                <span class="produto-card-sub"><i class="fas fa-fabric"></i> ${p.tecido_tipo || '-'}</span>
+                            </div>
                             ${thumb ? `<img class="thumb" src="${thumb}" alt="Foto">` : '<div class="badge">Sem foto</div>'}
                         </div>
+                        <div class="produto-card-kpis">
+                            <div class="kpi-chip">
+                                <span class="kpi-label">Preço unitário</span>
+                                <span class="kpi-value">R$ ${formatMoney(p.preco_venda_unitario || 0)}</span>
+                            </div>
+                            <div class="kpi-chip kpi-profit">
+                                <span class="kpi-label">Lucro unitário</span>
+                                <span class="kpi-value">R$ ${formatMoney(p.lucro_unitario || 0)}</span>
+                            </div>
+                        </div>
                         <div class="produto-card-list">
-                            <div class="produto-card-row"><span>Tecido</span><strong>${p.tecido_tipo || '-'}</strong></div>
                             <div class="produto-card-row"><span>Quantidade</span><strong>${p.quantidade_produtos ?? '-'}</strong></div>
-                            <div class="produto-card-row"><span>Preço unitário</span><strong>R$ ${formatMoney(p.preco_venda_unitario || 0)}</strong></div>
-                            <div class="produto-card-row"><span>Lucro unitário</span><strong>R$ ${formatMoney(p.lucro_unitario || 0)}</strong></div>
                             <div class="produto-card-row"><span>Atualizado</span><strong>${formatDate(p.updated_at || p.created_at)}</strong></div>
                         </div>
                         <div class="produto-card-actions">

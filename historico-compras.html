@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historico de Compras - Preco Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #151821;
+      --panel-soft: #10131c;
+      --line: rgba(255,255,255,.12);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+      --warn: #eab308;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px; background: rgba(10,10,11,.95); backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,.05); position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; z-index: 100;
+    }
+    .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .brand { display:flex; gap:14px; align-items:center; }
+    .brand-icon { width: 48px; height: 48px; border-radius: 14px; display:flex; align-items:center; justify-content:center; color: #111; font-size: 22px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); box-shadow: 0 0 32px rgba(251,191,36,.25); }
+    .brand-name { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-tag { font-size: .65rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,.05); }
+    .server-status { display:flex; gap:12px; align-items:center; padding:12px; border: 1px solid rgba(255,255,255,.05); border-radius: 12px; background: rgba(255,255,255,.02); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+    .status-info { font-size: .75rem; color: var(--muted); }
+    .status-value { font-size: .85rem; font-weight: 700; color: var(--text); }
+
+    .main { flex: 1; margin-left: 260px; padding: 24px; }
+    .container { max-width: 1240px; margin: 0 auto; }
+    .header { margin-bottom: 16px; padding-right: 300px; }
+    .title { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .subtitle { margin-top: 6px; color: var(--muted); }
+    .status-box {
+      min-height: 44px; border: 1px solid var(--line); border-radius: 10px; display:flex; align-items:center;
+      padding: 0 12px; margin-bottom: 14px; color: #d1d5db; background: rgba(255,255,255,.02);
+    }
+    .status-box.ok { border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.09); color: #86efac; }
+    .status-box.error { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.09); color: #fca5a5; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .stat-label { color: var(--muted); font-size: .78rem; margin-bottom: 4px; }
+    .stat-value { font-size: 1.35rem; font-weight: 800; }
+
+    .card { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,.24); }
+    .card-head { padding: 14px 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
+    .card-body { padding: 14px 16px; background: var(--panel-soft); }
+    .tools { display: grid; grid-template-columns: 1fr 190px 160px auto; gap: 10px; margin-bottom: 12px; align-items: center; }
+    .count { color: var(--muted); font-size: .85rem; text-align: right; }
+
+    input, select {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.22); color: var(--text);
+      padding: 10px 11px; outline: none; font-size: .9rem;
+    }
+    input:focus, select:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
+    .btn {
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: rgba(255,255,255,.05);
+      color: var(--text); font-weight: 700; cursor: pointer; transition: .18s ease; text-decoration:none;
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+    }
+    .btn:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 960px; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; vertical-align: top; }
+    th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: rgba(16,19,28,.96); position: sticky; top: 0; z-index: 1; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 10px; font-size: .74rem; font-weight: 700;
+      border: 1px solid var(--line); background: rgba(255,255,255,.03);
+    }
+    .badge.aguardando_pagamento { color: #fcd34d; border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.14); }
+    .badge.em_processo { color: #fde68a; border-color: rgba(234,179,8,.38); background: rgba(234,179,8,.14); }
+    .badge.concluido { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
+    .badge.erro { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
+    .muted { color: var(--muted); font-size: .85rem; }
+
+    @media (max-width: 1080px) {
+      .header { padding-right: 0; }
+      .stats { grid-template-columns: 1fr; }
+      .tools { grid-template-columns: 1fr; }
+      .count { text-align: left; }
+    }
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preco Certo</div>
+            <div class="brand-tag">PRECO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
+        <div class="header">
+          <h1 class="title">Historico de Compras</h1>
+          <div class="subtitle">Acompanhe as compras realizadas com valor e data/hora.</div>
+        </div>
+
+        <div id="status" class="status-box">Carregando...</div>
+
+        <section class="stats">
+          <article class="stat-card">
+            <div class="stat-label">Total de compras</div>
+            <div id="statCompras" class="stat-value">0</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">Total investido</div>
+            <div id="statValor" class="stat-value">R$ 0,00</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-label">Ultima compra</div>
+            <div id="statUltima" class="stat-value" style="font-size:1rem;">-</div>
+          </article>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">Compras realizadas</h2>
+            <button class="btn" id="btnRefresh" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+          </div>
+          <div class="card-body">
+            <div class="tools">
+              <input id="search" type="text" placeholder="Buscar por compra, telefone ou operadora">
+              <select id="statusFilter">
+                <option value="">Todos os status</option>
+                <option value="aguardando_pagamento">Aguardando pagamento</option>
+                <option value="em_processo">Em processo</option>
+                <option value="concluido">Concluido</option>
+                <option value="erro">Erro</option>
+              </select>
+              <select id="periodFilter">
+                <option value="all">Todo periodo</option>
+                <option value="7">Ultimos 7 dias</option>
+                <option value="30">Ultimos 30 dias</option>
+                <option value="90">Ultimos 90 dias</option>
+              </select>
+              <div class="count" id="count">0 compra(s)</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Compra</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data e hora</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular';
+      const statusEl = document.getElementById('status');
+      const bodyRows = document.getElementById('bodyRows');
+      const countEl = document.getElementById('count');
+      const searchEl = document.getElementById('search');
+      const statusFilterEl = document.getElementById('statusFilter');
+      const periodFilterEl = document.getElementById('periodFilter');
+      const btnRefresh = document.getElementById('btnRefresh');
+      const statComprasEl = document.getElementById('statCompras');
+      const statValorEl = document.getElementById('statValor');
+      const statUltimaEl = document.getElementById('statUltima');
+      let cache = [];
+
+      function setStatus(msg, kind) {
+        statusEl.textContent = msg || '';
+        statusEl.className = 'status-box' + (kind ? ' ' + kind : '');
+      }
+
+      function formatMoney(v) { return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function formatDate(v) {
+        if (!v) return '-';
+        const d = new Date(v);
+        if (Number.isNaN(d.getTime())) return '-';
+        return d.toLocaleString('pt-BR');
+      }
+
+      function statusBadge(status) {
+        const value = String(status || '').toLowerCase();
+        const label = value === 'aguardando_pagamento'
+          ? 'Aguardando pagamento'
+          : (value === 'concluido'
+            ? 'Concluido'
+            : (value === 'erro' ? 'Erro' : 'Em processo'));
+        return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
+      }
+
+      function getCompraLabel(r) {
+        const op = r.operadora || '-';
+        const num = r.numero || '-';
+        const credito = Number.isFinite(Number(r.valor_credito)) && Number(r.valor_credito) > 0
+          ? ` - credito R$ ${formatMoney(r.valor_credito)}`
+          : '';
+        return `Recarga ${op} - ${num}${credito}`;
+      }
+
+      function getValorPago(r) {
+        if (Number.isFinite(Number(r.valor_pago)) && Number(r.valor_pago) > 0) {
+          return Number(r.valor_pago);
+        }
+        return Number(r.valor || 0);
+      }
+
+      async function fetchJson(url, options) {
+        const r = await fetch(url, options || {});
+        const p = await r.json().catch(() => ({}));
+        if (!r.ok || !p || !p.success) throw new Error(p && p.error ? p.error : 'Erro na requisicao');
+        return p.data;
+      }
+
+      function applyFilters() {
+        const term = String(searchEl.value || '').trim().toLowerCase();
+        const status = String(statusFilterEl.value || '').trim().toLowerCase();
+        const period = String(periodFilterEl.value || 'all');
+        const now = Date.now();
+        const days = period === 'all' ? 0 : Number(period);
+        const minTs = days > 0 ? (now - (days * 24 * 60 * 60 * 1000)) : 0;
+
+        const list = cache.filter((r) => {
+          const statusOk = !status || String(r.status || '').toLowerCase() === status;
+          const ts = Date.parse(String(r.created_at || r.updated_at || ''));
+          const periodOk = !minTs || (Number.isFinite(ts) && ts >= minTs);
+          const hay = [getCompraLabel(r), r.operadora || '', r.numero || ''].join(' ').toLowerCase();
+          const textOk = !term || hay.includes(term);
+          return statusOk && periodOk && textOk;
+        });
+        renderRows(list, cache.length);
+      }
+
+      function renderRows(list, total) {
+        const items = Array.isArray(list) ? list : [];
+        countEl.textContent = `${items.length} de ${total} compra(s)`;
+        const totalValor = items.reduce((acc, r) => acc + getValorPago(r), 0);
+        statComprasEl.textContent = String(items.length);
+        statValorEl.textContent = `R$ ${formatMoney(totalValor)}`;
+        statUltimaEl.textContent = items.length ? formatDate(items[0].created_at || items[0].updated_at) : '-';
+
+        if (!items.length) {
+          bodyRows.innerHTML = '<tr><td colspan="5" class="muted">Nenhuma compra encontrada.</td></tr>';
+          return;
+        }
+        bodyRows.innerHTML = items.map((r) => `
+          <tr>
+            <td>#${r.id}</td>
+            <td>${getCompraLabel(r)}</td>
+            <td>R$ ${formatMoney(getValorPago(r))}</td>
+            <td>${statusBadge(r.status)}</td>
+            <td>${formatDate(r.created_at || r.updated_at)}</td>
+          </tr>
+        `).join('');
+      }
+
+      async function loadAll() {
+        const rows = await fetchJson(API);
+        cache = Array.isArray(rows) ? rows : [];
+        applyFilters();
+      }
+
+      searchEl.addEventListener('input', applyFilters);
+      statusFilterEl.addEventListener('change', applyFilters);
+      periodFilterEl.addEventListener('change', applyFilters);
+
+      btnRefresh.addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando historico...');
+          await loadAll();
+          setStatus('Historico atualizado.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar historico.', 'error');
+        }
+      });
+
+      (async function init() {
+        try {
+          setStatus('Carregando historico de compras...');
+          await loadAll();
+          setStatus('Historico carregado.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar historico.', 'error');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
