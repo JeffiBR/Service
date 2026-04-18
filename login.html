@@ -62,6 +62,53 @@
 
     .status.error { color: var(--danger); }
     .status.ok { color: var(--ok); }
+    .status.flow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      font-weight: 600;
+      animation: statusFadeIn 0.24s ease;
+    }
+    .status.flow::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 rgba(34, 197, 94, 0.75);
+      animation: statusPulse 1s infinite;
+      flex-shrink: 0;
+    }
+    .status.flow.done::before {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      animation: none;
+      content: '✓';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ade80;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(74, 222, 128, 0.6);
+    }
+    @keyframes statusPulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.65); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    @keyframes statusFadeIn {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     form { display: none; }
     form.active { display: block; }
@@ -392,6 +439,17 @@
         statusEl.className = 'status' + (isError ? ' error' : '') + (isOk ? ' ok' : '');
       }
 
+      function setFlowStatus(message, done) {
+        statusEl.textContent = message || '';
+        statusEl.className = 'status ok flow' + (done ? ' done' : '');
+      }
+
+      function wait(ms) {
+        return new Promise(function (resolve) {
+          setTimeout(resolve, ms);
+        });
+      }
+
       function setMode(mode) {
         const signin = mode !== 'signup';
         signInForm.classList.toggle('active', signin);
@@ -567,11 +625,12 @@
         }
 
         btn.disabled = true;
-        setStatus('Autenticando... (se o servidor estiver em hibernacao, pode levar ate 1 minuto)');
+        setFlowStatus('Iniciando sessao...', false);
 
         try {
           await window.authLogin(identifier, password, remember);
-          setStatus('Login realizado com sucesso.', false, true);
+          setFlowStatus('Acesso concluido com sucesso.', true);
+          await wait(700);
           window.location.replace(next);
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao autenticar.', true, false);

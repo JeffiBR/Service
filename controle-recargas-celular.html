@@ -114,6 +114,8 @@
     }
     .btn:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
     .btn-primary { border-color: transparent; color: #111; background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); }
+    .btn-danger { border-color: rgba(239,68,68,.45); color: #fecaca; background: rgba(239,68,68,.16); }
+    .btn-danger:hover { background: rgba(239,68,68,.24); border-color: rgba(239,68,68,.65); }
 
     .table-wrap { width: 100%; overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; min-width: 1180px; }
@@ -406,12 +408,16 @@
             <td>${r.comentario_cliente || '-'}</td>
             <td class="col-comment"><textarea class="r-comment" placeholder="Comentario do desenvolvedor">${r.comentario_desenvolvedor || ''}</textarea></td>
             <td>${formatDate(r.updated_at || r.created_at)}</td>
-            <td class="col-actions"><button class="btn btn-primary btn-save" type="button"><i class="fas fa-save"></i> Salvar</button></td>
+            <td class="col-actions">
+              <button class="btn btn-primary btn-save" type="button"><i class="fas fa-save"></i> Salvar</button>
+              <button class="btn btn-danger btn-delete" type="button"><i class="fas fa-trash"></i> Excluir</button>
+            </td>
           `;
 
           const statusSelect = tr.querySelector('.r-status');
           const commentInput = tr.querySelector('.r-comment');
           const saveBtn = tr.querySelector('.btn-save');
+          const deleteBtn = tr.querySelector('.btn-delete');
 
           saveBtn.addEventListener('click', async function () {
             saveBtn.disabled = true;
@@ -430,6 +436,23 @@
               setStatus(err && err.message ? err.message : 'Falha ao salvar recarga.', 'error');
             } finally {
               saveBtn.disabled = false;
+            }
+          });
+
+          deleteBtn.addEventListener('click', async function () {
+            const ok = window.confirm(`Deseja excluir a recarga #${r.id}? Essa acao nao pode ser desfeita.`);
+            if (!ok) return;
+            deleteBtn.disabled = true;
+            try {
+              await fetchJson(API + '/' + encodeURIComponent(r.id) + '/admin', {
+                method: 'DELETE'
+              });
+              setStatus(`Recarga #${r.id} excluida com sucesso.`, 'ok');
+              await loadAll();
+            } catch (err) {
+              setStatus(err && err.message ? err.message : 'Falha ao excluir recarga.', 'error');
+            } finally {
+              deleteBtn.disabled = false;
             }
           });
 

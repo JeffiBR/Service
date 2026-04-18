@@ -507,14 +507,49 @@
       const style = document.createElement('style');
       style.id = 'tpSidebarMobileStyle';
       style.textContent = `
+        /* baseline shared sidebar look to avoid unstyled links in new pages */
+        .sidebar-nav .nav-item { display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:6px; border-radius:12px; color:#a1a1aa; text-decoration:none; font-weight:600; border:1px solid transparent; transition:all .2s ease; }
+        .sidebar-nav .nav-item i { width:18px; text-align:center; color:#9ca3af; }
+        .sidebar-nav .nav-item:hover { color:#fff; background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.10); }
+        .sidebar-nav .nav-item.active { color:#111; background:#f5b915; border-color:#f5b915; box-shadow:0 6px 18px rgba(245,185,21,.22); }
+        .sidebar-nav .nav-item.active i { color:#111; }
+        .sidebar-nav .nav-section-title { margin:6px 10px 12px; color:#8f95a3; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+
         .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:1300; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
         .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1199; }
         @media (max-width: 960px) {
           .tp-sidebar-toggle { display:flex; align-items:center; justify-content:center; }
-          .sidebar { position:fixed !important; top:0; left:0; height:100vh !important; width:260px !important; transform:translateX(-100%); transition:transform .25s ease; z-index:1200; }
+          body { overflow-x:hidden; }
+          .sidebar {
+            position:fixed !important;
+            top:0 !important;
+            left:0 !important;
+            height:100vh !important;
+            width:280px !important;
+            max-width:84vw !important;
+            transform:translateX(-100%) !important;
+            transition:transform .25s ease;
+            z-index:1200;
+          }
           body.tp-sidebar-open .sidebar { transform:translateX(0); }
           body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
-          .main { margin-left:0 !important; padding-top:64px !important; }
+          .main, .main-content, main.main-content {
+            margin-left:0 !important;
+            width:100% !important;
+            max-width:100% !important;
+          }
+          .main { padding-top:72px !important; }
+          .main-content, main.main-content { padding-top:72px !important; padding-left:14px !important; padding-right:14px !important; }
+          .main .main-content { padding-top:12px !important; }
+
+          .main-content table { display:block; width:100%; overflow-x:auto; white-space:nowrap; }
+          .main-content .stats-grid,
+          .main-content .cards-grid,
+          .main-content .overview-grid,
+          .main-content .summary-grid { grid-template-columns:1fr !important; }
+          .main-content .header,
+          .main-content .page-header,
+          .main-content .toolbar { flex-wrap:wrap; gap:10px; }
         }
       `;
       document.head.appendChild(style);
@@ -612,6 +647,13 @@
       .tp-user-pages { margin-top:8px; color:#a1a1aa; font-size:11px; }
       .tp-user-actions a, .tp-user-actions button { width:100%; border:0; border-top:1px solid rgba(255,255,255,.06); background:transparent; color:#fafafa; text-decoration:none; text-align:left; padding:11px 12px; cursor:pointer; font-size:13px; display:block; }
       .tp-user-actions a:hover, .tp-user-actions button:hover { background:rgba(255,255,255,.06); }
+      @media (max-width: 960px) {
+        .tp-user-menu { top:12px; right:12px; left:62px; max-width:calc(100vw - 74px); }
+        .tp-user-menu-btn { min-width:0; width:100%; max-width:100%; padding:8px 9px; }
+        .tp-user-name { font-size:12px; }
+        .tp-user-group { font-size:10px; }
+        .tp-user-dropdown { width:min(92vw, 320px); right:0; }
+      }
     `;
     document.head.appendChild(style);
   }

@@ -3881,11 +3881,187 @@ input:not([type="file"]):not([type="checkbox"]), select {
 
                 document.querySelectorAll('.voice-btn[data-voice-target]').forEach(bindVoiceButton);
             })();
+
+            function selecionarTecidoNaLista(listEl, nomeTecido) {
+                if (!listEl || !nomeTecido) return false;
+                const alvo = String(nomeTecido).trim().toLowerCase();
+                if (!alvo) return false;
+                const option = Array.from(listEl.querySelectorAll('.tecido-option')).find((el) => {
+                    const nome = (el.getAttribute('data-tecido') || '').trim().toLowerCase();
+                    return nome === alvo;
+                });
+                if (!option) return false;
+                option.click();
+                return true;
+            }
+
+            function setNumberField(id, value) {
+                const el = document.getElementById(id);
+                if (!el || value === undefined || value === null || value === '') return;
+                if (el.type === 'number') {
+                    el.value = Number(value);
+                } else {
+                    el.value = formatarNumero(value);
+                }
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            function setMoneyField(id, value) {
+                const el = document.getElementById(id);
+                if (!el || value === undefined || value === null || value === '') return;
+                el.value = formatarMoedaNumero(value);
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            function preencherRecalculoProduto() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('recalculate') !== '1') return;
+
+                const raw = sessionStorage.getItem('pc_recalculate_product');
+                if (!raw) return;
+
+                let p = null;
+                try {
+                    p = JSON.parse(raw);
+                } catch (error) {
+                    console.error('Falha ao ler produto para recalculo:', error);
+                    return;
+                }
+                if (!p || typeof p !== 'object') return;
+
+                const setText = (id, value) => {
+                    const el = document.getElementById(id);
+                    if (!el || value === undefined || value === null) return;
+                    el.value = String(value);
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                };
+
+                setText('nomeProduto', p.nome_produto || p.nome || '');
+                setNumberField('quantidadeProdutos', p.quantidade_produtos ?? p.quantidade ?? 1);
+                setNumberField('margemErro', p.margem_erro_cm);
+
+                setMoneyField('valorTotalTecido', p.valor_total_tecido);
+                setNumberField('comprimentoTotalTecido', p.comprimento_total_tecido);
+                setNumberField('larguraTecido', p.largura_tecido);
+                setNumberField('larguraUtilizada', p.largura_utilizada);
+                setNumberField('comprimentoUtilizado', p.comprimento_utilizado);
+                setNumberField('partesReaisTecido', p.partes_reais_tecido);
+
+                setMoneyField('valorHora', p.valor_hora);
+                setNumberField('tempoGasto', p.tempo_gasto_minutos);
+                setMoneyField('valorEmbalagem', p.valor_sacola_embalagem);
+                setMoneyField('custoTransporte', p.custo_unitario_transporte);
+                setNumberField('porcentagemLucro', p.porcentagem_lucro);
+
+                if (p.sublimacao_qtd_folhas || p.sublimacao_valor_folhas || p.sublimacao_folhas_usadas) {
+                    if (temSublimacaoCheckbox && !temSublimacaoCheckbox.checked) {
+                        temSublimacaoCheckbox.checked = true;
+                        temSublimacaoCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    setNumberField('sublimacaoQtdFolhas', p.sublimacao_qtd_folhas);
+                    setMoneyField('sublimacaoValorFolhas', p.sublimacao_valor_folhas);
+                    setNumberField('sublimacaoFolhasUsadas', p.sublimacao_folhas_usadas);
+                }
+
+                const temTecido2 = Boolean(
+                    p.tecido_tipo2 || p.valor_total_tecido2 || p.comprimento_total_tecido2 || p.largura_tecido2
+                );
+                if (temTecido2 && usarTecido2Checkbox && !usarTecido2Checkbox.checked) {
+                    usarTecido2Checkbox.checked = true;
+                    usarTecido2Checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                if (temTecido2) {
+                    setMoneyField('valorTotalTecido2', p.valor_total_tecido2);
+                    setNumberField('comprimentoTotalTecido2', p.comprimento_total_tecido2);
+                    setNumberField('larguraTecido2', p.largura_tecido2);
+                    setNumberField('larguraUtilizada2', p.largura_utilizada2);
+                    setNumberField('comprimentoUtilizado2', p.comprimento_utilizado2);
+                    setNumberField('partesReaisTecido2', p.partes_reais_tecido2);
+                }
+
+                const temTecido3 = Boolean(
+                    p.tecido_tipo3 || p.valor_total_tecido3 || p.comprimento_total_tecido3 || p.largura_tecido3
+                );
+                if (temTecido3 && usarTecido3Checkbox && !usarTecido3Checkbox.checked) {
+                    usarTecido3Checkbox.checked = true;
+                    usarTecido3Checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                if (temTecido3) {
+                    setMoneyField('valorTotalTecido3', p.valor_total_tecido3);
+                    setNumberField('comprimentoTotalTecido3', p.comprimento_total_tecido3);
+                    setNumberField('larguraTecido3', p.largura_tecido3);
+                    setNumberField('larguraUtilizada3', p.largura_utilizada3);
+                    setNumberField('comprimentoUtilizado3', p.comprimento_utilizado3);
+                    setNumberField('partesReaisTecido3', p.partes_reais_tecido3);
+                }
+
+                const temForro = Boolean(
+                    p.tecido_tipo_forro || p.valor_total_forro || p.comprimento_total_forro || p.largura_forro
+                );
+                if (temForro && usarForroCheckbox && !usarForroCheckbox.checked) {
+                    usarForroCheckbox.checked = true;
+                    usarForroCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                if (temForro) {
+                    setMoneyField('valorTotalForro', p.valor_total_forro);
+                    setNumberField('comprimentoTotalForro', p.comprimento_total_forro);
+                    setNumberField('larguraForro', p.largura_forro);
+                    setNumberField('larguraUtilizadaForro', p.largura_utilizada_forro);
+                    setNumberField('comprimentoUtilizadoForro', p.comprimento_utilizado_forro);
+                    setNumberField('partesReaisForro', p.partes_reais_forro);
+                }
+
+                if (temAviamentosCheckbox && Array.isArray(p.aviamentos_data) && p.aviamentos_data.length > 0 && !temAviamentosCheckbox.checked) {
+                    temAviamentosCheckbox.checked = true;
+                    temAviamentosCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                if (p.tecido_tipo && !selecionarTecidoNaLista(tecidosList, p.tecido_tipo)) {
+                    tecidoSelecionado = String(p.tecido_tipo);
+                    tipoTecidoInput.value = tecidoSelecionado;
+                    tecidoSelecionadoNome.textContent = tecidoSelecionado;
+                    tecidosSelected.classList.add('active');
+                    limparErro('tipoTecido');
+                }
+                if (p.tecido_tipo2 && !selecionarTecidoNaLista(tecidosList2, p.tecido_tipo2)) {
+                    tecidoSelecionado2 = String(p.tecido_tipo2);
+                    if (tipoTecidoInput2) tipoTecidoInput2.value = tecidoSelecionado2;
+                    if (tecidoSelecionadoNome2) tecidoSelecionadoNome2.textContent = tecidoSelecionado2;
+                    if (tecidosSelected2) tecidosSelected2.classList.add('active');
+                    limparErro('tipoTecido2');
+                }
+                if (p.tecido_tipo3 && !selecionarTecidoNaLista(tecidosList3, p.tecido_tipo3)) {
+                    tecidoSelecionado3 = String(p.tecido_tipo3);
+                    if (tipoTecidoInput3) tipoTecidoInput3.value = tecidoSelecionado3;
+                    if (tecidoSelecionadoNome3) tecidoSelecionadoNome3.textContent = tecidoSelecionado3;
+                    if (tecidosSelected3) tecidosSelected3.classList.add('active');
+                    limparErro('tipoTecido3');
+                }
+                if (p.tecido_tipo_forro && !selecionarTecidoNaLista(forrosList, p.tecido_tipo_forro)) {
+                    forroSelecionado = String(p.tecido_tipo_forro);
+                    if (tipoForroInput) tipoForroInput.value = forroSelecionado;
+                    if (forroSelecionadoNome) forroSelecionadoNome.textContent = forroSelecionado;
+                    if (forrosSelected) forrosSelected.classList.add('active');
+                    limparErro('tipoForro');
+                }
+
+                atualizarPrevia();
+                setTimeout(() => form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })), 30);
+
+                sessionStorage.removeItem('pc_recalculate_product');
+                const cleanUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, cleanUrl);
+                mostrarAlerta('Dados importados para recálculo. Confira e salve novamente.', 'success');
+            }
             
             // Inicializar
             carregarConfiguracoesPrecificacao()
                 .finally(() => {
                     carregarTecidos();
+                    preencherRecalculoProduto();
                     atualizarPrevia();
                 });
         });
