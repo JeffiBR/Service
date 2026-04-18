@@ -274,7 +274,7 @@
         <div class="field">
           <label for="password">Senha</label>
           <div class="password-wrap">
-            <input id="password" name="password" type="password" placeholder="Sua senha" required>
+            <input id="password" name="password" type="password" placeholder="Sua senha" autocomplete="current-password" required>
             <button class="show-btn" type="button" data-toggle="password">Ver</button>
           </div>
         </div>
@@ -314,7 +314,7 @@
         <div class="field">
           <label for="senhaCadastro">Senha</label>
           <div class="password-wrap">
-            <input id="senhaCadastro" name="senha" type="password" minlength="6" required>
+            <input id="senhaCadastro" name="senha" type="password" minlength="6" autocomplete="new-password" required>
             <button class="show-btn" type="button" data-toggle="senhaCadastro">Ver</button>
           </div>
           <div class="password-strength">
@@ -410,6 +410,13 @@
 
       const initialMode = params.get('mode') === 'signup' ? 'signup' : 'signin';
       setMode(initialMode);
+
+      if (window.authPrewarm) {
+        setStatus('Conectando ao servidor...');
+        window.authPrewarm()
+          .then(function () { setStatus(''); })
+          .catch(function () { setStatus(''); });
+      }
 
       document.querySelectorAll('[data-toggle]').forEach((btn) => {
         btn.addEventListener('click', function () {
@@ -561,7 +568,7 @@
         }
 
         btn.disabled = true;
-        setStatus('Autenticando...');
+        setStatus('Autenticando... (se o servidor estiver em hibernacao, pode levar ate 1 minuto)');
 
         try {
           await window.authLogin(identifier, password, remember);
@@ -598,7 +605,7 @@
         }
 
         btn.disabled = true;
-        setStatus('Criando usuario...');
+        setStatus('Criando usuario... (se o servidor estiver em hibernacao, pode levar ate 1 minuto)');
 
         try {
           await window.authRegister(payload);

@@ -19,17 +19,22 @@
 
   // FastAPI auth service base URL
   const runtimeAuthBase = window.__AUTH_API_BASE__ || localStorage.getItem('tp_auth_api_base');
-  if (runtimeAuthBase) {
+  const normalizedRuntimeAuthBase = runtimeAuthBase ? runtimeAuthBase.replace(/\/+$/, '') : '';
+  const ignoreLegacyAuthBase = normalizedRuntimeAuthBase === 'https://certoauth.onrender.com';
+
+  if (normalizedRuntimeAuthBase && !ignoreLegacyAuthBase) {
     window.AUTH_API_BASE = runtimeAuthBase.replace(/\/+$/, '');
   } else if (isLocalHost) {
     window.AUTH_API_BASE = 'http://localhost:8000';
   } else {
-    // Ajuste para a URL do servico FastAPI em producao
-    window.AUTH_API_BASE = 'https://certoauth.onrender.com';
+    // Em producao, auth roda no mesmo backend principal
+    window.AUTH_API_BASE = 'https://certobackend.onrender.com';
   }
 
   // Session duration in ms (default 30 days)
   window.AUTH_TTL_MS = window.AUTH_TTL_MS || (30 * 24 * 60 * 60 * 1000);
+  // Sessao persistente ao marcar "Manter conectado" (7 dias)
+  window.AUTH_TTL_DAYS = Number(window.AUTH_TTL_DAYS || 7);
 
   // Legacy Clerk flags kept disabled (auth now uses FastAPI)
   window.CLERK_PUBLISHABLE_KEY = '';

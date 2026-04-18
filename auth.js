@@ -11,12 +11,76 @@
     return String(window.AUTH_API_BASE || '').replace(/\/+$/, '');
   }
 
+  function isNetworkError(err) {
+    const msg = String(err && err.message ? err.message : '').toLowerCase();
+    return msg.includes('failed to fetch') || msg.includes('networkerror') || msg.includes('load failed');
+  }
+
+  function createTimeoutSignal(timeoutMs) {
+    if (typeof AbortController !== 'function') return null;
+    const controller = new AbortController();
+    const timer = setTimeout(function () {
+      controller.abort();
+    }, timeoutMs);
+    return {
+      signal: controller.signal,
+      clear: function () { clearTimeout(timer); }
+    };
+  }
+
+  async function wakeServer(base) {
+    if (!base) return false;
+    const timeoutMs = Number(window.AUTH_WAKE_TIMEOUT_MS || 70000);
+    const endpoints = [base + '/health', base + '/api/wake-up'];
+
+    for (const endpoint of endpoints) {
+      const timeout = createTimeoutSignal(timeoutMs);
+      try {
+        await fetch(endpoint + '?ts=' + Date.now(), {
+          method: 'GET',
+          cache: 'no-store',
+          signal: timeout ? timeout.signal : undefined
+        });
+        if (timeout) timeout.clear();
+        return true;
+      } catch (_) {
+        if (timeout) timeout.clear();
+      }
+    }
+    return false;
+  }
+
+  async function fetchWithWake(url, init) {
+    try {
+      return await fetch(url, init);
+    } catch (err) {
+      if (!isNetworkError(err)) throw err;
+
+      const base = getAuthBase();
+      await wakeServer(base);
+      try {
+        return await fetch(url, init);
+      } catch (err2) {
+        if (isNetworkError(err2)) {
+          throw new Error('Servidor em hibernacao no Render. Aguarde ~1 minuto e tente novamente.');
+        }
+        throw err2;
+      }
+    }
+  }
+
+  async function prewarmAuthServer() {
+    const base = getAuthBase();
+    if (!base) return false;
+    return wakeServer(base);
+  }
+
   function getStoredSession() {
     return parseJSON(localStorage.getItem(SESSION_KEY));
   }
 
   function saveSession(data, remember) {
-    const rememberDays = Number(window.AUTH_TTL_DAYS || 30);
+    const rememberDays = Number(window.AUTH_TTL_DAYS || 7);
     const shortHours = Number(window.AUTH_SHORT_TTL_HOURS || 12);
     const ttlMs = remember
       ? rememberDays * 24 * 60 * 60 * 1000
@@ -196,7 +260,7 @@
     const base = getAuthBase();
     if (!base) throw new Error('AUTH_API_BASE nao configurada.');
 
-    const response = await fetch(base + '/auth/login', {
+    const response = await fetchWithWake(base + '/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifier, password })
@@ -219,7 +283,7 @@
     const headers = { 'Content-Type': 'application/json' };
     if (identity.token) headers.Authorization = 'Bearer ' + identity.token;
 
-    const response = await fetch(base + '/auth/register', {
+    const response = await fetchWithWake(base + '/auth/register', {
       method: 'POST',
       headers,
       body: JSON.stringify(data)
@@ -241,7 +305,7 @@
     if (!base || !session || !session.token) return null;
 
     try {
-      const response = await fetch(base + '/auth/me', {
+      const response = await fetchWithWake(base + '/auth/me', {
         method: 'GET',
         headers: { Authorization: 'Bearer ' + session.token }
       });
@@ -266,7 +330,7 @@
     const session = getStoredSession();
     if (!base || !session || !session.token) throw new Error('AUTH_API_BASE nao configurada.');
 
-    const response = await fetch(base + '/auth/me', {
+    const response = await fetchWithWake(base + '/auth/me', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -453,6 +517,7 @@
   window.authRegister = register;
   window.authRefreshCurrentUser = refreshCurrentUser;
   window.authUpdateMyProfile = updateMyProfile;
+  window.authPrewarm = prewarmAuthServer;
 
   patchFetchWithUserHeaders();
 
