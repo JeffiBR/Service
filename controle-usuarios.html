@@ -359,6 +359,36 @@
       min-width: 140px;
     }
 
+    .role-select,
+    .status-select {
+      font-weight: 700;
+    }
+
+    .role-select.role-usuario {
+      border-color: rgba(96, 165, 250, 0.45);
+      background: rgba(96, 165, 250, 0.12);
+    }
+
+    .role-select.role-administrador {
+      border-color: rgba(251, 191, 36, 0.5);
+      background: rgba(251, 191, 36, 0.14);
+    }
+
+    .role-select.role-desenvolvedor {
+      border-color: rgba(167, 139, 250, 0.55);
+      background: rgba(167, 139, 250, 0.16);
+    }
+
+    .status-select.status-ativo {
+      border-color: rgba(34, 197, 94, 0.55);
+      background: rgba(34, 197, 94, 0.14);
+    }
+
+    .status-select.status-inativo {
+      border-color: rgba(239, 68, 68, 0.55);
+      background: rgba(239, 68, 68, 0.13);
+    }
+
     textarea {
       min-height: 130px;
       resize: vertical;
@@ -384,6 +414,54 @@
       text-transform: capitalize;
       font-size: 0.94rem;
       font-weight: 700;
+    }
+
+    .perm-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-soft {
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .page-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      max-height: 132px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .page-chip {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .page-chip.active {
+      border-color: rgba(251, 191, 36, 0.7);
+      background: rgba(251, 191, 36, 0.16);
+      color: #fde68a;
+      font-weight: 700;
+    }
+
+    .perm-add-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
     .hint {
@@ -450,7 +528,6 @@
             <h1 class="title">Controle de Usuarios</h1>
             <p class="subtitle">Somente usuarios com role <strong>desenvolvedor</strong> conseguem acessar e alterar permissoes.</p>
           </div>
-          <a class="btn" href="index.html">Voltar</a>
         </div>
 
         <div id="status" class="status">Carregando dados...</div>
@@ -517,6 +594,23 @@
       const usersCount = document.getElementById('usersCount');
       const authBase = String(window.AUTH_API_BASE || '').replace(/\/+$/, '');
       let usersCache = [];
+      const COMMON_PAGES = [
+        '*',
+        'dashboard.html',
+        'index.html',
+        'renovacoes.html',
+        'historico-renovacoes.html',
+        'servidores.html',
+        'revendedores.html',
+        'mensagens.html',
+        'dindin.html',
+        'recebiveis.html',
+        'precificacao.html',
+        'produtos-atelie.html',
+        'configuracoes.html',
+        'perfil-usuario.html',
+        'controle-usuarios.html'
+      ];
 
       function setStatus(message, kind) {
         statusEl.textContent = message || '';
@@ -541,8 +635,9 @@
 
       function getRoleSelect(currentRole) {
         const role = getRoleLabel(currentRole);
+        const cls = `role-select role-${role}`;
         return `
-          <select>
+          <select class="${cls}">
             <option value="usuario" ${role === 'usuario' ? 'selected' : ''}>usuario</option>
             <option value="administrador" ${role === 'administrador' ? 'selected' : ''}>administrador</option>
             <option value="desenvolvedor" ${role === 'desenvolvedor' ? 'selected' : ''}>desenvolvedor</option>
@@ -562,12 +657,28 @@
 
       function getActiveSelect(currentActive) {
         const active = currentActive !== false;
+        const status = active ? 'ativo' : 'inativo';
+        const cls = `status-select status-${status}`;
         return `
-          <select>
+          <select class="${cls}">
             <option value="true" ${active ? 'selected' : ''}>ativo</option>
             <option value="false" ${!active ? 'selected' : ''}>inativo</option>
           </select>
         `;
+      }
+
+      function setRoleSelectTone(selectEl) {
+        if (!selectEl) return;
+        const role = getRoleLabel(selectEl.value);
+        selectEl.classList.remove('role-usuario', 'role-administrador', 'role-desenvolvedor');
+        selectEl.classList.add(`role-${role}`);
+      }
+
+      function setStatusSelectTone(selectEl) {
+        if (!selectEl) return;
+        const status = String(selectEl.value) === 'true' ? 'ativo' : 'inativo';
+        selectEl.classList.remove('status-ativo', 'status-inativo');
+        selectEl.classList.add(`status-${status}`);
       }
 
       async function fetchJson(path, options) {
@@ -636,6 +747,17 @@
           const saveUserBtn = tr.querySelector('.btn-save-user');
           const saveRoleBtn = tr.querySelector('.btn-save-role');
 
+          setStatusSelectTone(activeSelect);
+          setRoleSelectTone(roleSelect);
+
+          activeSelect.addEventListener('change', function () {
+            setStatusSelectTone(activeSelect);
+          });
+
+          roleSelect.addEventListener('change', function () {
+            setRoleSelectTone(roleSelect);
+          });
+
           saveUserBtn.addEventListener('click', async function () {
             saveUserBtn.disabled = true;
             try {
@@ -701,9 +823,38 @@
           .filter(Boolean);
       }
 
+      function normalizePages(pages) {
+        const out = [];
+        const seen = new Set();
+        pages.forEach((p) => {
+          const page = String(p || '').trim();
+          if (!page || seen.has(page)) return;
+          seen.add(page);
+          out.push(page);
+        });
+        return out;
+      }
+
+      function buildKnownPages(data) {
+        const set = new Set(COMMON_PAGES);
+        ['usuario', 'administrador', 'desenvolvedor'].forEach((role) => {
+          const arr = Array.isArray(data && data[role]) ? data[role] : [];
+          arr.forEach((page) => {
+            const p = String(page || '').trim();
+            if (p) set.add(p);
+          });
+        });
+        return Array.from(set).sort((a, b) => {
+          if (a === '*') return -1;
+          if (b === '*') return 1;
+          return a.localeCompare(b);
+        });
+      }
+
       async function loadPermissions() {
         const data = await fetchJson('/auth/permissions');
         const roles = ['usuario', 'administrador', 'desenvolvedor'];
+        const knownPages = buildKnownPages(data);
         permGrid.innerHTML = '';
 
         roles.forEach((role) => {
@@ -711,22 +862,94 @@
           item.className = 'perm-item';
           item.innerHTML = `
             <h3 class="perm-title">${role}</h3>
+            <div class="perm-toolbar">
+              <button class="btn btn-soft btn-select-all" type="button">Selecionar todas</button>
+              <button class="btn btn-soft btn-clear" type="button">Limpar</button>
+            </div>
+            <div class="page-chips"></div>
+            <div class="perm-add-row">
+              <input type="text" class="perm-add-input" placeholder="Nova pagina (ex.: relatorios.html)">
+              <button class="btn btn-soft btn-add-page" type="button">Adicionar</button>
+            </div>
             <textarea>${permissionsToText(data[role])}</textarea>
-            <button class="btn btn-primary" type="button" style="margin-top:8px;">Salvar paginas</button>
+            <button class="btn btn-primary btn-save-pages" type="button" style="margin-top:8px;">Salvar paginas</button>
           `;
 
+          const selected = new Set(normalizePages(textToPermissions(data[role])));
+          const chipsWrap = item.querySelector('.page-chips');
+          const btnSelectAll = item.querySelector('.btn-select-all');
+          const btnClear = item.querySelector('.btn-clear');
+          const addInput = item.querySelector('.perm-add-input');
+          const addBtn = item.querySelector('.btn-add-page');
           const textarea = item.querySelector('textarea');
-          const saveBtn = item.querySelector('button');
+          const saveBtn = item.querySelector('.btn-save-pages');
+
+          function syncTextareaFromSet() {
+            textarea.value = Array.from(selected).join('\n');
+          }
+
+          function syncSetFromTextarea() {
+            selected.clear();
+            normalizePages(textToPermissions(textarea.value)).forEach((page) => selected.add(page));
+          }
+
+          function renderChips() {
+            chipsWrap.innerHTML = '';
+            knownPages.forEach((page) => {
+              const chip = document.createElement('button');
+              chip.type = 'button';
+              chip.className = 'page-chip' + (selected.has(page) ? ' active' : '');
+              chip.textContent = page;
+              chip.addEventListener('click', function () {
+                if (selected.has(page)) selected.delete(page);
+                else selected.add(page);
+                syncTextareaFromSet();
+                renderChips();
+              });
+              chipsWrap.appendChild(chip);
+            });
+          }
+
+          btnSelectAll.addEventListener('click', function () {
+            knownPages.forEach((page) => selected.add(page));
+            syncTextareaFromSet();
+            renderChips();
+          });
+
+          btnClear.addEventListener('click', function () {
+            selected.clear();
+            syncTextareaFromSet();
+            renderChips();
+          });
+
+          addBtn.addEventListener('click', function () {
+            const page = String(addInput.value || '').trim();
+            if (!page) return;
+            selected.add(page);
+            addInput.value = '';
+            syncTextareaFromSet();
+            renderChips();
+          });
+
+          textarea.addEventListener('input', function () {
+            syncSetFromTextarea();
+            renderChips();
+          });
+
+          renderChips();
 
           saveBtn.addEventListener('click', async function () {
             saveBtn.disabled = true;
             try {
-              const pages = textToPermissions(textarea.value);
+              syncSetFromTextarea();
+              const pages = normalizePages(Array.from(selected));
               await fetchJson(`/auth/permissions/${encodeURIComponent(role)}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pages })
               });
+              textarea.value = pages.join('\n');
+              renderChips();
               setStatus(`Permissoes do grupo ${role} atualizadas.`, 'ok');
             } catch (err) {
               setStatus(err && err.message ? err.message : 'Falha ao salvar permissoes.', 'error');

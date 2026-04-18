@@ -259,14 +259,24 @@
       const headers = new Headers(requestInit.headers || {});
       const identity = getRequestIdentity();
       const base = getAuthBase();
-      const requestUrl = typeof input === 'string'
+      const rawRequestUrl = typeof input === 'string'
         ? input
         : (input && typeof input.url === 'string' ? input.url : '');
-      if (identity.token) headers.set('Authorization', 'Bearer ' + identity.token);
-      if (identity.userId) headers.set('X-User-Id', identity.userId);
-      if (identity.email) headers.set('X-User-Email', identity.email);
-      if (identity.name) headers.set('X-User-Name', identity.name);
-      if (identity.role) headers.set('X-User-Role', identity.role);
+      let requestUrl = '';
+      try {
+        requestUrl = new URL(rawRequestUrl, window.location.href).toString();
+      } catch (_) {
+        requestUrl = rawRequestUrl;
+      }
+      const isBackendCall = !!(base && requestUrl && requestUrl.startsWith(base + '/'));
+
+      if (isBackendCall) {
+        if (identity.token) headers.set('Authorization', 'Bearer ' + identity.token);
+        if (identity.userId) headers.set('X-User-Id', identity.userId);
+        if (identity.email) headers.set('X-User-Email', identity.email);
+        if (identity.name) headers.set('X-User-Name', identity.name);
+        if (identity.role) headers.set('X-User-Role', identity.role);
+      }
       requestInit.headers = headers;
       return originalFetch(input, requestInit).then(function (response) {
         const isAuthApiCall = !!(base && requestUrl && requestUrl.startsWith(base + '/auth/'));
