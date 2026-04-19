@@ -89,6 +89,39 @@
     .product-preview { width: 96px; height: 96px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(255,255,255,.1); background: #0c0f17; }
     .row-grid { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0,1fr)); }
     .row-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+    .categories-tools { display:grid; grid-template-columns: 1fr auto; gap:10px; margin-bottom:10px; }
+    .category-list { display:flex; flex-wrap:wrap; gap:8px; }
+    .category-chip {
+      display:inline-flex; align-items:center; gap:6px;
+      border:1px solid var(--line); border-radius:999px; padding:6px 10px;
+      background:rgba(255,255,255,.03); font-size:.82rem; color:var(--text);
+    }
+    .chip-remove {
+      border:0; background:transparent; color:#fca5a5; cursor:pointer; font-size:.9rem; line-height:1;
+    }
+    input[type="file"] {
+      border:1px dashed rgba(251,191,36,.35);
+      background:rgba(15,19,30,.65);
+      padding:8px;
+      border-radius:12px;
+    }
+    input[type="file"]::file-selector-button {
+      border:1px solid rgba(251,191,36,.55);
+      background:linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+      color:#121212;
+      font-weight:700;
+      border-radius:10px;
+      padding:8px 12px;
+      cursor:pointer;
+      margin-right:10px;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      box-shadow:0 0 0 rgba(251,191,36,0);
+    }
+    input[type="file"]::file-selector-button:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(251,191,36,.26);
+      filter:brightness(1.02);
+    }
     .muted { color: var(--muted); font-size: .84rem; }
     @media (max-width: 1080px) {
       .header { padding-right: 0; }
@@ -137,6 +170,20 @@
 
         <section class="card">
           <div class="card-head">
+            <h2 class="card-title">Categorias do marketplace</h2>
+            <button id="btnAddCategory" class="btn btn-primary" type="button"><i class="fas fa-tag"></i> Cadastrar categoria</button>
+          </div>
+          <div class="card-body">
+            <div class="categories-tools">
+              <input id="newCategoryName" type="text" placeholder="Ex.: Eletronicos">
+              <button id="btnRefreshCategories" class="btn" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+            </div>
+            <div id="categoriesList" class="category-list"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
             <h2 class="card-title">Novo produto</h2>
             <button id="btnCreate" class="btn btn-primary" type="button"><i class="fas fa-plus"></i> Cadastrar produto</button>
           </div>
@@ -149,6 +196,10 @@
               <div>
                 <label for="newValor">Valor (R$)</label>
                 <input id="newValor" type="number" min="0" step="0.01" placeholder="Ex.: 59.90">
+              </div>
+              <div class="full">
+                <label for="newCategoria">Categoria</label>
+                <input id="newCategoria" type="text" list="categoryOptions" placeholder="Selecione ou digite uma categoria">
               </div>
               <div class="full">
                 <label for="newDescricao">Descricao</label>
@@ -186,16 +237,25 @@
       </div>
     </main>
   </div>
+  <datalist id="categoryOptions"></datalist>
 
   <script>
     (function () {
-      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/marketplace/products';
+      const API_BASE = String(window.API_BASE || '').replace(/\/+$/, '') + '/marketplace';
+      const API_PRODUCTS = API_BASE + '/products';
+      const API_CATEGORIES = API_BASE + '/categories';
       const statusEl = document.getElementById('status');
       const productsEl = document.getElementById('products');
       const btnCreate = document.getElementById('btnCreate');
       const btnRefresh = document.getElementById('btnRefresh');
+      const btnAddCategory = document.getElementById('btnAddCategory');
+      const btnRefreshCategories = document.getElementById('btnRefreshCategories');
+      const newCategoryNameEl = document.getElementById('newCategoryName');
+      const categoriesListEl = document.getElementById('categoriesList');
+      const categoryOptionsEl = document.getElementById('categoryOptions');
       const newNomeEl = document.getElementById('newNome');
       const newValorEl = document.getElementById('newValor');
+      const newCategoriaEl = document.getElementById('newCategoria');
       const newDescricaoEl = document.getElementById('newDescricao');
       const newImagemUrlEl = document.getElementById('newImagemUrl');
       const newImagemArquivoEl = document.getElementById('newImagemArquivo');
@@ -203,6 +263,7 @@
       const newPreviewEl = document.getElementById('newPreview');
       const PLACEHOLDER_IMG = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDI2MCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI2MCIgaGVpZ2h0PSIxNjAiIGZpbGw9IiMwQzBGMTEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iI0E4QjBCQSIgZm9udC1zaXplPSIxNCIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2VtIGltYWdlbTwvdGV4dD48L3N2Zz4=';
       let products = [];
+      let categories = [];
       let newImageDataUrl = '';
 
       function setStatus(msg, kind) {
@@ -221,6 +282,10 @@
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
+      }
+
+      function normalizeCategory(value) {
+        return String(value || '').trim();
       }
 
       async function fetchJson(url, options) {
@@ -249,12 +314,32 @@
       function clearNewForm() {
         newNomeEl.value = '';
         newValorEl.value = '';
+        newCategoriaEl.value = '';
         newDescricaoEl.value = '';
         newImagemUrlEl.value = '';
         newImagemArquivoEl.value = '';
         newAtivoEl.checked = true;
         newImageDataUrl = '';
         updateNewPreview();
+      }
+
+      function renderCategoryOptions() {
+        categoryOptionsEl.innerHTML = categories
+          .map((c) => `<option value="${escapeHtml(c)}"></option>`)
+          .join('');
+      }
+
+      function renderCategoriesList() {
+        if (!categories.length) {
+          categoriesListEl.innerHTML = '<div class="muted">Nenhuma categoria cadastrada.</div>';
+          return;
+        }
+        categoriesListEl.innerHTML = categories.map((c) => `
+          <span class="category-chip">
+            ${escapeHtml(c)}
+            <button class="chip-remove" type="button" data-category="${escapeHtml(c)}" aria-label="Remover categoria">&times;</button>
+          </span>
+        `).join('');
       }
 
       function renderRows() {
@@ -274,6 +359,10 @@
                 <div>
                   <label>Valor (R$)</label>
                   <input class="r-valor" type="number" min="0" step="0.01" value="${Number(p.valor || 0)}">
+                </div>
+                <div style="grid-column:1 / -1;">
+                  <label>Categoria</label>
+                  <input class="r-categoria" type="text" list="categoryOptions" value="${escapeHtml(p.categoria || '')}">
                 </div>
                 <div style="grid-column:1 / -1;">
                   <label>Descricao</label>
@@ -302,21 +391,47 @@
       }
 
       async function loadProducts() {
-        const data = await fetchJson(API);
+        const data = await fetchJson(API_PRODUCTS);
         products = Array.isArray(data) ? data : [];
         renderRows();
       }
 
+      async function loadCategories() {
+        const data = await fetchJson(API_CATEGORIES);
+        categories = Array.isArray(data) ? data : [];
+        renderCategoryOptions();
+        renderCategoriesList();
+      }
+
+      async function createCategory() {
+        const categoria = normalizeCategory(newCategoryNameEl.value);
+        if (!categoria) throw new Error('Informe o nome da categoria.');
+        await fetchJson(API_CATEGORIES, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ categoria })
+        });
+        newCategoryNameEl.value = '';
+        await loadCategories();
+      }
+
+      async function removeCategory(categoria) {
+        await fetchJson(API_CATEGORIES + '/' + encodeURIComponent(categoria), { method: 'DELETE' });
+        await loadCategories();
+      }
+
       async function createProduct() {
         const imagem = String(newImageDataUrl || newImagemUrlEl.value || '').trim();
+        const categoria = normalizeCategory(newCategoriaEl.value);
         const payload = {
           nome: String(newNomeEl.value || '').trim(),
+          categoria: categoria,
           descricao: String(newDescricaoEl.value || '').trim(),
           imagem_url: imagem,
           valor: Number(newValorEl.value || 0),
           ativo: !!newAtivoEl.checked
         };
-        await fetchJson(API, {
+        await fetchJson(API_PRODUCTS, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -330,6 +445,7 @@
         const nome = rowEl.querySelector('.r-nome').value;
         const descricao = rowEl.querySelector('.r-descricao').value;
         const valor = Number(rowEl.querySelector('.r-valor').value || 0);
+        const categoria = normalizeCategory(rowEl.querySelector('.r-categoria').value);
         const imagemUrlInput = rowEl.querySelector('.r-imagem-url');
         const imagemFileInput = rowEl.querySelector('.r-imagem-file');
         const ativo = !!rowEl.querySelector('.r-ativo').checked;
@@ -337,11 +453,12 @@
         const file = imagemFileInput.files && imagemFileInput.files[0] ? imagemFileInput.files[0] : null;
         if (file) imagem = await fileToDataUrl(file);
 
-        await fetchJson(API + '/' + encodeURIComponent(id), {
+        await fetchJson(API_PRODUCTS + '/' + encodeURIComponent(id), {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             nome: String(nome || '').trim(),
+            categoria: categoria,
             descricao: String(descricao || '').trim(),
             valor: Number(valor || 0),
             imagem_url: imagem,
@@ -355,7 +472,7 @@
         const id = rowEl.getAttribute('data-id');
         const ok = window.confirm('Deseja excluir este produto?');
         if (!ok) return;
-        await fetchJson(API + '/' + encodeURIComponent(id), { method: 'DELETE' });
+        await fetchJson(API_PRODUCTS + '/' + encodeURIComponent(id), { method: 'DELETE' });
         await loadProducts();
       }
 
@@ -390,6 +507,43 @@
           setStatus(err && err.message ? err.message : 'Falha ao cadastrar produto.', 'error');
         } finally {
           btnCreate.disabled = false;
+        }
+      });
+
+      btnAddCategory.addEventListener('click', async function () {
+        btnAddCategory.disabled = true;
+        try {
+          setStatus('Cadastrando categoria...');
+          await createCategory();
+          setStatus('Categoria cadastrada com sucesso.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao cadastrar categoria.', 'error');
+        } finally {
+          btnAddCategory.disabled = false;
+        }
+      });
+
+      btnRefreshCategories.addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando categorias...');
+          await loadCategories();
+          setStatus('Categorias atualizadas.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar categorias.', 'error');
+        }
+      });
+
+      categoriesListEl.addEventListener('click', async function (event) {
+        const btn = event.target.closest('.chip-remove');
+        if (!btn) return;
+        const categoria = btn.getAttribute('data-category') || '';
+        if (!categoria) return;
+        try {
+          setStatus('Excluindo categoria...');
+          await removeCategory(categoria);
+          setStatus('Categoria excluida com sucesso.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao excluir categoria.', 'error');
         }
       });
 
@@ -436,9 +590,10 @@
         }
         try {
           updateNewPreview();
-          setStatus('Carregando produtos do marketplace...');
+          setStatus('Carregando marketplace...');
+          await loadCategories();
           await loadProducts();
-          setStatus('Produtos carregados.', 'ok');
+          setStatus('Marketplace carregado.', 'ok');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao carregar produtos.', 'error');
         }

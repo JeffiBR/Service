@@ -585,16 +585,26 @@
 
     const closeMenu = function () { document.body.classList.remove('tp-sidebar-open'); };
     const openMenu = function () { document.body.classList.add('tp-sidebar-open'); };
+    let lastTouchToggleTs = 0;
     const toggleMenu = function (event) {
       if (event && typeof event.preventDefault === 'function') event.preventDefault();
       if (document.body.classList.contains('tp-sidebar-open')) closeMenu();
       else openMenu();
     };
+    const onToggleTouchStart = function (event) {
+      lastTouchToggleTs = Date.now();
+      toggleMenu(event);
+    };
+    const onToggleClick = function (event) {
+      // Em mobile, apos touchstart o navegador pode disparar click sintetico.
+      // Ignora esse click para nao alternar duas vezes (abre e fecha).
+      if ((Date.now() - lastTouchToggleTs) < 500) return;
+      toggleMenu(event);
+    };
 
-    toggle.onclick = toggleMenu;
-    toggle.addEventListener('touchstart', toggleMenu, { passive: false });
+    toggle.onclick = onToggleClick;
+    toggle.addEventListener('touchstart', onToggleTouchStart, { passive: false });
     overlay.onclick = closeMenu;
-    overlay.addEventListener('touchstart', closeMenu, { passive: true });
 
     document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
       item.addEventListener('click', function () {

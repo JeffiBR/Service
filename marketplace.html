@@ -61,12 +61,12 @@
     .card-head { padding: 14px 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
     .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
     .card-body { padding: 14px 16px; background: var(--panel-soft); }
-    .tools { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 12px; }
-    input, textarea {
+    .tools { display: grid; grid-template-columns: 1fr 220px auto; gap: 10px; margin-bottom: 12px; }
+    input, textarea, select {
       width: 100%; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.22); color: var(--text);
       padding: 10px 11px; outline: none; font-size: .9rem;
     }
-    input:focus, textarea:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
+    input:focus, textarea:focus, select:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
     textarea { resize: vertical; min-height: 80px; }
     .btn {
       border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: rgba(255,255,255,.05);
@@ -90,6 +90,11 @@
     .product-name { margin: 0; font-size: .98rem; font-weight: 700; }
     .product-desc { margin: 0; color: var(--muted); font-size: .82rem; min-height: 38px; }
     .product-price { font-size: 1rem; font-weight: 800; color: #fde68a; }
+    .product-category {
+      display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:999px;
+      padding:3px 9px; font-size:.74rem; color:#d1d5db; background:rgba(255,255,255,.04);
+      width:fit-content;
+    }
     .product-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .empty { color: var(--muted); font-size: .86rem; padding: 14px 0; }
 
@@ -182,6 +187,7 @@
     @media (max-width: 1080px) {
       .header { padding-right: 0; }
       .layout { grid-template-columns: 1fr; }
+      .tools { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       .sidebar { position: static; width: 100%; height: auto; }
@@ -233,6 +239,9 @@
             <div class="card-body">
               <div class="tools">
                 <input id="search" type="text" placeholder="Buscar produto por nome ou descricao">
+                <select id="categoryFilter">
+                  <option value="">Todas as categorias</option>
+                </select>
                 <div style="color:var(--muted);font-size:.85rem;display:flex;align-items:center;justify-content:flex-end;" id="productCount">0 produto(s)</div>
               </div>
               <div id="products" class="products"></div>
@@ -314,6 +323,7 @@
       const CART_KEY = 'tp_marketplace_cart';
       const statusEl = document.getElementById('status');
       const searchEl = document.getElementById('search');
+      const categoryFilterEl = document.getElementById('categoryFilter');
       const productsEl = document.getElementById('products');
       const productCountEl = document.getElementById('productCount');
       const cartListEl = document.getElementById('cartList');
@@ -332,6 +342,7 @@
       const pixCodeField = document.getElementById('pixCodeField');
       const pixCopyBtn = document.getElementById('pixCopyBtn');
       let products = [];
+      let categories = [];
       let cart = [];
       let pixConfig = { pix_key: '', pix_merchant_name: 'PRECO CERTO', pix_city: 'ARAPIRACA' };
       let pixTimerId = null;
@@ -443,7 +454,10 @@
 
       function renderProducts() {
         const term = String(searchEl.value || '').trim().toLowerCase();
+        const category = String(categoryFilterEl.value || '').trim().toLowerCase();
         const filtered = products.filter((p) => {
+          const categoryOk = !category || String(p.categoria || '').trim().toLowerCase() === category;
+          if (!categoryOk) return false;
           if (!term) return true;
           const hay = `${p.nome || ''} ${p.descricao || ''}`.toLowerCase();
           return hay.includes(term);
@@ -458,6 +472,7 @@
             <img class="product-img" src="${escapeHtml(p.imagem_url || '')}" alt="${escapeHtml(p.nome || 'Produto')}">
             <div class="product-body">
               <h3 class="product-name">${escapeHtml(p.nome)}</h3>
+              <div class="product-category">${escapeHtml(p.categoria || 'Sem categoria')}</div>
               <p class="product-desc">${escapeHtml(p.descricao)}</p>
               <div class="product-price">R$ ${formatMoney(p.valor)}</div>
               <div class="product-actions">
@@ -495,6 +510,14 @@
         sanitizeCartAgainstProducts();
         renderProducts();
         renderCart();
+      }
+
+      async function loadCategories() {
+        const data = await fetchJson(API + '/categories');
+        categories = Array.isArray(data) ? data : [];
+        categoryFilterEl.innerHTML = ['<option value="">Todas as categorias</option>']
+          .concat(categories.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`))
+          .join('');
       }
 
       async function loadOrders() {
@@ -617,6 +640,7 @@
       }
 
       searchEl.addEventListener('input', renderProducts);
+      categoryFilterEl.addEventListener('change', renderProducts);
 
       productsEl.addEventListener('click', async function (event) {
         const button = event.target.closest('button[data-action]');
@@ -711,6 +735,7 @@
           setStatus('Carregando marketplace...');
           loadCart();
           await loadPixConfig();
+          await loadCategories();
           await loadProducts();
           await loadOrders();
           setStatus('Marketplace pronto para compras.', 'ok');
