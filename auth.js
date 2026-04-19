@@ -159,8 +159,8 @@
     { href: 'revendedores.html', icon: 'fas fa-user-tie', label: 'Revendedores', inSidebar: true },
     { href: 'servidores.html', icon: 'fas fa-server', label: 'Servidores', inSidebar: true },
     { href: 'mensagens.html', icon: 'fas fa-comment', label: 'Mensagens', inSidebar: true },
-    { href: 'precificação.html', icon: 'fas fa-calculator', label: 'Precificação', inSidebar: true },
-    { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebiveis Ateli', inSidebar: true },
+    { href: 'precificacao.html', icon: 'fas fa-calculator', label: 'Precificação', inSidebar: true },
+    { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebíveis Ateliê', inSidebar: true },
     { href: 'dindin.html', icon: 'fas fa-sack-dollar', label: 'Dindin pra Receber', inSidebar: true },
     { href: 'produtos-atelie.html', icon: 'fas fa-box-archive', label: 'Produtos Registrados', inSidebar: true },
     { href: 'recarga-celular.html', icon: 'fas fa-mobile-screen-button', label: 'Recarga Celular', inSidebar: true },
@@ -168,8 +168,8 @@
     { href: 'historico-renovacoes.html', icon: 'fas fa-clock-rotate-left', label: 'Histórico Renovações', inSidebar: true },
     { href: 'configuracoes.html', icon: 'fas fa-sliders', label: 'Configurações', inSidebar: true, inUserMenu: true },
     { href: 'historico-compras.html', icon: 'fas fa-receipt', label: 'Histórico de compras', inUserMenu: true },
-    { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do usuario', inUserMenu: true },
-    { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de usuarios', devOnly: true, inUserMenu: true },
+    { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do usuário', inUserMenu: true },
+    { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de usuários', devOnly: true, inUserMenu: true },
     { href: 'controle-recargas-celular.html', icon: 'fas fa-sim-card', label: 'Controle recargas', devOnly: true, inUserMenu: true },
     { href: 'configuracoes-pix-dev.html', icon: 'fas fa-qrcode', label: 'Configurações PIX (Dev)', devOnly: true, inUserMenu: true },
     { href: 'configuracoes-marketplace-dev.html', icon: 'fas fa-store-slash', label: 'Configurações marketplace (Dev)', devOnly: true, inUserMenu: true }
@@ -634,29 +634,38 @@
     const style = document.createElement('style');
     style.id = 'tpUserMenuStyle';
     style.textContent = `
-      .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: Inter, sans-serif; }
-      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: rgba(10,10,11,.92); color:#fafafa; border-radius:12px; padding:8px 10px; min-width:220px; cursor:pointer; }
-      .tp-user-avatar { width:34px; height:34px; border-radius:50%; background:#fbbf24; color:#111; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; flex-shrink:0; }
+      .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: "Plus Jakarta Sans", Inter, sans-serif; }
+      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: linear-gradient(180deg, rgba(18,21,32,.94), rgba(11,13,21,.94)); color:#fafafa; border-radius:14px; padding:8px 10px; min-width:220px; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+      .tp-user-menu-btn:hover { transform: translateY(-1px); border-color: rgba(251,191,36,.45); box-shadow: 0 14px 26px rgba(0,0,0,.4), 0 0 0 1px rgba(251,191,36,.2); }
+      .tp-user-menu.open .tp-user-menu-btn { border-color: rgba(251,191,36,.45); box-shadow: 0 14px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(251,191,36,.22); }
+      .tp-user-avatar { width:36px; height:36px; border-radius:50%; background: radial-gradient(circle at 30% 20%, #ffd979, #fbbf24 55%, #cf8f00 100%); color:#111; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; flex-shrink:0; box-shadow: 0 6px 16px rgba(251,191,36,.35); }
       .tp-user-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
       .tp-user-meta { line-height:1.25; min-width:0; flex:1; text-align:left; }
       .tp-user-name { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .tp-user-group { font-size:11px; color:#a1a1aa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:capitalize; }
-      .tp-user-caret { color:#a1a1aa; font-size:12px; }
-      .tp-user-dropdown { display:none; position:absolute; top:calc(100% + 8px); right:0; width:290px; border-radius:12px; border:1px solid rgba(255,255,255,.14); background:#10131c; box-shadow:0 16px 34px rgba(0,0,0,.4); overflow:hidden; }
-      .tp-user-menu.open .tp-user-dropdown { display:block; }
-      .tp-user-profile { padding:12px; border-bottom:1px solid rgba(255,255,255,.08); }
+      .tp-user-caret { color:#a1a1aa; font-size:12px; transition: transform .22s ease, color .22s ease; }
+      .tp-user-menu.open .tp-user-caret { transform: rotate(180deg); color:#fbbf24; }
+      .tp-user-dropdown { display:block; position:absolute; top:calc(100% + 10px); right:0; width:310px; border-radius:16px; border:1px solid rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(20,24,37,.88), rgba(10,13,22,.88)); backdrop-filter: blur(14px); box-shadow: 0 24px 48px rgba(0,0,0,.48), 0 0 0 1px rgba(255,255,255,.04) inset; overflow:hidden; opacity:0; transform: translateY(-8px) scale(.985); pointer-events:none; transition: opacity .2s ease, transform .22s ease; }
+      .tp-user-dropdown::before { content:""; position:absolute; inset:0; background: radial-gradient(120% 70% at 100% 0%, rgba(251,191,36,.13), transparent 55%); pointer-events:none; }
+      .tp-user-menu.open .tp-user-dropdown { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+      .tp-user-profile { position:relative; z-index:1; padding:14px; border-bottom:1px solid rgba(255,255,255,.1); }
       .tp-user-profile .tp-user-name { font-size:14px; }
       .tp-user-profile .tp-user-email { color:#a1a1aa; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .tp-user-profile .tp-user-group { margin-top:6px; font-size:12px; color:#fbbf24; font-weight:600; }
+      .tp-user-profile .tp-user-group { margin-top:6px; font-size:12px; color:#fbbf24; font-weight:700; letter-spacing:.01em; }
       .tp-user-pages { margin-top:8px; color:#a1a1aa; font-size:11px; }
-      .tp-user-actions a, .tp-user-actions button { width:100%; border:0; border-top:1px solid rgba(255,255,255,.06); background:transparent; color:#fafafa; text-decoration:none; text-align:left; padding:11px 12px; cursor:pointer; font-size:13px; display:block; }
-      .tp-user-actions a:hover, .tp-user-actions button:hover { background:rgba(255,255,255,.06); }
+      .tp-user-actions { position:relative; z-index:1; padding:8px; display:grid; gap:4px; }
+      .tp-user-actions a, .tp-user-actions button { width:100%; border:1px solid transparent; background:transparent; color:#eef1f6; text-decoration:none; text-align:left; padding:11px 12px; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:10px; border-radius:10px; transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease; }
+      .tp-user-actions a i, .tp-user-actions button i { width:16px; text-align:center; color:#aeb5c2; transition: color .18s ease, transform .18s ease; }
+      .tp-user-actions a:hover, .tp-user-actions button:hover { background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border-color: rgba(251,191,36,.34); color:#fff; transform: translateX(2px); }
+      .tp-user-actions a:hover i, .tp-user-actions button:hover i { color:#fbbf24; transform: scale(1.05); }
+      .tp-user-logout { margin-top:4px; color:#ffd3d3 !important; border-top:1px solid rgba(255,255,255,.08) !important; border-radius:10px !important; }
+      .tp-user-logout:hover { color:#fff4f4 !important; border-color: rgba(248,113,113,.44) !important; background: linear-gradient(180deg, rgba(248,113,113,.14), rgba(248,113,113,.06)) !important; }
       @media (max-width: 960px) {
         .tp-user-menu { top:12px; right:12px; left:62px; max-width:calc(100vw - 74px); }
         .tp-user-menu-btn { min-width:0; width:100%; max-width:100%; padding:8px 9px; }
         .tp-user-name { font-size:12px; }
         .tp-user-group { font-size:10px; }
-        .tp-user-dropdown { width:min(92vw, 320px); right:0; }
+        .tp-user-dropdown { width:min(92vw, 340px); right:0; }
       }
     `;
     document.head.appendChild(style);
@@ -688,7 +697,7 @@
     const userMenuLinks = MENU_ITEMS
       .filter((item) => item.inUserMenu)
       .filter((item) => isMenuItemVisible(item, session, role))
-      .map((item) => `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
+      .map((item) => `<a href="${item.href}"><i class="${escapeHtml(item.icon)}" aria-hidden="true"></i><span>${escapeHtml(item.label)}</span></a>`)
       .join('');
 
     menu.innerHTML = `
@@ -704,12 +713,12 @@
         <div class="tp-user-profile">
           <div class="tp-user-name">${escapeHtml(profile.name)}</div>
           <div class="tp-user-email">${escapeHtml(profile.email || 'Sem e-mail')}</div>
-          <div class="tp-user-group">Nivel: ${escapeHtml(profile.group)}</div>
-          <div class="tp-user-pages">Paginas: ${escapeHtml(allowedPreview)}</div>
+          <div class="tp-user-group">Nível: ${escapeHtml(profile.group)}</div>
+          <div class="tp-user-pages">Páginas: ${escapeHtml(allowedPreview)}</div>
         </div>
         <div class="tp-user-actions">
           ${userMenuLinks}
-          <button type="button" id="tpUserLogoutBtn">Sair</button>
+          <button type="button" id="tpUserLogoutBtn" class="tp-user-logout"><i class="fas fa-right-from-bracket" aria-hidden="true"></i><span>Sair</span></button>
         </div>
       </div>
     `;
@@ -772,4 +781,5 @@
     mountUserMenu();
   });
 })();
+
 

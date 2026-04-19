@@ -966,7 +966,7 @@
             <i class="fas fa-message"></i>
             <span>Mensagens</span>
         </a>
-        <a class="nav-item" href="precificação.html">
+        <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
             <span>Precificação</span>
         </a>
@@ -1191,7 +1191,7 @@
             }
             const p = produtos.find(x => String(x.id) === String(id));
             const novasObs = appendComentarioAtual(p ? p.observacoes : '', comentario);
-            const res = await apiPatch('/precificação/' + id, { observacoes: novasObs });
+            const res = await apiPatch('/precificacao/' + id, { observacoes: novasObs });
             if (res.success) {
                 showToast('Comentario adicionado!');
                 if (p) p.observacoes = novasObs;
@@ -1338,7 +1338,7 @@
             const p = findProdutoById(id);
             if (!p) return;
             sessionStorage.setItem('pc_recalculate_product', JSON.stringify(p));
-            window.location.href = 'precificação.html?recalculate=1';
+            window.location.href = 'precificacao.html?recalculate=1';
         }
 
 
@@ -1651,7 +1651,7 @@
                 observacoes: document.getElementById('produtoObs').value.trim()
             };
 
-            const res = await apiPatch('/precificação/' + id, payload);
+            const res = await apiPatch('/precificacao/' + id, payload);
             if (res.success) {
                 showToast('Produto atualizado!');
                 closeProdutoModal();
@@ -1663,7 +1663,7 @@
 
         async function deleteProduto(id) {
             if (!confirm('Deseja excluir este produto?')) return;
-            const res = await apiDelete('/precificação/' + id);
+            const res = await apiDelete('/precificacao/' + id);
             if (res.success) {
                 showToast('Produto excluido!');
                 refreshData();
@@ -1673,7 +1673,7 @@
         }
 
         async function refreshData() {
-            const res = await apiGet('/precificação');
+            const res = await apiGet('/precificacao');
             if (res.success) {
                 produtos = res.data || [];
                 applySearch();
@@ -1698,6 +1698,7 @@
     </script>
 </body>
 </html>
+
 
 
 
