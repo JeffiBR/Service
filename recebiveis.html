@@ -236,11 +236,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .header-date {
-      color: var(--white-600);
-      font-size: 0.9rem;
-    }
-
     .main-content { padding: 32px; }
 
     .container {
@@ -626,7 +621,6 @@
       <header class="main-header">
         <div>
           <div class="page-title">Página de <span>Recebíveis</span></div>
-          <div class="header-date" id="headerDate"></div>
         </div>
         <div class="badge badge-open"><i class="fa-solid fa-circle-dollar-to-slot"></i> Controle de cobranças</div>
       </header>
@@ -782,7 +776,6 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
-    const headerDate = document.getElementById('headerDate');
     const compradorInput = document.getElementById('comprador');
     const telefoneInput = document.getElementById('telefone');
     const vendedorInput = document.getElementById('vendedor');
@@ -934,15 +927,6 @@
       }
     }
 
-    function setHeaderDate() {
-      const now = new Date();
-      headerDate.textContent = now.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      });
-    }
-
     valorTotalInput.addEventListener('input', atualizarResumo);
     adiantadoInput.addEventListener('change', atualizarResumo);
 
@@ -1009,7 +993,6 @@
       }
     });
 
-    setHeaderDate();
     atualizarResumo();
     renderRecebiveis();
   </script>

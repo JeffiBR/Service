@@ -350,11 +350,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .header-date {
-            color: var(--white-600);
-            font-size: 0.9rem;
-        }
-
         .main-content {
             padding: 32px;
         }
@@ -967,7 +962,6 @@
         <main class="main">
             <header class="main-header">
                 <h1 class="page-title"><span>Dashboard</span></h1>
-                <div class="header-date" id="headerDate"></div>
             </header>
 
             <div class="main-content">
@@ -1212,13 +1206,6 @@
             toastMessage.textContent = message;
             toast.classList.add('active');
             setTimeout(() => toast.classList.remove('active'), 3000);
-        }
-
-        // Update date
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', options);
         }
 
         // API calls
@@ -1639,7 +1626,6 @@
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
-            updateDate();
             loadData();
             const whatsappSelect = document.getElementById('whatsappTemplateSelect');
             if (whatsappSelect) whatsappSelect.addEventListener('change', updateWhatsappPreview);

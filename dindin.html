@@ -237,11 +237,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .header-date {
-      color: var(--white-600);
-      font-size: 0.9rem;
-    }
-
     .main-content { padding: 32px; }
 
     .container {
@@ -587,7 +582,6 @@
       <header class="main-header">
         <div>
           <div class="page-title">Dindin pra <span>Receber</span></div>
-          <div class="header-date" id="headerDate"></div>
         </div>
         <div class="badge badge-open"><i class="fa-solid fa-sack-dollar"></i> Controle do Dindin</div>
       </header>
@@ -738,7 +732,6 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
-    const headerDate = document.getElementById('headerDate');
     const nomeEncomendaInput = document.getElementById('nomeEncomenda');
     const compradorInput = document.getElementById('comprador');
     const deQuemInput = document.getElementById('deQuem');
@@ -986,15 +979,6 @@
       }
     }
 
-    function setHeaderDate() {
-      const now = new Date();
-      headerDate.textContent = now.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      });
-    }
-
     dindinForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const nomeEncomenda = nomeEncomendaInput.value.trim();
@@ -1059,7 +1043,6 @@
       }
     });
 
-    setHeaderDate();
     renderTabela();
   </script>
 </body>

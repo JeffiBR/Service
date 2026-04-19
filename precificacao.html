@@ -264,11 +264,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .header-date {
-            color: var(--white-600);
-            font-size: 0.9rem;
-        }
-
         .main-content { padding: 32px; }
 
         .card {
@@ -1088,7 +1083,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
 <main class="main">
 <header class="main-header">
 <div class="page-title">Precificação</div>
-<div class="header-date" id="headerDate"></div>
 </header>
 <div class="main-content">
 <div class="card">
@@ -2073,13 +2067,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
         
         // elementos de toggles e sees sero armazenados mais tarde aps DOMContentLoaded
 
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const el = document.getElementById('headerDate');
-            if (el) el.textContent = now.toLocaleDateString('pt-BR', options);
-        }
-
         function updateServerStatus(online) {
             const dot = document.getElementById('statusDot');
             const text = document.getElementById('statusText');
@@ -2094,7 +2081,6 @@ input:not([type="file"]):not([type="checkbox"]), select {
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            updateDate();
             fetch(`${API_URL}/health`)
                 .then(() => updateServerStatus(true))
                 .catch(() => updateServerStatus(false));

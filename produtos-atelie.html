@@ -239,8 +239,6 @@
 
         .page-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; }
         .page-title span { background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-date { color: var(--white-600); font-size: 0.9rem; }
-
         .main-content { padding: 32px; }
 
         .filters-bar {
@@ -1002,7 +1000,6 @@
         <main class="main">
             <header class="main-header">
                 <div class="page-title">Produtos <span>Registrados</span></div>
-                <div class="header-date" id="headerDate"></div>
             </header>
 
             
@@ -1362,12 +1359,6 @@
             }
         }
 
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('headerDate').textContent = now.toLocaleDateString('pt-BR', options);
-        }
-
         async function apiGet(endpoint) {
             try {
                 const res = await fetch(API_URL + endpoint);
@@ -1683,7 +1674,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateDate();
             refreshData();
             setViewMode(currentViewMode);
             document.getElementById('searchInput').addEventListener('input', applySearch);
