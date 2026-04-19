@@ -179,6 +179,28 @@
       padding: 10px 11px; outline: none; font-size: .9rem;
     }
     input:focus, select:focus, textarea:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
+    .input-ddd {
+      background: linear-gradient(180deg, rgba(8,12,22,.98), rgba(8,12,22,.94));
+      border: 1px solid rgba(251,191,36,.78);
+      border-radius: 14px;
+      min-height: 48px;
+      font-size: 1.95rem;
+      font-weight: 600;
+      letter-spacing: .01em;
+      color: #f8fafc;
+      box-shadow: 0 0 0 2px rgba(251,191,36,.18), 0 10px 22px rgba(0,0,0,.26) inset;
+      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .input-ddd::placeholder {
+      color: #d1d5db;
+      opacity: .6;
+      font-weight: 500;
+    }
+    .input-ddd:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 2px rgba(251,191,36,.32), 0 0 0 6px rgba(251,191,36,.12), 0 10px 22px rgba(0,0,0,.28) inset;
+      background: linear-gradient(180deg, rgba(8,12,22,1), rgba(8,12,22,.96));
+    }
     textarea { min-height: 90px; resize: vertical; }
     .full { grid-column: 1 / -1; }
 
@@ -307,48 +329,62 @@
       pointer-events: none;
     }
     .plano-btn {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.03);
-      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(21,24,33,.92), rgba(14,17,26,.92));
+      border-radius: 14px;
       color: var(--text);
-      padding: 10px;
+      padding: 12px 12px 11px 14px;
       text-align: left;
       cursor: pointer;
       transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,.24);
     }
     .plano-btn::before {
       content: '';
       position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #94a3b8;
+      opacity: .9;
+    }
+    .plano-btn::after {
+      content: '';
+      position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.12) 50%, transparent 100%);
-      transform: translateX(-120%);
-      transition: transform .35s ease;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), transparent 60%);
       pointer-events: none;
     }
     .plano-btn:hover {
-      border-color: rgba(251,191,36,.55);
-      background: rgba(251,191,36,.08);
+      border-color: rgba(255,255,255,.28);
       transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(0,0,0,.28);
+      box-shadow: 0 12px 24px rgba(0,0,0,.32);
     }
-    .plano-btn:hover::before {
-      transform: translateX(120%);
-    }
-    .planos-rapidos[data-theme="tim"] .plano-btn:hover { border-color: rgba(59,130,246,.65); background: rgba(59,130,246,.14); }
-    .planos-rapidos[data-theme="vivo"] .plano-btn:hover { border-color: rgba(168,85,247,.65); background: rgba(168,85,247,.14); }
-    .planos-rapidos[data-theme="claro"] .plano-btn:hover { border-color: rgba(239,68,68,.65); background: rgba(239,68,68,.14); }
     .plano-btn.active {
-      border-color: rgba(251,191,36,.78);
-      background: rgba(251,191,36,.16);
-      box-shadow: 0 0 0 2px rgba(251,191,36,.18) inset;
+      border-color: rgba(255,255,255,.5);
+      box-shadow: 0 14px 28px rgba(0,0,0,.36), 0 0 0 2px rgba(255,255,255,.08) inset;
+      transform: translateY(-1px) scale(1.01);
     }
-    .planos-rapidos[data-theme="tim"] .plano-btn.active { border-color: rgba(59,130,246,.8); background: rgba(59,130,246,.2); box-shadow: 0 0 0 2px rgba(59,130,246,.24) inset; }
-    .planos-rapidos[data-theme="vivo"] .plano-btn.active { border-color: rgba(168,85,247,.8); background: rgba(168,85,247,.2); box-shadow: 0 0 0 2px rgba(168,85,247,.24) inset; }
-    .planos-rapidos[data-theme="claro"] .plano-btn.active { border-color: rgba(239,68,68,.8); background: rgba(239,68,68,.2); box-shadow: 0 0 0 2px rgba(239,68,68,.24) inset; }
+    .planos-rapidos[data-theme="tim"] .plano-btn {
+      background: linear-gradient(180deg, rgba(13,58,173,.42), rgba(11,27,73,.86));
+    }
+    .planos-rapidos[data-theme="tim"] .plano-btn::before { background: #3b82f6; }
+    .planos-rapidos[data-theme="tim"] .plano-btn.active { border-color: rgba(147,197,253,.8); }
+    .planos-rapidos[data-theme="vivo"] .plano-btn {
+      background: linear-gradient(180deg, rgba(109,40,217,.42), rgba(50,18,106,.86));
+    }
+    .planos-rapidos[data-theme="vivo"] .plano-btn::before { background: #a855f7; }
+    .planos-rapidos[data-theme="vivo"] .plano-btn.active { border-color: rgba(216,180,254,.82); }
+    .planos-rapidos[data-theme="claro"] .plano-btn {
+      background: linear-gradient(180deg, rgba(220,38,38,.42), rgba(105,16,22,.86));
+    }
+    .planos-rapidos[data-theme="claro"] .plano-btn::before { background: #ef4444; }
+    .planos-rapidos[data-theme="claro"] .plano-btn.active { border-color: rgba(252,165,165,.82); }
     .plano-credito { font-weight: 800; font-size: .98rem; }
-    .plano-paga { margin-top: 4px; font-size: .8rem; color: #fde68a; }
+    .plano-paga { margin-top: 6px; font-size: .8rem; color: rgba(255,255,255,.82); font-weight: 600; }
     .planos-empty { color: var(--muted); font-size: .82rem; }
 
     .list-head { display:flex; justify-content: space-between; align-items:center; gap:8px; margin-bottom: 10px; }
@@ -545,7 +581,7 @@
               <form id="formRecarga" class="form-grid">
                 <div class="field">
                   <label for="numero">Número com DDD</label>
-                  <input id="numero" type="text" placeholder="(82) 99999-9999" required>
+                  <input id="numero" class="input-ddd" type="text" placeholder="(82) 99999-9999" required>
                 </div>
                 <div class="field">
                   <label for="operadora">Operadora</label>
