@@ -417,13 +417,13 @@
   <script>
     (function () {
       if (window.AUTH_DISABLED === true) {
-        window.location.replace('index.html');
+        window.location.replace('marketplace.html');
         return;
       }
 
       const params = new URLSearchParams(window.location.search || '');
       const requestedNext = params.get('next');
-      const next = requestedNext || 'index.html';
+      const next = requestedNext || 'marketplace.html';
 
       if (window.authIsLoggedIn && window.authIsLoggedIn()) {
         window.location.replace(next);

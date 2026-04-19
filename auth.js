@@ -172,7 +172,9 @@
     { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de usuários', devOnly: true, inUserMenu: true },
     { href: 'controle-recargas-celular.html', icon: 'fas fa-sim-card', label: 'Controle recargas', devOnly: true, inUserMenu: true },
     { href: 'configuracoes-pix-dev.html', icon: 'fas fa-qrcode', label: 'Configurações PIX (Dev)', devOnly: true, inUserMenu: true },
-    { href: 'configuracoes-marketplace-dev.html', icon: 'fas fa-store-slash', label: 'Configurações marketplace (Dev)', devOnly: true, inUserMenu: true }
+    { href: 'configuracoes-marketplace-dev.html', icon: 'fas fa-store-slash', label: 'Configurações marketplace (Dev)', devOnly: true, inUserMenu: true },
+    { href: 'pedidos-marketplace-dev.html', icon: 'fas fa-bag-shopping', label: 'Pedidos marketplace (Dev)', devOnly: true, inUserMenu: true },
+    { href: 'usuarios-online-dev.html', icon: 'fas fa-signal', label: 'Usuários online (Dev)', devOnly: true, inUserMenu: true }
   ];
 
   function pageFileFromHref(href) {
@@ -206,13 +208,13 @@
   }
 
   function getFallbackPage(session) {
-    if (!session) return 'index.html';
+    if (!session) return 'marketplace.html';
     const role = roleValue(session.user && session.user.role);
-    if (role === 'desenvolvedor') return 'index.html';
+    if (role === 'desenvolvedor') return 'marketplace.html';
 
     const allowed = Array.isArray(session.allowedPages) ? session.allowedPages : [];
     const first = allowed.find((p) => typeof p === 'string' && p.endsWith('.html'));
-    return first || 'index.html';
+    return first || 'marketplace.html';
   }
 
   function requireAuth() {
@@ -228,7 +230,12 @@
     const page = getCurrentPageFile();
     const role = getCurrentRole(session);
 
-    if ((page === 'controle-usuarios.html' || page === 'controle-recargas-celular.html' || page === 'configuracoes-pix-dev.html' || page === 'configuracoes-marketplace-dev.html') && role !== 'desenvolvedor') {
+    if ((page === 'controle-usuarios.html'
+      || page === 'controle-recargas-celular.html'
+      || page === 'configuracoes-pix-dev.html'
+      || page === 'configuracoes-marketplace-dev.html'
+      || page === 'pedidos-marketplace-dev.html'
+      || page === 'usuarios-online-dev.html') && role !== 'desenvolvedor') {
       window.location.replace(getFallbackPage(session));
       return;
     }
@@ -542,11 +549,19 @@
             height:100vh !important;
             width:280px !important;
             max-width:84vw !important;
-            transform:translateX(-100%) !important;
+            transform:translateX(-108%) !important;
             transition:transform .25s ease;
             z-index:1200;
+            visibility:hidden !important;
+            pointer-events:none !important;
           }
-          body.tp-sidebar-open .sidebar { transform:translateX(0) !important; }
+          body.tp-sidebar-open .sidebar,
+          .sidebar.open {
+            transform:translateX(0) !important;
+            left:0 !important;
+            visibility:visible !important;
+            pointer-events:auto !important;
+          }
           body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
           body.tp-sidebar-open { overflow:hidden; }
           .main, .main-content, main.main-content {
@@ -590,8 +605,14 @@
       document.body.appendChild(overlay);
     }
 
-    const closeMenu = function () { document.body.classList.remove('tp-sidebar-open'); };
-    const openMenu = function () { document.body.classList.add('tp-sidebar-open'); };
+    const closeMenu = function () {
+      document.body.classList.remove('tp-sidebar-open');
+      sidebar.classList.remove('open');
+    };
+    const openMenu = function () {
+      document.body.classList.add('tp-sidebar-open');
+      sidebar.classList.add('open');
+    };
     let lastTouchToggleTs = 0;
     const toggleMenu = function (event) {
       if (event && typeof event.preventDefault === 'function') event.preventDefault();
@@ -622,6 +643,10 @@
     window.addEventListener('resize', function () {
       if (window.innerWidth > 960) closeMenu();
     });
+
+    if (window.innerWidth <= 960) {
+      closeMenu();
+    }
   }
 
   function mountDeveloperSidebarLink() {
@@ -661,11 +686,39 @@
       .tp-user-logout { margin-top:4px; color:#ffd3d3 !important; border-top:1px solid rgba(255,255,255,.08) !important; border-radius:10px !important; }
       .tp-user-logout:hover { color:#fff4f4 !important; border-color: rgba(248,113,113,.44) !important; background: linear-gradient(180deg, rgba(248,113,113,.14), rgba(248,113,113,.06)) !important; }
       @media (max-width: 960px) {
-        .tp-user-menu { top:12px; right:12px; left:62px; max-width:calc(100vw - 74px); }
-        .tp-user-menu-btn { min-width:0; width:100%; max-width:100%; padding:8px 9px; }
-        .tp-user-name { font-size:12px; }
-        .tp-user-group { font-size:10px; }
-        .tp-user-dropdown { width:min(92vw, 340px); right:0; }
+        .tp-user-menu {
+          top: 10px;
+          right: 10px;
+          left: auto;
+          width: auto;
+          max-width: calc(100vw - 108px);
+        }
+        .tp-user-menu-btn {
+          min-width: 0;
+          width: auto;
+          max-width: min(68vw, 280px);
+          padding: 6px 8px;
+          gap: 8px;
+          border-radius: 12px;
+        }
+        .tp-user-avatar {
+          width: 30px;
+          height: 30px;
+        }
+        .tp-user-name {
+          font-size: 11px;
+          line-height: 1.15;
+        }
+        .tp-user-group {
+          display: none;
+        }
+        .tp-user-caret {
+          font-size: 10px;
+        }
+        .tp-user-dropdown {
+          width: min(90vw, 310px);
+          right: 0;
+        }
       }
     `;
     document.head.appendChild(style);

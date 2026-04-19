@@ -127,7 +127,9 @@
     .badge.aguardando_pagamento { color: #fcd34d; border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.14); }
     .badge.em_processo { color: #fde68a; border-color: rgba(234,179,8,.38); background: rgba(234,179,8,.14); }
     .badge.concluido { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
+    .badge.entregue { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
     .badge.erro, .badge.cancelado { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
+    .badge.corrigido { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.14); }
 
     .pix-modal-overlay {
       position: fixed;
@@ -382,9 +384,11 @@
         const value = String(status || '').toLowerCase();
         const label = value === 'aguardando_pagamento'
           ? 'Aguardando pagamento'
-          : (value === 'concluido'
-            ? 'Concluído'
-            : (value === 'erro' || value === 'cancelado' ? 'Cancelado/Erro' : 'Em processo'));
+          : (value === 'entregue' || value === 'concluido'
+            ? 'Entregue'
+            : (value === 'corrigido'
+              ? 'Corrigido'
+              : (value === 'erro' || value === 'cancelado' ? 'Erro' : 'Em processo')));
         return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
       }
 

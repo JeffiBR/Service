@@ -135,7 +135,9 @@
     .badge.aguardando_pagamento { color: #fcd34d; border-color: rgba(245,158,11,.45); background: rgba(245,158,11,.14); }
     .badge.em_processo { color: #fde68a; border-color: rgba(234,179,8,.38); background: rgba(234,179,8,.14); }
     .badge.concluido { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
+    .badge.entregue { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
     .badge.erro { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
+    .badge.corrigido { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.14); }
     .muted { color: var(--muted); font-size: .85rem; }
 
     @media (max-width: 1080px) {
@@ -183,7 +185,7 @@
       <div class="container">
         <div class="header">
           <h1 class="title">Histórico de Compras</h1>
-          <div class="subtitle">Acompanhe as compras realizadas com valor e data/hora.</div>
+          <div class="subtitle">Acompanhe recargas e pedidos do marketplace com status atualizado.</div>
         </div>
 
         <div id="status" class="status-box">Carregando...</div>
@@ -210,13 +212,14 @@
           </div>
           <div class="card-body">
             <div class="tools">
-              <input id="search" type="text" placeholder="Buscar por compra, telefone ou operadora">
+              <input id="search" type="text" placeholder="Buscar por compra, item, telefone, operadora ou cliente">
               <select id="statusFilter">
                 <option value="">Todos os status</option>
                 <option value="aguardando_pagamento">Aguardando pagamento</option>
                 <option value="em_processo">Em processo</option>
-                <option value="concluido">Concluído</option>
+                <option value="entregue">Entregue</option>
                 <option value="erro">Erro</option>
+                <option value="corrigido">Corrigido</option>
               </select>
               <select id="periodFilter">
                 <option value="all">Todo periodo</option>
@@ -231,9 +234,11 @@
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Tipo</th>
                     <th>Compra</th>
                     <th>Valor</th>
                     <th>Status</th>
+                    <th>Comentário Dev</th>
                     <th>Data e hora</th>
                   </tr>
                 </thead>
@@ -248,7 +253,9 @@
 
   <script>
     (function () {
-      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular';
+      const BASE = String(window.API_BASE || '').replace(/\/+$/, '');
+      const RECARGAS_API = BASE + '/recargas-celular';
+      const MARKETPLACE_API = BASE + '/marketplace/orders';
       const statusEl = document.getElementById('status');
       const bodyRows = document.getElementById('bodyRows');
       const countEl = document.getElementById('count');
@@ -274,37 +281,72 @@
         return d.toLocaleString('pt-BR');
       }
 
-      function statusBadge(status) {
-        const value = String(status || '').toLowerCase();
-        const label = value === 'aguardando_pagamento'
-          ? 'Aguardando pagamento'
-          : (value === 'concluido'
-            ? 'Concluído'
-            : (value === 'erro' ? 'Erro' : 'Em processo'));
-        return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
       }
 
-      function getCompraLabel(r) {
-        const op = r.operadora || '-';
-        const num = r.numero || '-';
-        const credito = Number.isFinite(Number(r.valor_credito)) && Number(r.valor_credito) > 0
-          ? ` - credito R$ ${formatMoney(r.valor_credito)}`
+      function statusLabel(status) {
+        const value = String(status || '').toLowerCase();
+        if (value === 'aguardando_pagamento') return 'Aguardando pagamento';
+        if (value === 'em_processo') return 'Em processo';
+        if (value === 'entregue' || value === 'concluido') return 'Entregue';
+        if (value === 'corrigido') return 'Corrigido';
+        if (value === 'erro' || value === 'cancelado') return 'Erro';
+        return value || '-';
+      }
+
+      function statusClass(status) {
+        const value = String(status || '').toLowerCase();
+        if (value === 'concluido') return 'concluido';
+        if (value === 'cancelado') return 'erro';
+        return value;
+      }
+
+      function statusBadge(status) {
+        const value = statusClass(status);
+        return `<span class="badge ${value || 'aguardando_pagamento'}">${escapeHtml(statusLabel(status))}</span>`;
+      }
+
+      function getCompraLabel(item) {
+        if (item.tipo === 'marketplace') {
+          const items = Array.isArray(item.items) ? item.items : [];
+          const resumo = items.map((x) => `${x.nome || 'Item'} x${Number(x.quantidade || 0)}`).join(', ');
+          return resumo || 'Pedido marketplace';
+        }
+        const op = item.operadora || '-';
+        const num = item.numero || '-';
+        const credito = Number.isFinite(Number(item.valor_credito)) && Number(item.valor_credito) > 0
+          ? ` - crédito R$ ${formatMoney(item.valor_credito)}`
           : '';
         return `Recarga ${op} - ${num}${credito}`;
       }
 
-      function getValorPago(r) {
-        if (Number.isFinite(Number(r.valor_pago)) && Number(r.valor_pago) > 0) {
-          return Number(r.valor_pago);
-        }
-        return Number(r.valor || 0);
+      function getValorPago(item) {
+        if (item.tipo === 'marketplace') return Number(item.total || 0);
+        if (Number.isFinite(Number(item.valor_pago)) && Number(item.valor_pago) > 0) return Number(item.valor_pago);
+        return Number(item.valor || 0);
       }
 
       async function fetchJson(url, options) {
         const r = await fetch(url, options || {});
         const p = await r.json().catch(() => ({}));
-        if (!r.ok || !p || !p.success) throw new Error(p && p.error ? p.error : 'Erro na requisicao');
+        if (!r.ok || !p || !p.success) throw new Error(p && p.error ? p.error : 'Erro na requisição');
         return p.data;
+      }
+
+      function normalizeData(recargas, pedidos) {
+        const a = (Array.isArray(recargas) ? recargas : []).map((x) => ({ ...x, tipo: 'recarga' }));
+        const b = (Array.isArray(pedidos) ? pedidos : []).map((x) => ({ ...x, tipo: 'marketplace' }));
+        return a.concat(b).sort((x, y) => {
+          const ax = Date.parse(String(x.created_at || x.updated_at || '')) || 0;
+          const by = Date.parse(String(y.created_at || y.updated_at || '')) || 0;
+          return by - ax;
+        });
       }
 
       function applyFilters() {
@@ -315,11 +357,21 @@
         const days = period === 'all' ? 0 : Number(period);
         const minTs = days > 0 ? (now - (days * 24 * 60 * 60 * 1000)) : 0;
 
-        const list = cache.filter((r) => {
-          const statusOk = !status || String(r.status || '').toLowerCase() === status;
-          const ts = Date.parse(String(r.created_at || r.updated_at || ''));
+        const list = cache.filter((item) => {
+          const currentStatus = String(item.status || '').toLowerCase();
+          const statusOk = !status
+            || currentStatus === status
+            || (status === 'entregue' && currentStatus === 'concluido')
+            || (status === 'erro' && currentStatus === 'cancelado');
+          const ts = Date.parse(String(item.created_at || item.updated_at || ''));
           const periodOk = !minTs || (Number.isFinite(ts) && ts >= minTs);
-          const hay = [getCompraLabel(r), r.operadora || '', r.numero || ''].join(' ').toLowerCase();
+          const hay = [
+            getCompraLabel(item),
+            item.operadora || '',
+            item.numero || '',
+            item.cliente_nome || '',
+            item.comentario_desenvolvedor || ''
+          ].join(' ').toLowerCase();
           const textOk = !term || hay.includes(term);
           return statusOk && periodOk && textOk;
         });
@@ -329,29 +381,34 @@
       function renderRows(list, total) {
         const items = Array.isArray(list) ? list : [];
         countEl.textContent = `${items.length} de ${total} compra(s)`;
-        const totalValor = items.reduce((acc, r) => acc + getValorPago(r), 0);
+        const totalValor = items.reduce((acc, item) => acc + getValorPago(item), 0);
         statComprasEl.textContent = String(items.length);
         statValorEl.textContent = `R$ ${formatMoney(totalValor)}`;
         statUltimaEl.textContent = items.length ? formatDate(items[0].created_at || items[0].updated_at) : '-';
 
         if (!items.length) {
-          bodyRows.innerHTML = '<tr><td colspan="5" class="muted">Nenhuma compra encontrada.</td></tr>';
+          bodyRows.innerHTML = '<tr><td colspan="7" class="muted">Nenhuma compra encontrada.</td></tr>';
           return;
         }
-        bodyRows.innerHTML = items.map((r) => `
+        bodyRows.innerHTML = items.map((item) => `
           <tr>
-            <td>#${r.id}</td>
-            <td>${getCompraLabel(r)}</td>
-            <td>R$ ${formatMoney(getValorPago(r))}</td>
-            <td>${statusBadge(r.status)}</td>
-            <td>${formatDate(r.created_at || r.updated_at)}</td>
+            <td>#${item.id}</td>
+            <td>${item.tipo === 'marketplace' ? 'Marketplace' : 'Recarga celular'}</td>
+            <td>${escapeHtml(getCompraLabel(item))}</td>
+            <td>R$ ${formatMoney(getValorPago(item))}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>${escapeHtml(item.comentario_desenvolvedor || '-')}</td>
+            <td>${formatDate(item.created_at || item.updated_at)}</td>
           </tr>
         `).join('');
       }
 
       async function loadAll() {
-        const rows = await fetchJson(API);
-        cache = Array.isArray(rows) ? rows : [];
+        const [recargas, pedidos] = await Promise.all([
+          fetchJson(RECARGAS_API),
+          fetchJson(MARKETPLACE_API)
+        ]);
+        cache = normalizeData(recargas, pedidos);
         applyFilters();
       }
 
@@ -361,21 +418,21 @@
 
       btnRefresh.addEventListener('click', async function () {
         try {
-          setStatus('Atualizando historico...');
+          setStatus('Atualizando histórico...');
           await loadAll();
           setStatus('Histórico atualizado.', 'ok');
         } catch (err) {
-          setStatus(err && err.message ? err.message : 'Falha ao atualizar historico.', 'error');
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar histórico.', 'error');
         }
       });
 
       (async function init() {
         try {
-          setStatus('Carregando historico de compras...');
+          setStatus('Carregando histórico de compras...');
           await loadAll();
           setStatus('Histórico carregado.', 'ok');
         } catch (err) {
-          setStatus(err && err.message ? err.message : 'Falha ao carregar historico.', 'error');
+          setStatus(err && err.message ? err.message : 'Falha ao carregar histórico.', 'error');
         }
       })();
     })();

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos Marketplace (Dev) - Preço Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#0b0c10; --panel:#151821; --panel-soft:#10131c; --line:rgba(255,255,255,.12); --text:#f4f4f5; --muted:#a1a1aa; --ok:#22c55e; --danger:#ef4444; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Inter,sans-serif; background:radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%); color:var(--text); min-height:100vh; }
+    .app { display:flex; min-height:100vh; }
+    .sidebar { width:260px; background:rgba(10,10,11,.95); backdrop-filter:blur(20px); border-right:1px solid rgba(255,255,255,.05); position:fixed; inset:0 auto 0 0; display:flex; flex-direction:column; z-index:100; }
+    .sidebar-header { padding:24px; border-bottom:1px solid rgba(255,255,255,.05); }
+    .brand { display:flex; gap:14px; align-items:center; }
+    .brand-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#111; font-size:22px; background:linear-gradient(135deg, #fbbf24 0%, #d97706 100%); box-shadow:0 0 32px rgba(251,191,36,.25); }
+    .brand-name { font-size:1.25rem; font-weight:800; background:linear-gradient(135deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .brand-tag { font-size:.65rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; font-weight:600; }
+    .sidebar-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+    .sidebar-footer { padding:16px; border-top:1px solid rgba(255,255,255,.05); }
+    .server-status { display:flex; gap:12px; align-items:center; padding:12px; border:1px solid rgba(255,255,255,.05); border-radius:12px; background:rgba(255,255,255,.02); }
+    .status-dot { width:10px; height:10px; border-radius:50%; background:var(--ok); box-shadow:0 0 12px var(--ok); }
+    .status-info { font-size:.75rem; color:var(--muted); }
+    .status-value { font-size:.85rem; font-weight:700; color:var(--text); }
+    .main { flex:1; margin-left:260px; padding:24px; }
+    .container { max-width:1400px; margin:0 auto; }
+    .header { margin-bottom:16px; padding-right:300px; }
+    .title { margin:0; font-size:2rem; font-weight:800; letter-spacing:-.02em; }
+    .subtitle { margin-top:6px; color:var(--muted); }
+    .status-box { min-height:44px; border:1px solid var(--line); border-radius:10px; display:flex; align-items:center; padding:0 12px; margin-bottom:14px; color:#d1d5db; background:rgba(255,255,255,.02); }
+    .status-box.ok { border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.09); color:#86efac; }
+    .status-box.error { border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.09); color:#fca5a5; }
+    .card { border:1px solid var(--line); border-radius:12px; background:var(--panel); overflow:hidden; box-shadow:0 10px 26px rgba(0,0,0,.24); }
+    .card-head { padding:14px 16px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card-title { margin:0; font-size:1rem; font-weight:700; }
+    .card-body { padding:14px 16px; background:var(--panel-soft); }
+    .tools { display:grid; grid-template-columns: 1fr 220px auto; gap:10px; margin-bottom:12px; align-items:center; }
+    .count { color:var(--muted); font-size:.85rem; text-align:right; }
+    input, select, textarea { width:100%; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.22); color:var(--text); padding:10px 11px; outline:none; font-size:.9rem; }
+    textarea { min-height:74px; resize:vertical; }
+    .btn { border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:rgba(255,255,255,.05); color:var(--text); font-weight:700; cursor:pointer; transition:.18s ease; display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; }
+    .btn:hover { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); }
+    .btn-primary { border-color:transparent; color:#111; background:linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); }
+    .table-wrap { width:100%; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; min-width:1240px; }
+    th, td { padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08); text-align:left; vertical-align:top; }
+    th { font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); background:rgba(16,19,28,.96); position:sticky; top:0; z-index:1; }
+    .badge { display:inline-flex; align-items:center; border-radius:999px; padding:4px 10px; font-size:.74rem; font-weight:700; border:1px solid var(--line); background:rgba(255,255,255,.03); }
+    .badge.aguardando_pagamento { color:#fcd34d; border-color:rgba(245,158,11,.45); background:rgba(245,158,11,.14); }
+    .badge.em_processo { color:#fde68a; border-color:rgba(234,179,8,.38); background:rgba(234,179,8,.14); }
+    .badge.entregue { color:#86efac; border-color:rgba(34,197,94,.38); background:rgba(34,197,94,.14); }
+    .badge.erro { color:#fca5a5; border-color:rgba(239,68,68,.38); background:rgba(239,68,68,.14); }
+    .badge.corrigido { color:#93c5fd; border-color:rgba(59,130,246,.35); background:rgba(59,130,246,.14); }
+    .muted { color:var(--muted); font-size:.85rem; }
+    .order-items { margin:0; padding-left:16px; }
+    .order-items li { margin-bottom:4px; }
+    .row-actions { display:grid; gap:8px; min-width:280px; }
+    .row-actions .status-select { min-width:210px; }
+    @media (max-width:1080px) { .header { padding-right:0; } .tools { grid-template-columns:1fr; } .count { text-align:left; } }
+    @media (max-width:760px) { .sidebar { position:static; width:100%; height:auto; } .main { margin-left:0; padding:16px; } .app { flex-direction:column; } }
+    @media (max-width:960px) { body.tp-sidebar-open .sidebar { transform:translateX(0) !important; } }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
+        <div class="header">
+          <h1 class="title">Pedidos Marketplace (Dev)</h1>
+          <div class="subtitle">Gerencie todos os pedidos, status e comentários do marketplace.</div>
+        </div>
+
+        <div id="status" class="status-box">Carregando pedidos...</div>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">Todos os pedidos</h2>
+            <button class="btn" id="btnRefresh" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+          </div>
+          <div class="card-body">
+            <div class="tools">
+              <input id="search" type="text" placeholder="Buscar por cliente, id ou item do pedido">
+              <select id="statusFilter">
+                <option value="">Todos os status</option>
+                <option value="aguardando_pagamento">Aguardando pagamento</option>
+                <option value="em_processo">Em processo</option>
+                <option value="entregue">Entregue</option>
+                <option value="erro">Erro</option>
+                <option value="corrigido">Corrigido</option>
+              </select>
+              <div class="count" id="count">0 pedido(s)</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Itens</th>
+                    <th>Total</th>
+                    <th>Status atual</th>
+                    <th>Ações (Dev)</th>
+                    <th>Criado em</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/marketplace';
+      const statusEl = document.getElementById('status');
+      const bodyRows = document.getElementById('bodyRows');
+      const countEl = document.getElementById('count');
+      const searchEl = document.getElementById('search');
+      const statusFilterEl = document.getElementById('statusFilter');
+      const btnRefresh = document.getElementById('btnRefresh');
+      let cache = [];
+
+      function setStatus(msg, kind) {
+        statusEl.textContent = msg || '';
+        statusEl.className = 'status-box' + (kind ? ' ' + kind : '');
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatMoney(v) {
+        return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function formatDate(v) {
+        if (!v) return '-';
+        const d = new Date(v);
+        if (Number.isNaN(d.getTime())) return '-';
+        return d.toLocaleString('pt-BR');
+      }
+
+      function statusLabel(raw) {
+        const v = String(raw || '').toLowerCase();
+        if (v === 'aguardando_pagamento') return 'Aguardando pagamento';
+        if (v === 'em_processo') return 'Em processo';
+        if (v === 'entregue' || v === 'concluido') return 'Entregue';
+        if (v === 'corrigido') return 'Corrigido';
+        if (v === 'erro' || v === 'cancelado') return 'Erro';
+        return v || '-';
+      }
+
+      function statusClass(raw) {
+        const v = String(raw || '').toLowerCase();
+        if (v === 'concluido') return 'entregue';
+        if (v === 'cancelado') return 'erro';
+        return v;
+      }
+
+      function statusBadge(status) {
+        return `<span class="badge ${statusClass(status)}">${escapeHtml(statusLabel(status))}</span>`;
+      }
+
+      function itemsSummary(order) {
+        const items = Array.isArray(order && order.items) ? order.items : [];
+        if (!items.length) return '<span class="muted">Sem itens</span>';
+        return `<ul class="order-items">${items.map((item) => `<li>${escapeHtml(item.nome || 'Item')} x${Number(item.quantidade || 0)}</li>`).join('')}</ul>`;
+      }
+
+      async function fetchJson(url, options) {
+        const r = await fetch(url, options || {});
+        const p = await r.json().catch(() => ({}));
+        if (!r.ok || !p || !p.success) {
+          throw new Error(p && p.error ? p.error : 'Erro na requisição');
+        }
+        return p.data;
+      }
+
+      function applyFilters() {
+        const term = String(searchEl.value || '').trim().toLowerCase();
+        const status = String(statusFilterEl.value || '').trim().toLowerCase();
+        const list = cache.filter((order) => {
+          const currentStatus = String(order.status || '').toLowerCase();
+          const statusOk = !status || currentStatus === status || (status === 'entregue' && currentStatus === 'concluido') || (status === 'erro' && currentStatus === 'cancelado');
+          if (!statusOk) return false;
+          if (!term) return true;
+          const itemNames = Array.isArray(order.items) ? order.items.map((x) => String(x.nome || '')).join(' ') : '';
+          const hay = `#${order.id} ${order.cliente_nome || ''} ${itemNames}`.toLowerCase();
+          return hay.includes(term);
+        });
+        renderRows(list, cache.length);
+      }
+
+      function renderRows(items, total) {
+        const rows = Array.isArray(items) ? items : [];
+        countEl.textContent = `${rows.length} de ${total} pedido(s)`;
+        if (!rows.length) {
+          bodyRows.innerHTML = '<tr><td colspan="7" class="muted">Nenhum pedido encontrado.</td></tr>';
+          return;
+        }
+        bodyRows.innerHTML = rows.map((order) => `
+          <tr>
+            <td>#${order.id}</td>
+            <td>
+              <div>${escapeHtml(order.cliente_nome || 'Cliente')}</div>
+              <div class="muted">${escapeHtml(order.user_id || '-')}</div>
+            </td>
+            <td>${itemsSummary(order)}</td>
+            <td>R$ ${formatMoney(order.total)}</td>
+            <td>${statusBadge(order.status)}</td>
+            <td>
+              <div class="row-actions">
+                <select class="status-select" data-field="status" data-id="${order.id}">
+                  <option value="aguardando_pagamento" ${String(order.status) === 'aguardando_pagamento' ? 'selected' : ''}>Aguardando pagamento</option>
+                  <option value="em_processo" ${String(order.status) === 'em_processo' ? 'selected' : ''}>Em processo</option>
+                  <option value="entregue" ${(String(order.status) === 'entregue' || String(order.status) === 'concluido') ? 'selected' : ''}>Entregue</option>
+                  <option value="erro" ${(String(order.status) === 'erro' || String(order.status) === 'cancelado') ? 'selected' : ''}>Erro</option>
+                  <option value="corrigido" ${String(order.status) === 'corrigido' ? 'selected' : ''}>Corrigido</option>
+                </select>
+                <textarea data-field="comentario" data-id="${order.id}" placeholder="Comentário para o cliente">${escapeHtml(order.comentario_desenvolvedor || '')}</textarea>
+                <button class="btn btn-primary" data-action="save" data-id="${order.id}" type="button"><i class="fas fa-floppy-disk"></i> Salvar</button>
+              </div>
+            </td>
+            <td>${formatDate(order.created_at)}</td>
+          </tr>
+        `).join('');
+      }
+
+      function getRowValues(orderId) {
+        const statusEl = bodyRows.querySelector(`select[data-field="status"][data-id="${orderId}"]`);
+        const comentarioEl = bodyRows.querySelector(`textarea[data-field="comentario"][data-id="${orderId}"]`);
+        return {
+          status: statusEl ? String(statusEl.value || '').trim().toLowerCase() : '',
+          comentario_desenvolvedor: comentarioEl ? String(comentarioEl.value || '').trim() : ''
+        };
+      }
+
+      async function saveOrder(orderId) {
+        const payload = getRowValues(orderId);
+        await fetchJson(`${API}/orders/${orderId}/admin`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      async function loadAll() {
+        const rows = await fetchJson(API + '/orders');
+        cache = Array.isArray(rows) ? rows : [];
+        applyFilters();
+      }
+
+      searchEl.addEventListener('input', applyFilters);
+      statusFilterEl.addEventListener('change', applyFilters);
+
+      bodyRows.addEventListener('click', async function (event) {
+        const btn = event.target.closest('button[data-action="save"]');
+        if (!btn) return;
+        const orderId = btn.getAttribute('data-id');
+        if (!orderId) return;
+        btn.disabled = true;
+        try {
+          setStatus(`Salvando pedido #${orderId}...`);
+          await saveOrder(orderId);
+          await loadAll();
+          setStatus(`Pedido #${orderId} atualizado com sucesso.`, 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao salvar pedido.', 'error');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      btnRefresh.addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando pedidos...');
+          await loadAll();
+          setStatus('Pedidos atualizados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar pedidos.', 'error');
+        }
+      });
+
+      (async function init() {
+        try {
+          setStatus('Carregando pedidos marketplace...');
+          await loadAll();
+          setStatus('Pedidos carregados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar pedidos.', 'error');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

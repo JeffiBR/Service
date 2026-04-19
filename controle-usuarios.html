@@ -442,9 +442,10 @@
 
     .perm-item {
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px;
-      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
     .perm-head {
@@ -479,6 +480,18 @@
       flex-wrap: wrap;
     }
 
+    .perm-search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .perm-search {
+      font-size: 0.84rem;
+      padding: 8px 10px;
+    }
+
     .btn-soft {
       font-size: 0.8rem;
       padding: 6px 10px;
@@ -490,9 +503,12 @@
       gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 10px;
-      max-height: 132px;
+      max-height: 168px;
       overflow-y: auto;
-      padding-right: 2px;
+      padding: 2px 4px 2px 2px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background: rgba(0,0,0,0.18);
     }
 
     .page-chip {
@@ -500,10 +516,14 @@
       background: rgba(255, 255, 255, 0.03);
       color: var(--text);
       border-radius: 999px;
-      padding: 6px 10px;
+      padding: 6px 11px;
       font-size: 0.78rem;
       cursor: pointer;
       white-space: nowrap;
+      transition: all 0.16s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .page-chip.active {
@@ -511,6 +531,18 @@
       background: rgba(251, 191, 36, 0.16);
       color: #fde68a;
       font-weight: 700;
+    }
+
+    .page-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .page-chip .tick {
+      width: 13px;
+      text-align: center;
+      opacity: 0.8;
     }
 
     .perm-add-row {
@@ -669,12 +701,16 @@
         'precificacao.html',
         'produtos-atelie.html',
         'recarga-celular.html',
+        'marketplace.html',
         'historico-compras.html',
         'configuracoes.html',
         'perfil-usuario.html',
         'controle-usuarios.html',
         'controle-recargas-celular.html',
-        'configuracoes-pix-dev.html'
+        'configuracoes-pix-dev.html',
+        'configuracoes-marketplace-dev.html',
+        'pedidos-marketplace-dev.html',
+        'usuarios-online-dev.html'
       ];
 
       function setStatus(message, kind) {
@@ -932,7 +968,13 @@
             </div>
             <div class="perm-toolbar">
               <button class="btn btn-soft btn-select-all" type="button">Selecionar todas</button>
+              <button class="btn btn-soft btn-select-visible" type="button">Selecionar visiveis</button>
+              <button class="btn btn-soft btn-clear-visible" type="button">Limpar visiveis</button>
               <button class="btn btn-soft btn-clear" type="button">Limpar</button>
+            </div>
+            <div class="perm-search-row">
+              <input type="text" class="perm-search" placeholder="Filtrar paginas existentes...">
+              <button class="btn btn-soft btn-clear-search" type="button">Limpar filtro</button>
             </div>
             <div class="page-chips"></div>
             <div class="perm-add-row">
@@ -946,7 +988,11 @@
           const selected = new Set(normalizePages(textToPermissions(data[role])));
           const chipsWrap = item.querySelector('.page-chips');
           const btnSelectAll = item.querySelector('.btn-select-all');
+          const btnSelectVisible = item.querySelector('.btn-select-visible');
+          const btnClearVisible = item.querySelector('.btn-clear-visible');
           const btnClear = item.querySelector('.btn-clear');
+          const searchInput = item.querySelector('.perm-search');
+          const btnClearSearch = item.querySelector('.btn-clear-search');
           const addInput = item.querySelector('.perm-add-input');
           const addBtn = item.querySelector('.btn-add-page');
           const textarea = item.querySelector('textarea');
@@ -964,13 +1010,34 @@
             if (countEl) countEl.textContent = `${selected.size} selecionada(s)`;
           }
 
+          function getSearchTerm() {
+            return String(searchInput && searchInput.value ? searchInput.value : '').trim().toLowerCase();
+          }
+
+          function getVisiblePages() {
+            const term = getSearchTerm();
+            const all = Array.from(new Set(knownPages.concat(Array.from(selected)))).sort((a, b) => {
+              if (a === '*') return -1;
+              if (b === '*') return 1;
+              return a.localeCompare(b);
+            });
+            if (!term) return all;
+            return all.filter((page) => String(page || '').toLowerCase().includes(term));
+          }
+
           function renderChips() {
             chipsWrap.innerHTML = '';
-            knownPages.forEach((page) => {
+            const visiblePages = getVisiblePages();
+            if (!visiblePages.length) {
+              chipsWrap.innerHTML = '<span class="hint">Nenhuma página encontrada no filtro.</span>';
+              return;
+            }
+            visiblePages.forEach((page) => {
+              const isActive = selected.has(page);
               const chip = document.createElement('button');
               chip.type = 'button';
-              chip.className = 'page-chip' + (selected.has(page) ? ' active' : '');
-              chip.textContent = page;
+              chip.className = 'page-chip' + (isActive ? ' active' : '');
+              chip.innerHTML = `<span class="tick">${isActive ? '✓' : ''}</span><span>${page}</span>`;
               chip.addEventListener('click', function () {
                 if (selected.has(page)) selected.delete(page);
                 else selected.add(page);
@@ -987,11 +1054,36 @@
             renderChips();
           });
 
+          btnSelectVisible.addEventListener('click', function () {
+            getVisiblePages().forEach((page) => selected.add(page));
+            syncTextareaFromSet();
+            renderChips();
+          });
+
+          btnClearVisible.addEventListener('click', function () {
+            getVisiblePages().forEach((page) => selected.delete(page));
+            syncTextareaFromSet();
+            renderChips();
+          });
+
           btnClear.addEventListener('click', function () {
             selected.clear();
             syncTextareaFromSet();
             renderChips();
           });
+
+          if (searchInput) {
+            searchInput.addEventListener('input', renderChips);
+          }
+
+          if (btnClearSearch) {
+            btnClearSearch.addEventListener('click', function () {
+              if (!searchInput) return;
+              searchInput.value = '';
+              searchInput.focus();
+              renderChips();
+            });
+          }
 
           addBtn.addEventListener('click', function () {
             const page = String(addInput.value || '').trim();
@@ -1000,6 +1092,12 @@
             addInput.value = '';
             syncTextareaFromSet();
             renderChips();
+          });
+
+          addInput.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            addBtn.click();
           });
 
           textarea.addEventListener('input', function () {
