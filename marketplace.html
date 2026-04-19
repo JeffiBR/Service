@@ -144,46 +144,98 @@
     .pix-modal-overlay.open { display: flex; }
     .pix-modal {
       width: 100%;
-      max-width: 540px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #0f1420;
-      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      max-width: 560px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      background: radial-gradient(120% 100% at 0% 0%, rgba(59,130,246,.08), transparent 48%), #0f1420;
+      box-shadow: 0 28px 56px rgba(0,0,0,.56), 0 0 0 1px rgba(255,255,255,.04) inset;
       overflow: hidden;
     }
     .pix-modal-head {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--line);
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
     }
-    .pix-modal-title { margin: 0; font-size: 1rem; font-weight: 800; }
-    .pix-modal-body { padding: 16px; display: grid; gap: 12px; }
-    .pix-box { border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.03); padding: 12px; }
+    .pix-modal-title { margin: 0; font-size: 1.04rem; font-weight: 800; letter-spacing: .01em; }
+    .pix-modal-body { padding: 18px; display: grid; gap: 12px; }
+    .pix-box {
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      padding: 13px;
+    }
+    #pixResumo { color: #e2e8f0; line-height: 1.5; }
     .pix-qr-wrap { text-align: center; }
     .pix-qr {
-      width: 260px;
-      height: 260px;
+      width: 280px;
+      height: 280px;
       max-width: 100%;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.2);
       background: #fff;
       object-fit: contain;
+      padding: 10px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.34);
+    }
+    .pix-copy-grid { display: grid; gap: 8px; }
+    .pix-copy-grid label {
+      color: #f8fafc;
+      font-weight: 800;
+      font-size: .8rem;
+      letter-spacing: .02em;
     }
     .pix-copy-field {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      padding: 10px;
-      min-height: 84px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      background: rgba(6,10,18,.68);
+      color: #f8fafc;
+      padding: 11px;
+      min-height: 92px;
       resize: vertical;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: .8rem;
-      line-height: 1.35;
+      line-height: 1.42;
       margin-bottom: 8px;
+    }
+    .pix-copy-field:focus {
+      outline: none;
+      border-color: rgba(251,191,36,.64);
+      box-shadow: 0 0 0 3px rgba(251,191,36,.18);
+    }
+    #pixCopyBtn {
+      width: 100%;
+      border-radius: 12px;
+      font-size: .9rem;
+      letter-spacing: .01em;
+      min-height: 42px;
+      box-shadow: 0 10px 24px rgba(245,158,11,.28);
+    }
+    #pixCopyBtn:hover {
+      box-shadow: 0 14px 28px rgba(245,158,11,.36);
+      transform: translateY(-1px);
+    }
+    #pixTimer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(251,191,36,.38);
+      background: rgba(251,191,36,.12);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .78rem;
+      width: fit-content;
+    }
+    #pixTimer::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #fbbf24;
+      box-shadow: 0 0 10px rgba(251,191,36,.8);
     }
 
     @media (max-width: 1080px) {
@@ -197,6 +249,9 @@
       .app { flex-direction: column; }
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .product { grid-template-rows: 120px auto; }
+      .pix-modal { max-width: 100%; border-radius: 16px; }
+      .pix-modal-body { padding: 14px; }
+      .pix-qr { width: 240px; height: 240px; }
     }
       @media (max-width: 960px) {
       body.tp-sidebar-open .sidebar {
@@ -308,14 +363,14 @@
       </div>
       <div class="pix-modal-body">
         <div class="pix-box">
-          <div id="pixResumo" style="color:var(--text);">Carregando dados...</div>
-          <div id="pixTimer" style="margin-top:6px;color:#fde68a;font-weight:700;">Tempo para pagar: 05:00</div>
+          <div id="pixResumo">Carregando dados...</div>
+          <div id="pixTimer" style="margin-top:6px;">Tempo para pagar: 05:00</div>
         </div>
         <div class="pix-box pix-qr-wrap">
           <img id="pixQrImage" class="pix-qr" alt="QR Code PIX">
         </div>
-        <div class="pix-box">
-          <label for="pixCodeField" style="font-size:.82rem;color:#e5e7eb;font-weight:700;">PIX copia e cola</label>
+        <div class="pix-box pix-copy-grid">
+          <label for="pixCodeField">PIX copia e cola</label>
           <textarea id="pixCodeField" class="pix-copy-field" readonly></textarea>
           <button id="pixCopyBtn" class="btn btn-primary" type="button"><i class="fas fa-copy"></i> Copiar codigo PIX</button>
         </div>
