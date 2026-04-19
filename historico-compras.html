@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Historico de Compras - Preco Certo</title>
+  <title>Histórico de Compras - Preço Certo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -165,7 +165,7 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">Preco Certo</div>
+            <div class="brand-name">Preço Certo</div>
             <div class="brand-tag">PRECO CERTO</div>
           </div>
         </div>
@@ -182,7 +182,7 @@
     <main class="main">
       <div class="container">
         <div class="header">
-          <h1 class="title">Historico de Compras</h1>
+          <h1 class="title">Histórico de Compras</h1>
           <div class="subtitle">Acompanhe as compras realizadas com valor e data/hora.</div>
         </div>
 
@@ -215,7 +215,7 @@
                 <option value="">Todos os status</option>
                 <option value="aguardando_pagamento">Aguardando pagamento</option>
                 <option value="em_processo">Em processo</option>
-                <option value="concluido">Concluido</option>
+                <option value="concluido">Concluído</option>
                 <option value="erro">Erro</option>
               </select>
               <select id="periodFilter">
@@ -279,7 +279,7 @@
         const label = value === 'aguardando_pagamento'
           ? 'Aguardando pagamento'
           : (value === 'concluido'
-            ? 'Concluido'
+            ? 'Concluído'
             : (value === 'erro' ? 'Erro' : 'Em processo'));
         return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
       }
@@ -363,7 +363,7 @@
         try {
           setStatus('Atualizando historico...');
           await loadAll();
-          setStatus('Historico atualizado.', 'ok');
+          setStatus('Histórico atualizado.', 'ok');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao atualizar historico.', 'error');
         }
@@ -373,7 +373,7 @@
         try {
           setStatus('Carregando historico de compras...');
           await loadAll();
-          setStatus('Historico carregado.', 'ok');
+          setStatus('Histórico carregado.', 'ok');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao carregar historico.', 'error');
         }

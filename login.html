@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acesso - Preco Certo</title>
+  <title>Acesso - Preço Certo</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -91,7 +91,7 @@
       background: transparent;
       box-shadow: none;
       animation: none;
-      content: '✓';
+      content: '?';
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -333,7 +333,7 @@
       </label>
 
       <div class="signup-callout">
-        <span>Ainda nao tem conta? Crie sua conta agora mesmo.</span>
+        <span>Ainda não tem conta? Crie sua conta agora mesmo.</span>
         <button id="btnGoSignUp" class="cta-btn" type="button">Criar conta</button>
       </div>
 
@@ -585,7 +585,7 @@
             setStatus('Buscando endereco pelo CEP...');
             const endereco = await buscarEnderecoPorCep(cepNormalizado);
             if (!endereco) {
-              setStatus('CEP nao encontrado. Preencha os campos manualmente.', true, false);
+              setStatus('CEP não encontrado. Preencha os campos manualmente.', true, false);
               return;
             }
 
@@ -595,7 +595,7 @@
             if (estadoInput && !estadoInput.value.trim()) estadoInput.value = endereco.estado;
             setStatus('Endereco preenchido pelo CEP.', false, true);
           } catch (_) {
-            setStatus('Nao foi possivel consultar o CEP agora. Preencha manualmente.', true, false);
+            setStatus('Não foi possível consultar o CEP agora. Preencha manualmente.', true, false);
           }
         });
       }
@@ -663,11 +663,11 @@
         }
 
         btn.disabled = true;
-        setStatus('Criando usuario... (se o servidor estiver em hibernacao, pode levar ate 1 minuto)');
+        setStatus('Criando usuario... (se o servidor estiver em hibernação, pode levar ate 1 minuto)');
 
         try {
           await window.authRegister(payload);
-          setStatus('Usuario criado com sucesso. Faca login agora.', false, true);
+          setStatus('Usuário criado com sucesso. Faça login agora.', false, true);
           setMode('signin');
           document.getElementById('identifier').value = payload.email;
           document.getElementById('password').focus();

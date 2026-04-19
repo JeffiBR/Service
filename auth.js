@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
   let heartbeatTimer = null;
   let redirectingToLogin = false;
@@ -64,7 +64,7 @@
         return await fetch(url, init);
       } catch (err2) {
         if (isNetworkError(err2)) {
-          throw new Error('Servidor em hibernacao no Render. Aguarde ~1 minuto e tente novamente.');
+          throw new Error('Servidor em hibernação no Render. Aguarde ~1 minuto e tente novamente.');
         }
         throw err2;
       }
@@ -153,6 +153,40 @@
     return allowed.includes(pageFile);
   }
 
+  const MENU_ITEMS = [
+    { href: 'dashboard.html', icon: 'fas fa-chart-pie', label: 'Dashboard', inSidebar: true },
+    { href: 'index.html', icon: 'fas fa-users', label: 'Clientes', inSidebar: true },
+    { href: 'revendedores.html', icon: 'fas fa-user-tie', label: 'Revendedores', inSidebar: true },
+    { href: 'servidores.html', icon: 'fas fa-server', label: 'Servidores', inSidebar: true },
+    { href: 'mensagens.html', icon: 'fas fa-comment', label: 'Mensagens', inSidebar: true },
+    { href: 'precificação.html', icon: 'fas fa-calculator', label: 'Precificação', inSidebar: true },
+    { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebiveis Ateli', inSidebar: true },
+    { href: 'dindin.html', icon: 'fas fa-sack-dollar', label: 'Dindin pra Receber', inSidebar: true },
+    { href: 'produtos-atelie.html', icon: 'fas fa-box-archive', label: 'Produtos Registrados', inSidebar: true },
+    { href: 'recarga-celular.html', icon: 'fas fa-mobile-screen-button', label: 'Recarga Celular', inSidebar: true },
+    { href: 'marketplace.html', icon: 'fas fa-store', label: 'Marketplace', inSidebar: true },
+    { href: 'historico-renovacoes.html', icon: 'fas fa-clock-rotate-left', label: 'Histórico Renovações', inSidebar: true },
+    { href: 'configuracoes.html', icon: 'fas fa-sliders', label: 'Configurações', inSidebar: true, inUserMenu: true },
+    { href: 'historico-compras.html', icon: 'fas fa-receipt', label: 'Histórico de compras', inUserMenu: true },
+    { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do usuario', inUserMenu: true },
+    { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de usuarios', devOnly: true, inUserMenu: true },
+    { href: 'controle-recargas-celular.html', icon: 'fas fa-sim-card', label: 'Controle recargas', devOnly: true, inUserMenu: true },
+    { href: 'configuracoes-pix-dev.html', icon: 'fas fa-qrcode', label: 'Configurações PIX (Dev)', devOnly: true, inUserMenu: true },
+    { href: 'configuracoes-marketplace-dev.html', icon: 'fas fa-store-slash', label: 'Configurações marketplace (Dev)', devOnly: true, inUserMenu: true }
+  ];
+
+  function pageFileFromHref(href) {
+    return String(href || '').split('?')[0].split('/').pop();
+  }
+
+  function isMenuItemVisible(item, session, role) {
+    if (!item || !item.href) return false;
+    if (item.devOnly && role !== 'desenvolvedor') return false;
+    if (role === 'desenvolvedor') return true;
+    const pageFile = pageFileFromHref(item.href);
+    return !!(pageFile && canAccessPage(pageFile, session));
+  }
+
   function getNextFromUrl() {
     const params = new URLSearchParams(window.location.search || '');
     return params.get('next');
@@ -210,7 +244,7 @@
 
     const u = session.user;
     const fullName = String(u.name || '').trim();
-    const labelName = fullName || u.email || u.phone || 'Usuario';
+    const labelName = fullName || u.email || u.phone || 'Usuário';
     const initials = labelName
       .split(' ')
       .filter(Boolean)
@@ -291,7 +325,7 @@
 
   async function login(identifier, password, remember) {
     const base = getAuthBase();
-    if (!base) throw new Error('AUTH_API_BASE nao configurada.');
+    if (!base) throw new Error('AUTH_API_BASE não configurada.');
 
     const response = await fetchWithWake(base + '/auth/login', {
       method: 'POST',
@@ -311,7 +345,7 @@
 
   async function register(data) {
     const base = getAuthBase();
-    if (!base) throw new Error('AUTH_API_BASE nao configurada.');
+    if (!base) throw new Error('AUTH_API_BASE não configurada.');
 
     const identity = getRequestIdentity();
     const headers = { 'Content-Type': 'application/json' };
@@ -362,7 +396,7 @@
 
     const base = getAuthBase();
     const session = getStoredSession();
-    if (!base || !session || !session.token) throw new Error('AUTH_API_BASE nao configurada.');
+    if (!base || !session || !session.token) throw new Error('AUTH_API_BASE não configurada.');
 
     const response = await fetchWithWake(base + '/auth/me', {
       method: 'PATCH',
@@ -461,40 +495,19 @@
     const current = getCurrentPageFile();
     const session = getStoredSession();
     const role = getCurrentRole(session);
-    const items = [
-      { href: 'dashboard.html', icon: 'fas fa-chart-pie', label: 'Dashboard' },
-      { href: 'index.html', icon: 'fas fa-users', label: 'Clientes' },
-      { href: 'revendedores.html', icon: 'fas fa-user-tie', label: 'Revendedores' },
-      { href: 'servidores.html', icon: 'fas fa-server', label: 'Servidores' },
-      { href: 'mensagens.html', icon: 'fas fa-comment', label: 'Mensagens' },
-      { href: 'precificacao.html', icon: 'fas fa-calculator', label: 'Precificacao' },
-      { href: 'recebiveis.html', icon: 'fas fa-file-invoice-dollar', label: 'Recebiveis Ateli' },
-      { href: 'dindin.html', icon: 'fas fa-sack-dollar', label: 'Dindin pra Receber' },
-      { href: 'produtos-atelie.html', icon: 'fas fa-box-archive', label: 'Produtos Registrados' },
-      { href: 'recarga-celular.html', icon: 'fas fa-mobile-screen-button', label: 'Recarga Celular' },
-      { href: 'marketplace.html', icon: 'fas fa-store', label: 'Marketplace' },
-      { href: 'historico-compras.html', icon: 'fas fa-receipt', label: 'Historico Compras' },
-      { href: 'historico-renovacoes.html', icon: 'fas fa-clock-rotate-left', label: 'Historico Renovacoes' },
-      { href: 'configuracoes.html', icon: 'fas fa-sliders', label: 'Configuracoes' },
-      { href: 'perfil-usuario.html', icon: 'fas fa-user-circle', label: 'Perfil do Usuario' },
-      { href: 'controle-usuarios.html', icon: 'fas fa-user-shield', label: 'Controle de Usuarios', devOnly: true },
-      { href: 'controle-recargas-celular.html', icon: 'fas fa-sim-card', label: 'Controle Recargas', devOnly: true },
-      { href: 'configuracoes-pix-dev.html', icon: 'fas fa-qrcode', label: 'Configuracoes PIX (Dev)', devOnly: true },
-      { href: 'configuracoes-marketplace-dev.html', icon: 'fas fa-store-slash', label: 'Configuracoes Marketplace (Dev)', devOnly: true }
-    ];
-
     nav.innerHTML = '';
     const section = document.createElement('div');
     section.className = 'nav-section-title';
     section.textContent = 'Menu';
     nav.appendChild(section);
 
-    items.forEach((item) => {
-      if (item.devOnly && role !== 'desenvolvedor') return;
+    MENU_ITEMS.forEach((item) => {
+      if (!item.inSidebar) return;
+      if (!isMenuItemVisible(item, session, role)) return;
       const a = document.createElement('a');
       const isActive = current === item.href;
       a.href = item.href;
-      a.className = 'nav-item' + (isActive ? ' active' : '') + (item.devOnly ? ' tp-dev-sidebar-link' : '');
+      a.className = 'nav-item' + (isActive ? ' active' : '');
       a.innerHTML = `<i class="${item.icon}"></i><span>${item.label}</span>`;
       nav.appendChild(a);
     });
@@ -591,7 +604,7 @@
     };
     const onToggleClick = function (event) {
       // Em mobile, apos touchstart o navegador pode disparar click sintetico.
-      // Ignora esse click para nao alternar duas vezes (abre e fecha).
+      // Ignora esse click para não alternar duas vezes (abre e fecha).
       if ((Date.now() - lastTouchToggleTs) < 500) return;
       toggleMenu(event);
     };
@@ -612,34 +625,8 @@
   }
 
   function mountDeveloperSidebarLink() {
-    if (isLoginPage()) return;
-    if (!isLoggedIn()) return;
-
-    const session = getStoredSession();
-    const role = getCurrentRole(session);
-    const existing = document.querySelector('.tp-dev-sidebar-link');
-
-    if (role !== 'desenvolvedor') {
-      if (existing) existing.remove();
-      return;
-    }
-
-    if (existing) return;
-
-    const nav = document.querySelector('.sidebar-nav');
-    if (!nav) return;
-
-    const anchor = document.createElement('a');
-    anchor.href = 'controle-usuarios.html';
-    anchor.className = 'nav-item tp-dev-sidebar-link';
-    anchor.innerHTML = '<i class="fas fa-user-shield"></i><span>Controle de Usuarios</span>';
-
-    const current = getCurrentPageFile();
-    if (current === 'controle-usuarios.html') {
-      anchor.classList.add('active');
-    }
-
-    nav.appendChild(anchor);
+    // Links de desenvolvedor ficam apenas no menu de perfil (top-right).
+    return;
   }
 
   function ensureMenuStyles() {
@@ -696,10 +683,13 @@
     const allowedPreview = profile.group === 'desenvolvedor'
       ? 'Acesso total'
       : (profile.allowedPages.slice(0, 5).join(', ') || 'Sem paginas liberadas');
-
-    const devLink = profile.group === 'desenvolvedor'
-      ? '<a href="controle-usuarios.html">Controle de usuarios</a><a href="controle-recargas-celular.html">Controle recargas</a><a href="configuracoes-pix-dev.html">Configuracoes PIX (Dev)</a><a href="configuracoes-marketplace-dev.html">Configuracoes marketplace (Dev)</a>'
-      : '';
+    const session = getStoredSession();
+    const role = getCurrentRole(session);
+    const userMenuLinks = MENU_ITEMS
+      .filter((item) => item.inUserMenu)
+      .filter((item) => isMenuItemVisible(item, session, role))
+      .map((item) => `<a href="${item.href}">${escapeHtml(item.label)}</a>`)
+      .join('');
 
     menu.innerHTML = `
       <button type="button" class="tp-user-menu-btn" id="tpUserMenuBtn" aria-haspopup="menu" aria-expanded="false">
@@ -718,9 +708,7 @@
           <div class="tp-user-pages">Paginas: ${escapeHtml(allowedPreview)}</div>
         </div>
         <div class="tp-user-actions">
-          ${devLink}
-          <a href="perfil-usuario.html">Perfil do usuario</a>
-          <a href="configuracoes.html">Configuracoes</a>
+          ${userMenuLinks}
           <button type="button" id="tpUserLogoutBtn">Sair</button>
         </div>
       </div>

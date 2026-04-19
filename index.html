@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes - Pre�o Certo</title>
+    <title>Clientes - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -944,8 +944,8 @@
                         <i class="fas fa-bolt"></i>
                     </div>
                     <div>
-                        <div class="brand-name">Pre�o Certo</div>
-                        <div class="brand-tag">PRE�O CERTO</div>
+                        <div class="brand-name">Preço Certo</div>
+                        <div class="brand-tag">PREÇO CERTO</div>
                     </div>
                 </div>
             </div>
@@ -972,13 +972,13 @@
                     <i class="fas fa-message"></i>
                     <span>Mensagens</span>
                 </a>
-                <a href="precificacao.html" class="nav-item">
+                <a href="precificação.html" class="nav-item">
                     <i class="fas fa-calculator"></i>
-                    <span>Precifica��o</span>
+                    <span>Precificação</span>
                 </a>
                 <a href="recebiveis.html" class="nav-item">
                     <i class="fas fa-file-invoice-dollar"></i>
-                    <span>Receb�veis Ateli</span>
+                    <span>Recebíveis Ateli</span>
                 </a>
                 <a href="dindin.html" class="nav-item">
                     <i class="fas fa-sack-dollar"></i>
@@ -991,7 +991,7 @@
 
                 <a href="historico-renovacoes.html" class="nav-item">
                     <i class="fas fa-clipboard-list"></i>
-                    <span>Hist�rico</span>
+                    <span>Histórico</span>
                 </a>
             </nav>
 
@@ -1073,7 +1073,7 @@
                                     <th>Servidor</th>
                                     <th>Vencimento</th>
                                     <th>Status</th>
-                                    <th>A��es</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="clientesTable"></tbody>
@@ -1138,7 +1138,7 @@
                             <input type="text" class="form-input" id="clienteValor" placeholder="0,00">
                         </div>
                         <div class="form-group full">
-                            <label class="form-label">Observa��es</label>
+                            <label class="form-label">Observações</label>
                             <textarea class="form-textarea" id="clienteObs" placeholder="Observaes..."></textarea>
                         </div>
                     </div>
@@ -1154,33 +1154,33 @@
     </div>
 
     <!-- Modal Renovao -->
-    <div class="modal-overlay" id="renovacaoModal">
+    <div class="modal-overlay" id="renovaçãoModal">
         <div class="modal">
             <div class="modal-header">
                 <h3 class="modal-title">
                     <div class="modal-title-icon"><i class="fas fa-sync"></i></div>
                     <span>Renovar Cliente</span>
                 </h3>
-                <button class="modal-close" onclick="closeRenovacaoModal()"><i class="fas fa-times"></i></button>
+                <button class="modal-close" onclick="closeRenovaçãoModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <div id="renovacaoInfo"></div>
-                <input type="hidden" id="renovacaoClienteId">
+                <div id="renovaçãoInfo"></div>
+                <input type="hidden" id="renovaçãoClienteId">
                 <div class="form-grid" style="margin-top: 20px;">
                     <div class="form-group full">
                         <label class="form-label">Novo Plano</label>
-                        <div class="planos-grid" id="planosRenovacaoGrid"></div>
+                        <div class="planos-grid" id="planosRenovaçãoGrid"></div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Valor da Renova��o (R$)</label>
-                        <input type="text" class="form-input" id="renovacaoValor" placeholder="0,00">
+                        <label class="form-label">Valor da Renovação (R$)</label>
+                        <input type="text" class="form-input" id="renovaçãoValor" placeholder="0,00">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-dark" onclick="closeRenovacaoModal()">Cancelar</button>
-                <button class="btn btn-success" onclick="executarRenovacao()">
-                    <i class="fas fa-check"></i> Confirmar Renova��o
+                <button class="btn btn-dark" onclick="closeRenovaçãoModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="executarRenovação()">
+                    <i class="fas fa-check"></i> Confirmar Renovação
                 </button>
             </div>
         </div>
@@ -1211,8 +1211,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-dark" onclick="closeMigrarModal()">Cancelar</button>
-                <button class="btn btn-success" onclick="executarMigracao()">
-                    <i class="fas fa-check"></i> Confirmar Migra��o
+                <button class="btn btn-success" onclick="executarMigração()">
+                    <i class="fas fa-check"></i> Confirmar Migração
                 </button>
             </div>
         </div>
@@ -1271,7 +1271,7 @@
                         <input type="text" class="form-input" id="whatsappClienteNome" disabled>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Pr�-visualiza��o</label>
+                        <label class="form-label">Pré-visualização</label>
                         <div class="form-input" id="whatsappPreview" style="min-height:120px; white-space:pre-wrap;"></div>
                     </div>
                 </div>
@@ -1309,7 +1309,7 @@
         let revendedores = [];
         let renovacoes = [];
         let planoSelecionado = null;
-        let planoRenovacaoSelecionado = null;
+        let planoRenovaçãoSelecionado = null;
         let planoMudancaSelecionado = null;
         let mensagensTemplates = [];
         let whatsappCliente = null;
@@ -1560,7 +1560,7 @@
                             <button class="btn btn-sm btn-icon btn-dark" onclick="openMudarPlanoModal(${c.id})" title="Mudar Plano">
                                 <i class="fas fa-layer-group"></i>
                             </button>
-                            <button class="btn btn-sm btn-icon btn-success" onclick="openRenovacaoModal(${c.id})" title="Renovar">
+                            <button class="btn btn-sm btn-icon btn-success" onclick="openRenovaçãoModal(${c.id})" title="Renovar">
                                 <i class="fas fa-sync"></i>
                             </button>
                             <button class="btn btn-sm btn-icon" style="background: #25D366; color: white;" onclick="openWhatsappModal(${c.id})" title="WhatsApp">
@@ -1833,7 +1833,7 @@
             document.getElementById('migrarModal').classList.remove('active');
         }
 
-        async function executarMigracao() {
+        async function executarMigração() {
             const clienteId = document.getElementById('migrarClienteId').value;
             const servidor = document.getElementById('migrarServidor').value;
             const idServidor = document.getElementById('migrarIdServidor').value.trim();
@@ -1858,12 +1858,12 @@
         }
 
         // Renovao
-        function openRenovacaoModal(clienteId) {
+        function openRenovaçãoModal(clienteId) {
             const cliente = clientes.find(c => c.id === clienteId);
             if (!cliente) return;
 
-            document.getElementById('renovacaoClienteId').value = clienteId;
-            document.getElementById('renovacaoInfo').innerHTML = `
+            document.getElementById('renovaçãoClienteId').value = clienteId;
+            document.getElementById('renovaçãoInfo').innerHTML = `
                 <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 12px;">
                     <h4 style="margin-bottom: 16px;">${cliente.nome}</h4>
                     <p style="color: var(--white-600);">Telefone: ${cliente.telefone || '-'}</p>
@@ -1872,24 +1872,24 @@
                 </div>
             `;
 
-            planoRenovacaoSelecionado = cliente.tipo_plano;
-            renderPlanosRenovacao();
-            const planoAtual = PLANOS.find(p => p.id === planoRenovacaoSelecionado);
-            document.getElementById('renovacaoValor').value = planoAtual
+            planoRenovaçãoSelecionado = cliente.tipo_plano;
+            renderPlanosRenovação();
+            const planoAtual = PLANOS.find(p => p.id === planoRenovaçãoSelecionado);
+            document.getElementById('renovaçãoValor').value = planoAtual
                 ? planoAtual.valor.toFixed(2).replace('.', ',')
                 : '';
 
-            document.getElementById('renovacaoModal').classList.add('active');
+            document.getElementById('renovaçãoModal').classList.add('active');
         }
 
-        function closeRenovacaoModal() {
-            document.getElementById('renovacaoModal').classList.remove('active');
+        function closeRenovaçãoModal() {
+            document.getElementById('renovaçãoModal').classList.remove('active');
         }
 
-        function renderPlanosRenovacao() {
-            const grid = document.getElementById('planosRenovacaoGrid');
+        function renderPlanosRenovação() {
+            const grid = document.getElementById('planosRenovaçãoGrid');
             grid.innerHTML = PLANOS.map(p => `
-                <div class="plano-card ${planoRenovacaoSelecionado === p.id ? 'selected' : ''}" onclick="selectPlanoRenovacao('${p.id}', ${p.valor})">
+                <div class="plano-card ${planoRenovaçãoSelecionado === p.id ? 'selected' : ''}" onclick="selectPlanoRenovação('${p.id}', ${p.valor})">
                     <div class="plano-header">
                         <span class="plano-nome">${p.nome}</span>
                         <span class="plano-preco">R$ ${p.valor}</span>
@@ -1899,10 +1899,10 @@
             `).join('');
         }
 
-        function selectPlanoRenovacao(id, valor) {
-            planoRenovacaoSelecionado = id;
-            renderPlanosRenovacao();
-            document.getElementById('renovacaoValor').value = valor.toFixed(2).replace('.', ',');
+        function selectPlanoRenovação(id, valor) {
+            planoRenovaçãoSelecionado = id;
+            renderPlanosRenovação();
+            document.getElementById('renovaçãoValor').value = valor.toFixed(2).replace('.', ',');
         }
 
         function renderPlanosMudanca() {
@@ -1961,24 +1961,24 @@
             }
         }
 
-        async function executarRenovacao() {
-            const clienteId = document.getElementById('renovacaoClienteId').value;
-            const valor = parseValor(document.getElementById('renovacaoValor').value);
+        async function executarRenovação() {
+            const clienteId = document.getElementById('renovaçãoClienteId').value;
+            const valor = parseValor(document.getElementById('renovaçãoValor').value);
 
-            if (!planoRenovacaoSelecionado) {
+            if (!planoRenovaçãoSelecionado) {
                 showToast('Selecione um plano!', 'error');
                 return;
             }
 
             const res = await apiPost('/renovacoes/executar', {
                 cliente_id: parseInt(clienteId),
-                plano_novo: planoRenovacaoSelecionado,
-                valor_renovacao: valor
+                plano_novo: planoRenovaçãoSelecionado,
+                valor_renovação: valor
             });
 
             if (res.success) {
                 showToast('Renovao realizada com sucesso!');
-                closeRenovacaoModal();
+                closeRenovaçãoModal();
                 loadData();
             } else {
                 showToast('Erro: ' + (res.error || 'Erro desconhecido'), 'error');
@@ -2005,7 +2005,7 @@
             e.target.value = formatarValor(e.target.value);
         });
 
-        document.getElementById('renovacaoValor').addEventListener('input', (e) => {
+        document.getElementById('renovaçãoValor').addEventListener('input', (e) => {
             e.target.value = formatarValor(e.target.value);
         });
 

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil do Usuario - Preco Certo</title>
+  <title>Perfil do Usuário - Preço Certo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -368,8 +368,8 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">Pre�o Certo</div>
-            <div class="brand-tag">PRE�O CERTO</div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
           </div>
         </div>
       </div>
@@ -380,12 +380,12 @@
         <a class="nav-item" href="revendedores.html"><i class="fas fa-user-tie"></i><span>Revendedores</span></a>
         <a class="nav-item" href="servidores.html"><i class="fas fa-server"></i><span>Servidores</span></a>
         <a class="nav-item" href="mensagens.html"><i class="fas fa-comment"></i><span>Mensagens</span></a>
-        <a class="nav-item" href="precificacao.html"><i class="fas fa-calculator"></i><span>Precificacao</span></a>
+        <a class="nav-item" href="precificação.html"><i class="fas fa-calculator"></i><span>Precificação</span></a>
         <a class="nav-item" href="recebiveis.html"><i class="fas fa-file-invoice-dollar"></i><span>Recebiveis Ateli</span></a>
         <a class="nav-item" href="dindin.html"><i class="fas fa-sack-dollar"></i><span>Dindin pra Receber</span></a>
         <a class="nav-item" href="produtos-atelie.html"><i class="fas fa-box-archive"></i><span>Produtos Registrados</span></a>
-        <a class="nav-item" href="historico-renovacoes.html"><i class="fas fa-clock-rotate-left"></i><span>Hist�rico Renova��es</span></a>
-        <a class="nav-item active" href="perfil-usuario.html"><i class="fas fa-user-circle"></i><span>Perfil do Usuario</span></a>
+        <a class="nav-item" href="historico-renovacoes.html"><i class="fas fa-clock-rotate-left"></i><span>Histórico Renovações</span></a>
+        <a class="nav-item active" href="perfil-usuario.html"><i class="fas fa-user-circle"></i><span>Perfil do Usuário</span></a>
       </nav>
       <div class="sidebar-footer">
         <div class="server-status">
@@ -399,7 +399,7 @@
       <div class="wrap">
         <div class="header">
           <div>
-            <h1 class="title">Perfil do Usuario</h1>
+            <h1 class="title">Perfil do Usuário</h1>
             <div class="subtitle">Atualize seus dados pessoais e foto de perfil.</div>
           </div>
         </div>
@@ -600,7 +600,7 @@
       }
 
       function renderAvatar(name, imageUrl) {
-        const initials = String(name || 'Usuario')
+        const initials = String(name || 'Usuário')
           .split(' ')
           .filter(Boolean)
           .slice(0, 2)
@@ -660,10 +660,10 @@
       async function loadProfile() {
         const payload = await window.authRefreshCurrentUser();
         const profile = window.authGetSessionProfile && window.authGetSessionProfile();
-        if (!profile) throw new Error('Sessao invalida. Faca login novamente.');
+        if (!profile) throw new Error('Sessao invalida. Faça login novamente.');
 
         const user = payload && payload.user ? payload.user : null;
-        if (!user) throw new Error('Nao foi possivel carregar os dados do usuario.');
+        if (!user) throw new Error('Não foi possível carregar os dados do usuário.');
 
         fillForm(user);
       }
@@ -726,7 +726,7 @@
           setStatus('Consultando CEP...');
           const data = await buscarEnderecoPorCep(cep);
           if (!data) {
-            if (origemBlur) setStatus('CEP nao encontrado. Preencha manualmente.', 'error');
+            if (origemBlur) setStatus('CEP não encontrado. Preencha manualmente.', 'error');
             return;
           }
           lastCepConsultado = cep;
@@ -736,7 +736,7 @@
           estadoInput.value = data.estado || estadoInput.value;
 
           const enderecoAuto = montarEndereco(ruaInput.value, cidadeInput.value, estadoInput.value, cepInput.value);
-          if (enderecoAuto && (!enderecoInput.value.trim() || /nao informado/i.test(enderecoInput.value))) {
+          if (enderecoAuto && (!enderecoInput.value.trim() || /não informado/i.test(enderecoInput.value))) {
             enderecoInput.value = enderecoAuto;
           }
           setStatus('Endereco atualizado pelo CEP.', 'ok');
@@ -762,7 +762,7 @@
       [ruaInput, cidadeInput, estadoInput].forEach((el) => {
         el.addEventListener('blur', function () {
           const enderecoAuto = montarEndereco(ruaInput.value, cidadeInput.value, estadoInput.value, cepInput.value);
-          if (enderecoAuto && (!enderecoInput.value.trim() || /nao informado/i.test(enderecoInput.value))) {
+          if (enderecoAuto && (!enderecoInput.value.trim() || /não informado/i.test(enderecoInput.value))) {
             enderecoInput.value = enderecoAuto;
           }
         });

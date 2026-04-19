@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   function normalizeAscii(value) {
     return String(value || '')
       .normalize('NFD')
@@ -99,7 +99,7 @@
         state.expired = true;
         el.timer.textContent = 'PIX expirado (05:00). Gere um novo pedido para pagar.';
         if (el.copyBtn) el.copyBtn.disabled = true;
-        onStatus('Tempo de pagamento PIX expirado. Envie uma nova solicitacao para gerar outro codigo.', 'error');
+        onStatus('Tempo de pagamento PIX expirado. Envie uma nova solicitação para gerar outro codigo.', 'error');
         return;
       }
       el.timer.textContent = `Tempo para pagar: ${formatTimer(left)}`;
@@ -152,11 +152,11 @@
       });
 
       if (!pixCode) {
-        throw new Error('A chave PIX nao esta configurada. Avise o desenvolvedor.');
+        throw new Error('A chave PIX não esta configurada. Avise o desenvolvedor.');
       }
 
       if (el.resumo) {
-        el.resumo.textContent = `Recarga #${recarga.id} | Operadora ${recarga.operadora} | Credito R$ ${formatMoney(valorCredito)} | Valor a pagar R$ ${formatMoney(valorPago)}.`;
+        el.resumo.textContent = `Recarga #${recarga.id} | Operadora ${recarga.operadora} | Crédito R$ ${formatMoney(valorCredito)} | Valor a pagar R$ ${formatMoney(valorPago)}.`;
       }
       if (el.codeField) el.codeField.value = pixCode;
       if (el.qrImage) el.qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(pixCode)}`;

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Renovações - Preço Certo</title>
+    <title>HistÃ³rico de RenovaÃ§Ãµes - PreÃ§o Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -620,8 +620,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">Preço Certo</div>
-                <div class="brand-tag">PREÇO CERTO</div>
+                <div class="brand-name">PreÃ§o Certo</div>
+                <div class="brand-tag">PREÃ‡O CERTO</div>
             </div>
         </div>
     </div>
@@ -647,13 +647,13 @@
             <i class="fas fa-message"></i>
             <span>Mensagens</span>
         </a>
-        <a class="nav-item" href="precificacao.html">
+        <a class="nav-item" href="precificaÃ§Ã£o.html">
             <i class="fas fa-calculator"></i>
-            <span>Precificação</span>
+            <span>PrecificaÃ§Ã£o</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>Recebíveis Ateli</span>
+            <span>RecebÃ­veis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -665,7 +665,7 @@
         </a>
         <a class="nav-item active" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>Histórico</span>
+            <span>HistÃ³rico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -682,7 +682,7 @@
         <!-- Main -->
         <main class="main">
             <header class="main-header">
-                <h1 class="page-title"><span>Histórico de Renovações</span></h1>
+                <h1 class="page-title"><span>HistÃ³rico de RenovaÃ§Ãµes</span></h1>
                 <div class="header-actions">
                     <select class="form-input" id="mesSelect"></select>
                     <button class="btn btn-dark" onclick="refreshMes()">
@@ -699,7 +699,7 @@
                     <div class="stat-card gold">
                         <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
                         <div class="stat-value" id="statTotal">0</div>
-                        <div class="stat-label">Total de Renovações</div>
+                        <div class="stat-label">Total de RenovaÃ§Ãµes</div>
                     </div>
                     <div class="stat-card green">
                         <div class="stat-icon"><i class="fas fa-user-check"></i></div>
@@ -733,14 +733,14 @@
                                     <th>Servidor</th>
                                     <th>Plano</th>
                                     <th>Valor</th>
-                                    <th>Renovação</th>
+                                    <th>RenovaÃ§Ã£o</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                         <div class="empty-state" id="emptyRenovaram" style="display:none;">
                             <i class="fas fa-user-check"></i>
-                            <p>Nenhuma renovação no mês selecionado</p>
+                            <p>Nenhuma renovaÃ§Ã£o no mÃªs selecionado</p>
                         </div>
                     </div>
                 </div>
@@ -765,7 +765,7 @@
                         </table>
                         <div class="empty-state" id="emptyNaoRenovaram" style="display:none;">
                             <i class="fas fa-user-clock"></i>
-                            <p>Todos os clientes renovaram no mês selecionado</p>
+                            <p>Todos os clientes renovaram no mÃªs selecionado</p>
                         </div>
                     </div>
                 </div>
@@ -875,11 +875,11 @@
 
             document.getElementById('statTotal').textContent = data.total_renovacoes || 0;
             document.getElementById('statRenovaram').textContent = data.total_clientes_renovaram || 0;
-            document.getElementById('statNaoRenovaram').textContent = data.total_clientes_nao_renovaram || 0;
+            document.getElementById('statNaoRenovaram').textContent = data.total_clientes_nÃ£o_renovaram || 0;
             document.getElementById('statValor').textContent = formatarValor(data.valor_total_mes || 0);
 
             renderRenovaram(data.clientes_renovaram || []);
-            renderNaoRenovaram(data.clientes_nao_renovaram || []);
+            renderNaoRenovaram(data.clientes_nÃ£o_renovaram || []);
         }
 
         function renderRenovaram(lista) {
@@ -901,8 +901,8 @@
                     <td>${c.revendedor || '-'}</td>
                     <td>${c.servidor || '-'}</td>
                     <td>${c.plano_novo || '-'}</td>
-                    <td>${formatarValor(c.valor_renovacao)}</td>
-                    <td>${formatarData(c.data_renovacao)}</td>
+                    <td>${formatarValor(c.valor_renovaÃ§Ã£o)}</td>
+                    <td>${formatarData(c.data_renovaÃ§Ã£o)}</td>
                 </tr>
             `).join('');
         }

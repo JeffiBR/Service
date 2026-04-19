@@ -1,4 +1,4 @@
-// Global config for frontend deployments (GitHub Pages + Render API)
+﻿// Global config for frontend deployments (GitHub Pages + Render API)
 (function () {
   const host = window.location.hostname || '';
   const isLocalHost = host === 'localhost' || host === '127.0.0.1';

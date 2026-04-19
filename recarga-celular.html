@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -302,7 +302,7 @@
                   </select>
                 </div>
                 <div class="field">
-                  <label for="valor">Credito da recarga (R$)</label>
+                  <label for="valor">Crédito da recarga (R$)</label>
                   <select id="valor" required>
                     <option value="">Selecione...</option>
                   </select>
@@ -339,7 +339,7 @@
                       <th>ID</th>
                       <th>Número</th>
                       <th>Operadora</th>
-                      <th>Credito</th>
+                      <th>Crédito</th>
                       <th>Valor pago</th>
                       <th>Status</th>
                       <th>Comentário</th>
@@ -424,7 +424,7 @@
         const label = value === 'aguardando_pagamento'
           ? 'Aguardando pagamento'
           : (value === 'concluido'
-            ? 'Concluido'
+            ? 'Concluído'
             : (value === 'erro' ? 'Erro' : 'Em processo'));
         return `<span class="badge ${value || 'aguardando_pagamento'}">${label}</span>`;
       }
@@ -475,7 +475,7 @@
       function renderPlanosSelect(operadora) {
         const planos = getPlanosByOperadora(operadora);
         const options = ['<option value="">Selecione...</option>']
-          .concat(planos.map((p) => `<option value="${p.credito}">Credito R$ ${formatMoney(p.credito)} -> paga R$ ${formatMoney(p.paga)}</option>`));
+          .concat(planos.map((p) => `<option value="${p.credito}">Crédito R$ ${formatMoney(p.credito)} -> paga R$ ${formatMoney(p.paga)}</option>`));
         valorEl.innerHTML = options.join('');
         renderPlanosRapidos(operadora);
       }
@@ -493,7 +493,7 @@
         }
         planosRapidosEl.innerHTML = planos.map((p) => `
           <button type="button" class="plano-btn" data-credito="${p.credito}">
-            <div class="plano-credito">Credito R$ ${formatMoney(p.credito)}</div>
+            <div class="plano-credito">Crédito R$ ${formatMoney(p.credito)}</div>
             <div class="plano-paga">Voce paga R$ ${formatMoney(p.paga)}</div>
           </button>
         `).join('');
@@ -518,10 +518,10 @@
         }
         const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === credito);
         if (!plano) {
-          resumoPrecoEl.value = 'Plano nao disponivel para essa operadora.';
+          resumoPrecoEl.value = 'Plano não disponivel para essa operadora.';
           return;
         }
-        resumoPrecoEl.value = `Credito R$ ${formatMoney(plano.credito)} | Cliente paga R$ ${formatMoney(plano.paga)}`;
+        resumoPrecoEl.value = `Crédito R$ ${formatMoney(plano.credito)} | Cliente paga R$ ${formatMoney(plano.paga)}`;
         markPlanoAtivo();
       }
 
@@ -544,7 +544,7 @@
 
       function renderRows(items) {
         const list = Array.isArray(items) ? items : [];
-        countEl.textContent = `${list.length} solicitacao(oes)`;
+        countEl.textContent = `${list.length} solicitação(oes)`;
         if (!list.length) {
           bodyRows.innerHTML = '<tr><td colspan="8" class="muted">Nenhuma recarga solicitada.</td></tr>';
           return;
@@ -590,14 +590,14 @@
         e.preventDefault();
         btnSalvar.disabled = true;
         try {
-          setStatus('Enviando solicitacao...');
+          setStatus('Enviando solicitação...');
           const operadora = operadoraEl.value;
           const valorCredito = Number(valorEl.value);
           if (!operadora) throw new Error('Selecione a operadora.');
           if (!Number.isFinite(valorCredito) || valorCredito <= 0) throw new Error('Selecione um credito valido.');
 
           const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === valorCredito);
-          if (!plano) throw new Error('Esse plano nao esta disponivel para a operadora selecionada.');
+          if (!plano) throw new Error('Esse plano não esta disponivel para a operadora selecionada.');
 
           const created = await fetchJson(API, {
             method: 'POST',
@@ -615,7 +615,7 @@
           await loadRecargas();
           setStatus('Recarga solicitada com sucesso.', 'ok');
           if (!pixUi) {
-            throw new Error('Modulo PIX nao carregado.');
+            throw new Error('Modulo PIX não carregado.');
           }
           const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
           pixUi.open({

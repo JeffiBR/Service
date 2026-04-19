@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="pt-BR">
 <head>
@@ -1054,7 +1054,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
             <i class="fas fa-message"></i>
             <span>Mensagens</span>
         </a>
-        <a class="nav-item active" href="precificacao.html">
+        <a class="nav-item active" href="precificação.html">
             <i class="fas fa-calculator"></i>
             <span>Precificação</span>
         </a>
@@ -1760,56 +1760,56 @@ input:not([type="file"]):not([type="checkbox"]), select {
 </div>
 <div class="form-group">
 <div class="toggle-switch">
-<label for="temSublimacao" style="margin-bottom: 0;">
+<label for="temSublimação" style="margin-bottom: 0;">
 <i class="fas fa-layer-group"></i>
                                 Produto sublimado?
                             </label>
 <label class="switch-label">
-<input id="temSublimacao" type="checkbox"/>
+<input id="temSublimação" type="checkbox"/>
 <span class="slider"></span>
 </label>
 </div>
 </div>
-<div class="aviamentos-section" id="sublimacaoSection" style="display: none;">
+<div class="aviamentos-section" id="sublimaçãoSection" style="display: none;">
 <div class="grid-3">
 <div class="form-group">
-<label for="sublimacaoQtdFolhas">
+<label for="sublimaçãoQtdFolhas">
 <i class="fas fa-layer-group"></i>
                                     Quantidade de folhas
                                 </label>
 <div class="input-with-icon">
 <i class="fas fa-sort-amount-up input-icon"></i>
-<input class="number-input" id="sublimacaoQtdFolhas" placeholder="0" type="text"/>
+<input class="number-input" id="sublimaçãoQtdFolhas" placeholder="0" type="text"/>
 </div>
-<div class="error-message" id="sublimacaoQtdFolhasError">
+<div class="error-message" id="sublimaçãoQtdFolhasError">
 <i class="fas fa-exclamation-circle"></i>
                                     Informe a quantidade de folhas
                                 </div>
 </div>
 <div class="form-group">
-<label for="sublimacaoValorFolhas">
+<label for="sublimaçãoValorFolhas">
 <i class="fas fa-money-bill-wave"></i>
                                     Valor pago pelas folhas (R$)
                                 </label>
 <div class="input-with-icon">
 <i class="fas fa-dollar-sign input-icon"></i>
-<input class="money-input" id="sublimacaoValorFolhas" placeholder="0,00" type="text"/>
+<input class="money-input" id="sublimaçãoValorFolhas" placeholder="0,00" type="text"/>
 </div>
-<div class="error-message" id="sublimacaoValorFolhasError">
+<div class="error-message" id="sublimaçãoValorFolhasError">
 <i class="fas fa-exclamation-circle"></i>
                                     Informe o valor pago pelas folhas
                                 </div>
 </div>
 <div class="form-group">
-<label for="sublimacaoFolhasUsadas">
+<label for="sublimaçãoFolhasUsadas">
 <i class="fas fa-file-alt"></i>
                                     Folhas utilizadas (por produto)
                                 </label>
 <div class="input-with-icon">
 <i class="fas fa-cut input-icon"></i>
-<input class="number-input" id="sublimacaoFolhasUsadas" placeholder="0" type="text"/>
+<input class="number-input" id="sublimaçãoFolhasUsadas" placeholder="0" type="text"/>
 </div>
-<div class="error-message" id="sublimacaoFolhasUsadasError">
+<div class="error-message" id="sublimaçãoFolhasUsadasError">
 <i class="fas fa-exclamation-circle"></i>
                                     Informe as folhas utilizadas
                                 </div>
@@ -1817,27 +1817,27 @@ input:not([type="file"]):not([type="checkbox"]), select {
 </div>
 <div class="grid-2">
 <div class="form-group">
-<label for="sublimacaoTinta">
+<label for="sublimaçãoTinta">
 <i class="fas fa-tint"></i>
                                     Gasto com tinta (R$ por produto)
                                 </label>
 <div class="input-with-icon">
 <i class="fas fa-dollar-sign input-icon"></i>
-<input class="money-input" id="sublimacaoTinta" readonly="" type="text" value="0,10"/>
+<input class="money-input" id="sublimaçãoTinta" readonly="" type="text" value="0,10"/>
 </div>
 </div>
 <div class="form-group">
-<label for="sublimacaoEnergia">
+<label for="sublimaçãoEnergia">
 <i class="fas fa-bolt"></i>
                                     Gasto com energia (R$ por produto)
                                 </label>
 <div class="input-with-icon">
 <i class="fas fa-dollar-sign input-icon"></i>
-<input class="money-input" id="sublimacaoEnergia" readonly="" type="text" value="0,25"/>
+<input class="money-input" id="sublimaçãoEnergia" readonly="" type="text" value="0,25"/>
 </div>
 </div>
 </div>
-<div class="highlight-info" id="sublimacaoCalcInfo" style="padding-left: 5px; display: none;">
+<div class="highlight-info" id="sublimaçãoCalcInfo" style="padding-left: 5px; display: none;">
 <i class="fas fa-info-circle"></i> Custo de folhas calculado automaticamente.
                         </div>
 </div>
@@ -1976,7 +1976,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
 <script>
         // ** CONFIGURAO DO BACKEND **
         const API_URL = (window.API_BASE || (window.location.origin + '/api'));
-        const SAVE_ENDPOINT = `${API_URL}/precificacao`;
+        const SAVE_ENDPOINT = `${API_URL}/precificação`;
         const CONFIG_ENDPOINT = `${API_URL}/configuracoes`;
         
         const MAX_FILE_SIZE_MB = 0.9;
@@ -2054,7 +2054,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 return { dataUrl: newDataUrl, blob: lastBlob, file: newFile, compressed: true };
             }
 
-            throw new Error('Nao foi possivel reduzir a imagem.');
+            throw new Error('Não foi possível reduzir a imagem.');
         }
 
         // Variveis de estado
@@ -2067,7 +2067,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
         let tecidoSelecionado2 = ''; // guarda o segundo tecido (opcional)
         let tecidoSelecionado3 = ''; // terceiro tecido opcional
         let forroSelecionado = '';
-        let configPrecificacao = { tecidos: {}, forros: {}, aviamentos: {} };
+        let configPrecificação = { tecidos: {}, forros: {}, aviamentos: {} };
         let precoTecidosIndex = {};
         let precoForrosIndex = {};
         
@@ -2148,9 +2148,9 @@ input:not([type="file"]):not([type="checkbox"]), select {
             const aviamentosSection = document.getElementById('aviamentosSection');
             const aviamentosContainer = document.getElementById('aviamentosContainer');
             const adicionarAviamentoBtn = document.getElementById('adicionarAviamento');
-            const temSublimacaoCheckbox = document.getElementById('temSublimacao');
-            const sublimacaoSection = document.getElementById('sublimacaoSection');
-            const sublimacaoCalcInfo = document.getElementById('sublimacaoCalcInfo');
+            const temSublimaçãoCheckbox = document.getElementById('temSublimação');
+            const sublimaçãoSection = document.getElementById('sublimaçãoSection');
+            const sublimaçãoCalcInfo = document.getElementById('sublimaçãoCalcInfo');
             const calcularBtn = document.getElementById('calcular');
             const resultadoDiv = document.getElementById('resultado');
             const resultadoDetalhes = document.getElementById('resultadoDetalhes');
@@ -2206,7 +2206,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     'artesanato_jogos_americanos': 'Tecidos para Artesanato e Jogos Americanos',
                     'calados_bolsas_pecas_firmes': 'Tecidos para Calados, Bolsas e Peas Firmes',
                     'forros': 'Forros',
-                    'personalizados_usuario': 'Personalizados do Usuario'
+                    'personalizados_usuario': 'Personalizados do Usuário'
                 };
                 return nomes[categoria] || categoria;
             }
@@ -2295,25 +2295,25 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 input.dispatchEvent(new Event('input', { bubbles: true }));
             }
 
-            async function carregarConfiguracoesPrecificacao() {
+            async function carregarConfiguraçõesPrecificação() {
                 try {
                     const response = await fetch(CONFIG_ENDPOINT, { cache: 'no-store' });
                     const payload = await response.json().catch(() => ({}));
                     if (!response.ok || !payload || !payload.success || !payload.data) return;
                     const data = payload.data || {};
-                    configPrecificacao = {
+                    configPrecificação = {
                         tecidos: data.tecidos && typeof data.tecidos === 'object' ? data.tecidos : {},
                         forros: data.forros && typeof data.forros === 'object' ? data.forros : {},
                         aviamentos: data.aviamentos && typeof data.aviamentos === 'object' ? data.aviamentos : {}
                     };
-                    precoTecidosIndex = buildPriceIndexMap(configPrecificacao.tecidos);
-                    precoForrosIndex = buildPriceIndexMap(configPrecificacao.forros);
+                    precoTecidosIndex = buildPriceIndexMap(configPrecificação.tecidos);
+                    precoForrosIndex = buildPriceIndexMap(configPrecificação.forros);
 
                     if (!Array.isArray(tecidos.personalizados_usuario)) tecidos.personalizados_usuario = [];
-                    mergeUniqueNames(tecidos.personalizados_usuario, Object.keys(configPrecificacao.tecidos || {}));
-                    mergeUniqueNames(tecidos.forros, Object.keys(configPrecificacao.forros || {}));
+                    mergeUniqueNames(tecidos.personalizados_usuario, Object.keys(configPrecificação.tecidos || {}));
+                    mergeUniqueNames(tecidos.forros, Object.keys(configPrecificação.forros || {}));
                 } catch (err) {
-                    console.warn('Nao foi possivel carregar configuracoes de precificacao:', err);
+                    console.warn('Não foi possível carregar configurações de precificação:', err);
                 }
             }
 
@@ -2337,7 +2337,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
 
                 return {
                     partes: usarA ? partesA : partesB,
-                    orientacao: usarA ? 'normal' : 'rotacionada',
+                    orientação: usarA ? 'normal' : 'rotacionada',
                     colunas: usarA ? colA : colB,
                     linhas: usarA ? linA : linB,
                     areaSobra: usarA ? areaSobraA : areaSobraB
@@ -2536,30 +2536,30 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     }
                 });
 
-                if (temSublimacaoCheckbox && temSublimacaoCheckbox.checked) {
-                    const qtdFolhas = parseNumero(document.getElementById('sublimacaoQtdFolhas')?.value || '');
-                    const valorFolhas = parseMoeda(document.getElementById('sublimacaoValorFolhas')?.value || '');
-                    const folhasUsadas = parseNumero(document.getElementById('sublimacaoFolhasUsadas')?.value || '');
+                if (temSublimaçãoCheckbox && temSublimaçãoCheckbox.checked) {
+                    const qtdFolhas = parseNumero(document.getElementById('sublimaçãoQtdFolhas')?.value || '');
+                    const valorFolhas = parseMoeda(document.getElementById('sublimaçãoValorFolhas')?.value || '');
+                    const folhasUsadas = parseNumero(document.getElementById('sublimaçãoFolhasUsadas')?.value || '');
 
                     if (!qtdFolhas || qtdFolhas <= 0) {
-                        mostrarErro('sublimacaoQtdFolhas', 'Informe a quantidade de folhas');
+                        mostrarErro('sublimaçãoQtdFolhas', 'Informe a quantidade de folhas');
                         valido = false;
                     } else {
-                        limparErro('sublimacaoQtdFolhas');
+                        limparErro('sublimaçãoQtdFolhas');
                     }
 
                     if (!valorFolhas || valorFolhas <= 0) {
-                        mostrarErro('sublimacaoValorFolhas', 'Informe o valor pago pelas folhas');
+                        mostrarErro('sublimaçãoValorFolhas', 'Informe o valor pago pelas folhas');
                         valido = false;
                     } else {
-                        limparErro('sublimacaoValorFolhas');
+                        limparErro('sublimaçãoValorFolhas');
                     }
 
                     if (!folhasUsadas || folhasUsadas <= 0) {
-                        mostrarErro('sublimacaoFolhasUsadas', 'Informe as folhas utilizadas');
+                        mostrarErro('sublimaçãoFolhasUsadas', 'Informe as folhas utilizadas');
                         valido = false;
                     } else {
-                        limparErro('sublimacaoFolhasUsadas');
+                        limparErro('sublimaçãoFolhasUsadas');
                     }
                 }
 
@@ -2667,7 +2667,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     imagePreviewDiv.style.display = 'block';
                 } catch (err) {
                     console.error(err);
-                    mostrarErro('produtoFoto', 'Nao foi possivel processar a imagem.');
+                    mostrarErro('produtoFoto', 'Não foi possível processar a imagem.');
                     this.value = '';
                     return;
                 }
@@ -2895,20 +2895,20 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 atualizarPrevia();
             });
 
-            if (temSublimacaoCheckbox) {
-                temSublimacaoCheckbox.addEventListener('change', function() {
+            if (temSublimaçãoCheckbox) {
+                temSublimaçãoCheckbox.addEventListener('change', function() {
                     if (this.checked) {
-                        sublimacaoSection.style.display = 'block';
+                        sublimaçãoSection.style.display = 'block';
                     } else {
-                        sublimacaoSection.style.display = 'none';
-                        ['sublimacaoQtdFolhas', 'sublimacaoValorFolhas', 'sublimacaoFolhasUsadas'].forEach(id => {
+                        sublimaçãoSection.style.display = 'none';
+                        ['sublimaçãoQtdFolhas', 'sublimaçãoValorFolhas', 'sublimaçãoFolhasUsadas'].forEach(id => {
                             const el = document.getElementById(id);
                             if (el) {
                                 el.value = '';
                                 limparErro(id);
                             }
                         });
-                        if (sublimacaoCalcInfo) sublimacaoCalcInfo.style.display = 'none';
+                        if (sublimaçãoCalcInfo) sublimaçãoCalcInfo.style.display = 'none';
                     }
                     atualizarPrevia();
                 });
@@ -3001,7 +3001,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 'valorTotalTecido2', 'comprimentoTotalTecido2', 'larguraTecido2', 'larguraUtilizada2', 'comprimentoUtilizado2', 'partesReaisTecido2', 'tipoTecido2',
                 'valorTotalTecido3', 'comprimentoTotalTecido3', 'larguraTecido3', 'larguraUtilizada3', 'comprimentoUtilizado3', 'partesReaisTecido3', 'tipoTecido3',
                 'valorTotalForro', 'comprimentoTotalForro', 'larguraForro', 'larguraUtilizadaForro', 'comprimentoUtilizadoForro', 'partesReaisForro', 'tipoForro',
-                'sublimacaoQtdFolhas', 'sublimacaoValorFolhas', 'sublimacaoFolhasUsadas'];
+                'sublimaçãoQtdFolhas', 'sublimaçãoValorFolhas', 'sublimaçãoFolhasUsadas'];
             camposPrincipais.forEach(id => {
                 const campo = document.getElementById(id);
                 if (campo) {
@@ -3029,16 +3029,16 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const tempoGasto = parseNumero(document.getElementById('tempoGasto').value) || 0;
                     const valorEmbalagemTotal = parseMoeda(document.getElementById('valorEmbalagem').value) || 0; // Valor TOTAL do Lote
                     const custoTransporte = parseMoeda(document.getElementById('custoTransporte').value) || 0; // Unitário
-                    const sublimacaoAtiva = temSublimacaoCheckbox && temSublimacaoCheckbox.checked;
-                    const sublimacaoQtdFolhas = parseNumero(document.getElementById('sublimacaoQtdFolhas')?.value || '') || 0;
-                    const sublimacaoValorFolhas = parseMoeda(document.getElementById('sublimacaoValorFolhas')?.value || '') || 0;
-                    const sublimacaoFolhasUsadas = parseNumero(document.getElementById('sublimacaoFolhasUsadas')?.value || '') || 0;
-                    const custoFolhaUnitario = sublimacaoAtiva && sublimacaoQtdFolhas > 0
-                        ? (sublimacaoValorFolhas / sublimacaoQtdFolhas) * sublimacaoFolhasUsadas
+                    const sublimaçãoAtiva = temSublimaçãoCheckbox && temSublimaçãoCheckbox.checked;
+                    const sublimaçãoQtdFolhas = parseNumero(document.getElementById('sublimaçãoQtdFolhas')?.value || '') || 0;
+                    const sublimaçãoValorFolhas = parseMoeda(document.getElementById('sublimaçãoValorFolhas')?.value || '') || 0;
+                    const sublimaçãoFolhasUsadas = parseNumero(document.getElementById('sublimaçãoFolhasUsadas')?.value || '') || 0;
+                    const custoFolhaUnitario = sublimaçãoAtiva && sublimaçãoQtdFolhas > 0
+                        ? (sublimaçãoValorFolhas / sublimaçãoQtdFolhas) * sublimaçãoFolhasUsadas
                         : 0;
-                    const custoTintaUnitario = sublimacaoAtiva ? 0.10 : 0;
-                    const custoEnergiaUnitario = sublimacaoAtiva ? 0.25 : 0;
-                    const custoSublimacaoUnitario = sublimacaoAtiva
+                    const custoTintaUnitario = sublimaçãoAtiva ? 0.10 : 0;
+                    const custoEnergiaUnitario = sublimaçãoAtiva ? 0.25 : 0;
+                    const custoSublimaçãoUnitario = sublimaçãoAtiva
                         ? (custoFolhaUnitario + custoTintaUnitario + custoEnergiaUnitario)
                         : 0;
                     
@@ -3091,7 +3091,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                             if (calcTecido1.metodo === 'rendimento_real') {
                                 detalhes += `(1) R$ ${valorTotalTecido.toFixed(2)} / ${partesReaisTecido.toFixed(0)} partes (real) = R$ ${custoTecido.toFixed(2)}`;
                             } else if (calcTecido1.metodo === 'rendimento_estimado') {
-                                detalhes += `(1) R$ ${valorTotalTecido.toFixed(2)} / ${calcTecido1.partesConsideradas} partes (auto ${calcTecido1.estimado.colunas}x${calcTecido1.estimado.linhas}, ${calcTecido1.estimado.orientacao}) = R$ ${custoTecido.toFixed(2)}`;
+                                detalhes += `(1) R$ ${valorTotalTecido.toFixed(2)} / ${calcTecido1.partesConsideradas} partes (auto ${calcTecido1.estimado.colunas}x${calcTecido1.estimado.linhas}, ${calcTecido1.estimado.orientação}) = R$ ${custoTecido.toFixed(2)}`;
                             } else {
                                 detalhes += `(1) (R$ ${valorTotalTecido.toFixed(2)} | ${comprimentoTotal}x${larguraTotal} cm) x (${larguraUtilizadaCalc.toFixed(2)}x${comprimentoUtilizadoCalc.toFixed(2)} cm c/ margem) = R$ ${custoTecido.toFixed(2)}`;
                             }
@@ -3101,7 +3101,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                             if (calcTecido2.metodo === 'rendimento_real') {
                                 detalhes += `(2) R$ ${valorTotalTecido2.toFixed(2)} / ${partesReaisTecido2.toFixed(0)} partes (real) = R$ ${custoTecido2.toFixed(2)}`;
                             } else if (calcTecido2.metodo === 'rendimento_estimado') {
-                                detalhes += `(2) R$ ${valorTotalTecido2.toFixed(2)} / ${calcTecido2.partesConsideradas} partes (auto ${calcTecido2.estimado.colunas}x${calcTecido2.estimado.linhas}, ${calcTecido2.estimado.orientacao}) = R$ ${custoTecido2.toFixed(2)}`;
+                                detalhes += `(2) R$ ${valorTotalTecido2.toFixed(2)} / ${calcTecido2.partesConsideradas} partes (auto ${calcTecido2.estimado.colunas}x${calcTecido2.estimado.linhas}, ${calcTecido2.estimado.orientação}) = R$ ${custoTecido2.toFixed(2)}`;
                             } else {
                                 detalhes += `(2) (R$ ${valorTotalTecido2.toFixed(2)} | ${comprimentoTotal2}x${larguraTotal2} cm) x (${larguraUtilizada2Calc.toFixed(2)}x${comprimentoUtilizado2Calc.toFixed(2)} cm c/ margem) = R$ ${custoTecido2.toFixed(2)}`;
                             }
@@ -3111,7 +3111,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                             if (calcTecido3.metodo === 'rendimento_real') {
                                 detalhes += `(3) R$ ${valorTotalTecido3.toFixed(2)} / ${partesReaisTecido3.toFixed(0)} partes (real) = R$ ${custoTecido3.toFixed(2)}`;
                             } else if (calcTecido3.metodo === 'rendimento_estimado') {
-                                detalhes += `(3) R$ ${valorTotalTecido3.toFixed(2)} / ${calcTecido3.partesConsideradas} partes (auto ${calcTecido3.estimado.colunas}x${calcTecido3.estimado.linhas}, ${calcTecido3.estimado.orientacao}) = R$ ${custoTecido3.toFixed(2)}`;
+                                detalhes += `(3) R$ ${valorTotalTecido3.toFixed(2)} / ${calcTecido3.partesConsideradas} partes (auto ${calcTecido3.estimado.colunas}x${calcTecido3.estimado.linhas}, ${calcTecido3.estimado.orientação}) = R$ ${custoTecido3.toFixed(2)}`;
                             } else {
                                 detalhes += `(3) (R$ ${valorTotalTecido3.toFixed(2)} | ${comprimentoTotal3}x${larguraTotal3} cm) x (${larguraUtilizada3Calc.toFixed(2)}x${comprimentoUtilizado3Calc.toFixed(2)} cm c/ margem) = R$ ${custoTecido3.toFixed(2)}`;
                             }
@@ -3121,7 +3121,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                             if (calcForro.metodo === 'rendimento_real') {
                                 detalhes += `(Forro) R$ ${valorTotalForro.toFixed(2)} / ${partesReaisForro.toFixed(0)} partes (real) = R$ ${custoForro.toFixed(2)}`;
                             } else if (calcForro.metodo === 'rendimento_estimado') {
-                                detalhes += `(Forro) R$ ${valorTotalForro.toFixed(2)} / ${calcForro.partesConsideradas} partes (auto ${calcForro.estimado.colunas}x${calcForro.estimado.linhas}, ${calcForro.estimado.orientacao}) = R$ ${custoForro.toFixed(2)}`;
+                                detalhes += `(Forro) R$ ${valorTotalForro.toFixed(2)} / ${calcForro.partesConsideradas} partes (auto ${calcForro.estimado.colunas}x${calcForro.estimado.linhas}, ${calcForro.estimado.orientação}) = R$ ${custoForro.toFixed(2)}`;
                             } else {
                                 detalhes += `(Forro) (R$ ${valorTotalForro.toFixed(2)} | ${comprimentoTotalForro}x${larguraTotalForro} cm) x (${larguraUtilizadaForroCalc.toFixed(2)}x${comprimentoUtilizadoForroCalc.toFixed(2)} cm c/ margem) = R$ ${custoForro.toFixed(2)}`;
                             }
@@ -3156,7 +3156,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoEmbalagemUnitario = valorEmbalagemTotal / (qtdProdutos || 1);
                     
                     // 5. Custo Unitário Total
-                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimacaoUnitario; // inclui sublimação na base de lucro
+                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimaçãoUnitario; // inclui sublimação na base de lucro
                     const custoMateriaisParaCalculoTotal = baseLucro + custoEmbalagemUnitario + custoTransporte;
                     const custoTotalUnitario = custoMateriaisParaCalculoTotal + custoMaoDeObra;
                     const comprimentoNecessarioM = calcularMetragemLote({ qtdProdutos, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, calculoMaterial: calcTecido1 });
@@ -3171,15 +3171,15 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoFolhaTotal = custoFolhaUnitario * qtdProdutos;
                     const custoTintaTotal = custoTintaUnitario * qtdProdutos;
                     const custoEnergiaTotal = custoEnergiaUnitario * qtdProdutos;
-                    const custoSublimacaoTotal = custoSublimacaoUnitario * qtdProdutos;
+                    const custoSublimaçãoTotal = custoSublimaçãoUnitario * qtdProdutos;
 
-                    if (sublimacaoCalcInfo) {
-                        if (sublimacaoAtiva && sublimacaoQtdFolhas > 0 && sublimacaoValorFolhas > 0) {
-                            const custoFolha = sublimacaoValorFolhas / sublimacaoQtdFolhas;
-                            sublimacaoCalcInfo.innerHTML = `<i class="fas fa-info-circle"></i> Custo por folha: R$ ${custoFolha.toFixed(4)}. Usadas: ${sublimacaoFolhasUsadas || 0}.`;
-                            sublimacaoCalcInfo.style.display = 'block';
+                    if (sublimaçãoCalcInfo) {
+                        if (sublimaçãoAtiva && sublimaçãoQtdFolhas > 0 && sublimaçãoValorFolhas > 0) {
+                            const custoFolha = sublimaçãoValorFolhas / sublimaçãoQtdFolhas;
+                            sublimaçãoCalcInfo.innerHTML = `<i class="fas fa-info-circle"></i> Custo por folha: R$ ${custoFolha.toFixed(4)}. Usadas: ${sublimaçãoFolhasUsadas || 0}.`;
+                            sublimaçãoCalcInfo.style.display = 'block';
                         } else {
-                            sublimacaoCalcInfo.style.display = sublimacaoAtiva ? 'block' : 'none';
+                            sublimaçãoCalcInfo.style.display = sublimaçãoAtiva ? 'block' : 'none';
                         }
                     }
                     
@@ -3222,15 +3222,15 @@ input:not([type="file"]):not([type="checkbox"]), select {
                             <span>R$ ${custoEmbalagemUnitario.toFixed(2)}</span>
                         </div>
                         <div class="previa-item"><span>Transporte (Unitário):</span><span>R$ ${custoTransporte.toFixed(2)}</span></div>
-                        ${sublimacaoAtiva ? `
-                        <div class="previa-item"><span>Sublimação (Unitário):</span><span>R$ ${custoSublimacaoUnitario.toFixed(2)}</span></div>
+                        ${sublimaçãoAtiva ? `
+                        <div class="previa-item"><span>Sublimação (Unitário):</span><span>R$ ${custoSublimaçãoUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Folhas (Unitário):</span><span>R$ ${custoFolhaUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Tinta (Unitário):</span><span>R$ ${custoTintaUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Energia (Unitário):</span><span>R$ ${custoEnergiaUnitario.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Folhas (Lote):</span><span>R$ ${custoFolhaTotal.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Tinta (Lote):</span><span>R$ ${custoTintaTotal.toFixed(2)}</span></div>
                         <div class="previa-item" style="font-size:0.9em; padding-left:16px;"><span>Energia (Lote):</span><span>R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
-                        <div class="previa-item"><span>Sublimação (Lote ${qtdProdutos} un):</span><span>R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
+                        <div class="previa-item"><span>Sublimação (Lote ${qtdProdutos} un):</span><span>R$ ${custoSublimaçãoTotal.toFixed(2)}</span></div>
                         ` : ''}
                         <div class="previa-item highlight" style="border-top:1px dashed rgba(255,255,255,0.2); margin-top:5px; padding-top:5px;">
                             <span>Custo Total Materiais (Unitário):</span><span>R$ ${(custoMateriaisParaCalculoTotal).toFixed(2)}</span>
@@ -3415,16 +3415,16 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const valorEmbalagemTotal = parseMoeda(document.getElementById('valorEmbalagem').value); // TOTAL LOTE
                     const custoTransporte = parseMoeda(document.getElementById('custoTransporte').value); // UNITRIO
                     const porcentagemLucro = parseNumero(document.getElementById('porcentagemLucro').value);
-                    const sublimacaoAtiva = temSublimacaoCheckbox && temSublimacaoCheckbox.checked;
-                    const sublimacaoQtdFolhas = parseNumero(document.getElementById('sublimacaoQtdFolhas')?.value || '') || 0;
-                    const sublimacaoValorFolhas = parseMoeda(document.getElementById('sublimacaoValorFolhas')?.value || '') || 0;
-                    const sublimacaoFolhasUsadas = parseNumero(document.getElementById('sublimacaoFolhasUsadas')?.value || '') || 0;
-                    const custoFolhaUnitario = sublimacaoAtiva && sublimacaoQtdFolhas > 0
-                        ? (sublimacaoValorFolhas / sublimacaoQtdFolhas) * sublimacaoFolhasUsadas
+                    const sublimaçãoAtiva = temSublimaçãoCheckbox && temSublimaçãoCheckbox.checked;
+                    const sublimaçãoQtdFolhas = parseNumero(document.getElementById('sublimaçãoQtdFolhas')?.value || '') || 0;
+                    const sublimaçãoValorFolhas = parseMoeda(document.getElementById('sublimaçãoValorFolhas')?.value || '') || 0;
+                    const sublimaçãoFolhasUsadas = parseNumero(document.getElementById('sublimaçãoFolhasUsadas')?.value || '') || 0;
+                    const custoFolhaUnitario = sublimaçãoAtiva && sublimaçãoQtdFolhas > 0
+                        ? (sublimaçãoValorFolhas / sublimaçãoQtdFolhas) * sublimaçãoFolhasUsadas
                         : 0;
-                    const custoTintaUnitario = sublimacaoAtiva ? 0.10 : 0;
-                    const custoEnergiaUnitario = sublimacaoAtiva ? 0.25 : 0;
-                    const custoSublimacaoUnitario = sublimacaoAtiva
+                    const custoTintaUnitario = sublimaçãoAtiva ? 0.10 : 0;
+                    const custoEnergiaUnitario = sublimaçãoAtiva ? 0.25 : 0;
+                    const custoSublimaçãoUnitario = sublimaçãoAtiva
                         ? (custoFolhaUnitario + custoTintaUnitario + custoEnergiaUnitario)
                         : 0;
                     
@@ -3504,7 +3504,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoEmbalagemUnitario = valorEmbalagemTotal / (qtdProdutos || 1); 
 
                     // Lógica Final Unitária
-                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimacaoUnitario; // Lucro incide também sobre sublimação
+                    const baseLucro = custoTecido + custoTecido2 + custoTecido3 + custoForro + custoAviamentos + custoSublimaçãoUnitario; // Lucro incide também sobre sublimação
                     const valorLucroUnitario = baseLucro * (porcentagemLucro / 100);
 
                     const custoOutrosUnitario = custoEmbalagemUnitario + custoTransporte;
@@ -3522,14 +3522,14 @@ input:not([type="file"]):not([type="checkbox"]), select {
                     const custoEmbTotal = valorEmbalagemTotal; // O valor de input é o total FIXO
                     const custoTranspTotal = custoTransporte * qtdProdutos;
                     const custoAvTotal = custoAviamentos * qtdProdutos;
-                    const custoSublimacaoTotal = custoSublimacaoUnitario * qtdProdutos;
+                    const custoSublimaçãoTotal = custoSublimaçãoUnitario * qtdProdutos;
                     const custoFolhaTotal = custoFolhaUnitario * qtdProdutos;
                     const custoTintaTotal = custoTintaUnitario * qtdProdutos;
                     const custoEnergiaTotal = custoEnergiaUnitario * qtdProdutos;
-                    const folhasUsadasLote = sublimacaoFolhasUsadas * qtdProdutos;
+                    const folhasUsadasLote = sublimaçãoFolhasUsadas * qtdProdutos;
                     const lucroTotal = valorLucroUnitario * qtdProdutos;
                     const vendaTotal = valorVendaUnitario * qtdProdutos;
-                    const custoProducaoTotal = custoTecidoTotal + custoAvTotal + custoMOTotal + custoEmbTotal + custoTranspTotal + (sublimacaoAtiva ? custoSublimacaoTotal : 0);
+                    const custoProducaoTotal = custoTecidoTotal + custoAvTotal + custoMOTotal + custoEmbTotal + custoTranspTotal + (sublimaçãoAtiva ? custoSublimaçãoTotal : 0);
                     const comprimentoNecessarioM = calcularMetragemLote({ qtdProdutos, comprimentoTotal, larguraTotal, larguraUtilizada: larguraUtilizadaCalc, comprimentoUtilizado: comprimentoUtilizadoCalc, calculoMaterial: calcTecido1 });
                     const comprimentoNecessarioM2 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal2, larguraTotal: larguraTotal2, larguraUtilizada: larguraUtilizada2Calc, comprimentoUtilizado: comprimentoUtilizado2Calc, calculoMaterial: calcTecido2 });
                     const comprimentoNecessarioM3 = calcularMetragemLote({ qtdProdutos, comprimentoTotal: comprimentoTotal3, larguraTotal: larguraTotal3, larguraUtilizada: larguraUtilizada3Calc, comprimentoUtilizado: comprimentoUtilizado3Calc, calculoMaterial: calcTecido3 });
@@ -3568,8 +3568,8 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         <div class="resultado-item result-header" style="background: rgba(255, 255, 255, 0.04); font-weight:bold; margin-top:10px; border: 1px solid rgba(255,255,255,0.08);">Custo Unitário</div>
                         <div class="resultado-item"><span>Base de Lucro (Tecidos + Aviamentos + Sublimação):</span><span>R$ ${baseLucro.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Outros Custos (Emb + Transp):</span><span>R$ ${custoOutrosUnitario.toFixed(2)}</span></div>
-                        ${sublimacaoAtiva ? `
-                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Sublimação (Unitário):</span><span>R$ ${custoSublimacaoUnitario.toFixed(2)}</span></div>
+                        ${sublimaçãoAtiva ? `
+                        <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Sublimação (Unitário):</span><span>R$ ${custoSublimaçãoUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Folhas (Unitário):</span><span>R$ ${custoFolhaUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Tinta (Unitário):</span><span>R$ ${custoTintaUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Energia (Unitário):</span><span>R$ ${custoEnergiaUnitario.toFixed(2)}</span></div>
@@ -3606,8 +3606,8 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         <div class="resultado-item"><span>Sacola/Embalagem (unitário):</span><span>R$ ${custoEmbalagemUnitario.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Total Sacola/Embalagem:</span><span>R$ ${custoEmbTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Total Transporte:</span><span>R$ ${custoTranspTotal.toFixed(2)}</span></div>
-                        ${sublimacaoAtiva ? `
-                        <div class="resultado-item"><span>Total Sublimação:</span><span>R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
+                        ${sublimaçãoAtiva ? `
+                        <div class="resultado-item"><span>Total Sublimação:</span><span>R$ ${custoSublimaçãoTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Folhas usadas (lote):</span><span>${folhasUsadasLote > 0 ? folhasUsadasLote.toFixed(2) : '-'}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Total Folhas:</span><span>R$ ${custoFolhaTotal.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Total Tinta:</span><span>R$ ${custoTintaTotal.toFixed(2)}</span></div>
@@ -3622,8 +3622,8 @@ input:not([type="file"]):not([type="checkbox"]), select {
                         <div class="resultado-item"><span>Mão de Obra:</span><span>R$ ${custoMaoDeObra.toFixed(2)} x ${qtdProdutos} = R$ ${custoMOTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Sacola/Embalagem:</span><span>R$ ${custoEmbalagemUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoEmbTotal.toFixed(2)}</span></div>
                         <div class="resultado-item"><span>Transporte:</span><span>R$ ${custoTransporte.toFixed(2)} x ${qtdProdutos} = R$ ${custoTranspTotal.toFixed(2)}</span></div>
-                        ${sublimacaoAtiva ? `
-                        <div class="resultado-item"><span>Sublimação:</span><span>R$ ${custoSublimacaoUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoSublimacaoTotal.toFixed(2)}</span></div>
+                        ${sublimaçãoAtiva ? `
+                        <div class="resultado-item"><span>Sublimação:</span><span>R$ ${custoSublimaçãoUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoSublimaçãoTotal.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Folhas:</span><span>R$ ${custoFolhaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoFolhaTotal.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Tinta:</span><span>R$ ${custoTintaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoTintaTotal.toFixed(2)}</span></div>
                         <div class="resultado-item" style="font-size:0.9em; padding-left:20px;"><span>Energia:</span><span>R$ ${custoEnergiaUnitario.toFixed(2)} x ${qtdProdutos} = R$ ${custoEnergiaTotal.toFixed(2)}</span></div>
@@ -3684,16 +3684,16 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 resultadoDiv.style.display = 'none';
                 aviamentosSection.style.display = 'none';
                 temAviamentosCheckbox.checked = false;
-                if (sublimacaoSection) sublimacaoSection.style.display = 'none';
-                if (temSublimacaoCheckbox) temSublimacaoCheckbox.checked = false;
-                ['sublimacaoQtdFolhas', 'sublimacaoValorFolhas', 'sublimacaoFolhasUsadas'].forEach(id => {
+                if (sublimaçãoSection) sublimaçãoSection.style.display = 'none';
+                if (temSublimaçãoCheckbox) temSublimaçãoCheckbox.checked = false;
+                ['sublimaçãoQtdFolhas', 'sublimaçãoValorFolhas', 'sublimaçãoFolhasUsadas'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         el.value = '';
                         limparErro(id);
                     }
                 });
-                if (sublimacaoCalcInfo) sublimacaoCalcInfo.style.display = 'none';
+                if (sublimaçãoCalcInfo) sublimaçãoCalcInfo.style.display = 'none';
                 aviamentosContainer.innerHTML = '';
                 aviamentoCount = 0;
                 tecidoSelecionado = '';
@@ -3961,14 +3961,14 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 setMoneyField('custoTransporte', p.custo_unitario_transporte);
                 setNumberField('porcentagemLucro', p.porcentagem_lucro);
 
-                if (p.sublimacao_qtd_folhas || p.sublimacao_valor_folhas || p.sublimacao_folhas_usadas) {
-                    if (temSublimacaoCheckbox && !temSublimacaoCheckbox.checked) {
-                        temSublimacaoCheckbox.checked = true;
-                        temSublimacaoCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+                if (p.sublimação_qtd_folhas || p.sublimação_valor_folhas || p.sublimação_folhas_usadas) {
+                    if (temSublimaçãoCheckbox && !temSublimaçãoCheckbox.checked) {
+                        temSublimaçãoCheckbox.checked = true;
+                        temSublimaçãoCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
                     }
-                    setNumberField('sublimacaoQtdFolhas', p.sublimacao_qtd_folhas);
-                    setMoneyField('sublimacaoValorFolhas', p.sublimacao_valor_folhas);
-                    setNumberField('sublimacaoFolhasUsadas', p.sublimacao_folhas_usadas);
+                    setNumberField('sublimaçãoQtdFolhas', p.sublimação_qtd_folhas);
+                    setMoneyField('sublimaçãoValorFolhas', p.sublimação_valor_folhas);
+                    setNumberField('sublimaçãoFolhasUsadas', p.sublimação_folhas_usadas);
                 }
 
                 const temTecido2 = Boolean(
@@ -4063,7 +4063,7 @@ input:not([type="file"]):not([type="checkbox"]), select {
             }
             
             // Inicializar
-            carregarConfiguracoesPrecificacao()
+            carregarConfiguraçõesPrecificação()
                 .finally(() => {
                     carregarTecidos();
                     preencherRecalculoProduto();

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+Ôªø<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produtos Registrados - PreÁo Certo</title>
+    <title>Produtos Registrados - Pre√ßo Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -939,8 +939,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">PreÁo Certo</div>
-                <div class="brand-tag">PRE«O CERTO</div>
+                <div class="brand-name">Pre√ßo Certo</div>
+                <div class="brand-tag">PRE√áO CERTO</div>
             </div>
         </div>
     </div>
@@ -966,13 +966,13 @@
             <i class="fas fa-message"></i>
             <span>Mensagens</span>
         </a>
-        <a class="nav-item" href="precificacao.html">
+        <a class="nav-item" href="precifica√ß√£o.html">
             <i class="fas fa-calculator"></i>
-            <span>PrecificaÁ„o</span>
+            <span>Precifica√ß√£o</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>RecebÌveis Ateli</span>
+            <span>Receb√≠veis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -984,7 +984,7 @@
         </a>
         <a class="nav-item" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>HistÛrico</span>
+            <span>Hist√≥rico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -1038,10 +1038,10 @@
                                     <th>Produto</th>
                                     <th>Tecido</th>
                                     <th>Qtd</th>
-                                    <th>PreÁo Unit.</th>
+                                    <th>Pre√ßo Unit.</th>
                                     <th>Lucro Unit.</th>
                                     <th>Atualizado</th>
-                                    <th>AÁıes</th>
+                                    <th>A√ß√µes</th>
                                 </tr>
                             </thead>
                             <tbody id="produtosTable"></tbody>
@@ -1084,11 +1084,11 @@
                         <input type="number" class="form-input" id="produtoLucro" min="0" step="0.1">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">PreÁo Unit·rio (R$)</label>
+                        <label class="form-label">Pre√ßo Unit√°rio (R$)</label>
                         <input type="text" class="form-input" id="produtoPreco">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Lucro Unit·rio (R$)</label>
+                        <label class="form-label">Lucro Unit√°rio (R$)</label>
                         <input type="text" class="form-input" id="produtoLucroUnit">
                     </div>
                     <div class="form-group">
@@ -1104,7 +1104,7 @@
                         <input type="text" class="form-input" id="produtoCustoTransp">
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">ObservaÁıes</label>
+                        <label class="form-label">Observa√ß√µes</label>
                         <textarea class="form-textarea" id="produtoObs"></textarea>
                     </div>
                     <div class="form-group full">
@@ -1191,7 +1191,7 @@
             }
             const p = produtos.find(x => String(x.id) === String(id));
             const novasObs = appendComentarioAtual(p ? p.observacoes : '', comentario);
-            const res = await apiPatch('/precificacao/' + id, { observacoes: novasObs });
+            const res = await apiPatch('/precifica√ß√£o/' + id, { observacoes: novasObs });
             if (res.success) {
                 showToast('Comentario adicionado!');
                 if (p) p.observacoes = novasObs;
@@ -1230,12 +1230,12 @@
                             <div style="font-weight: 800; font-size: 1.1rem;">${p.nome_produto || '-'}</div>
                         </div>
                         ${p.foto_url || p.foto_base64 ? `<img class="thumb" src="${p.foto_url || p.foto_base64}" alt="Foto" style="width:72px; height:72px;">` : ''}
-                        <div class="details-row"><span class="details-label">CÛdigo do Produto</span><span class="details-value">${p.id ?? '-'}</span></div>
+                        <div class="details-row"><span class="details-label">C√≥digo do Produto</span><span class="details-value">${p.id ?? '-'}</span></div>
                         <div class="details-row"><span class="details-label">Tecido Principal</span><span class="details-value">${p.tecido_tipo || '-'}</span></div>
                         <div class="details-row"><span class="details-label">Quantidade</span><span class="details-value">${p.quantidade_produtos ?? '-'}</span></div>
-                        <div class="details-row"><span class="details-label">PreÁo Unit·rio</span><span class="details-value">R$ ${formatMoney(p.preco_venda_unitario || 0)}</span></div>
-                        <div class="details-row"><span class="details-label">Lucro Unit·rio</span><span class="details-value">R$ ${formatMoney(p.lucro_unitario || 0)}</span></div>
-                        <div class="details-row"><span class="details-label">PreÁo Total do Lote</span><span class="details-value">R$ ${formatMoney(vendaTotal)}</span></div>
+                        <div class="details-row"><span class="details-label">Pre√ßo Unit√°rio</span><span class="details-value">R$ ${formatMoney(p.preco_venda_unitario || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Lucro Unit√°rio</span><span class="details-value">R$ ${formatMoney(p.lucro_unitario || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Pre√ßo Total do Lote</span><span class="details-value">R$ ${formatMoney(vendaTotal)}</span></div>
                         <div class="details-row"><span class="details-label">Lucro Total do Lote</span><span class="details-value">R$ ${formatMoney(lucroTotal)}</span></div>
                         <div class="details-row"><span class="details-label">Lucro (%)</span><span class="details-value">${p.porcentagem_lucro || 0}%</span></div>
                     </div>
@@ -1245,13 +1245,13 @@
                             <i class="fas fa-sack-dollar" style="color: var(--accent-emerald);"></i>
                             <div style="font-weight: 700;">Custos e Margem</div>
                         </div>
-                        <div class="details-row"><span class="details-label">Custo Tecido (total unit·rio)</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_tecido || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Tecido (total unit√°rio)</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_tecido || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Custo Aviamentos</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_aviamentos || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Custo M.O.</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_mo || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Custo Embalagem</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_embalagem || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Custo Transporte</span><span class="details-value">R$ ${formatMoney(p.custo_unitario_transporte || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Custo Materiais (unit.)</span><span class="details-value">R$ ${formatMoney(custoMateriaisUnit)}</span></div>
-                        <div class="details-row"><span class="details-label">Custo ProduÁ„o (unit.)</span><span class="details-value">R$ ${formatMoney(custoProducaoUnit)}</span></div>
+                        <div class="details-row"><span class="details-label">Custo Produ√ß√£o (unit.)</span><span class="details-value">R$ ${formatMoney(custoProducaoUnit)}</span></div>
                     </div>
 
                     <div class="details-card">
@@ -1265,8 +1265,8 @@
                         <div class="details-row"><span class="details-label">Largura Tecido 1</span><span class="details-value">${formatNumber(p.largura_tecido || 0, 2)} cm</span></div>
                         <div class="details-row"><span class="details-label">Largura Utilizada</span><span class="details-value">${formatNumber(p.largura_utilizada || 0, 2)} cm</span></div>
                         <div class="details-row"><span class="details-label">Comprimento Utilizado</span><span class="details-value">${formatNumber(p.comprimento_utilizado || 0, 2)} cm</span></div>
-                        <div class="details-row"><span class="details-label">¡rea por PeÁa</span><span class="details-value">${formatNumber(areaPeca, 2)} cm≤</span></div>
-                        <div class="details-row"><span class="details-label">¡rea Total do Lote</span><span class="details-value">${formatNumber(areaLote, 2)} cm≤</span></div>
+                        <div class="details-row"><span class="details-label">√Årea por Pe√ßa</span><span class="details-value">${formatNumber(areaPeca, 2)} cm¬≤</span></div>
+                        <div class="details-row"><span class="details-label">√Årea Total do Lote</span><span class="details-value">${formatNumber(areaLote, 2)} cm¬≤</span></div>
                     </div>
 
                     <div class="details-card">
@@ -1288,15 +1288,15 @@
                     <div class="details-card">
                         <div class="details-header">
                             <i class="fas fa-paperclip" style="color: var(--accent-blue);"></i>
-                            <div style="font-weight: 700;">Aviamentos e ProduÁ„o</div>
+                            <div style="font-weight: 700;">Aviamentos e Produ√ß√£o</div>
                         </div>
                         <div class="details-row"><span class="details-label">Total de Aviamentos</span><span class="details-value">${totalAviamentos}</span></div>
                         <div class="details-row"><span class="details-label">Valor Hora</span><span class="details-value">R$ ${formatMoney(p.valor_hora || 0)}</span></div>
                         <div class="details-row"><span class="details-label">Tempo Gasto</span><span class="details-value">${formatNumber(p.tempo_gasto_minutos || 0, 0)} min</span></div>
-                        <div class="details-row"><span class="details-label">SublimaÁ„o</span><span class="details-value">${p.sublimacao_qtd_folhas ? 'Sim' : 'N„o'}</span></div>
-                        <div class="details-row"><span class="details-label">Folhas SublimaÁ„o</span><span class="details-value">${formatNumber(p.sublimacao_qtd_folhas || 0, 0)}</span></div>
-                        <div class="details-row"><span class="details-label">Folhas Usadas</span><span class="details-value">${formatNumber(p.sublimacao_folhas_usadas || 0, 0)}</span></div>
-                        <div class="details-row"><span class="details-label">Valor Folhas</span><span class="details-value">R$ ${formatMoney(p.sublimacao_valor_folhas || 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Sublima√ß√£o</span><span class="details-value">${p.sublima√ß√£o_qtd_folhas ? 'Sim' : 'N√£o'}</span></div>
+                        <div class="details-row"><span class="details-label">Folhas Sublima√ß√£o</span><span class="details-value">${formatNumber(p.sublima√ß√£o_qtd_folhas || 0, 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Folhas Usadas</span><span class="details-value">${formatNumber(p.sublima√ß√£o_folhas_usadas || 0, 0)}</span></div>
+                        <div class="details-row"><span class="details-label">Valor Folhas</span><span class="details-value">R$ ${formatMoney(p.sublima√ß√£o_valor_folhas || 0)}</span></div>
                         <div style="margin-top:10px;" class="details-row"><span class="details-label">Aviamentos (detalhado)</span><span class="details-value">${renderAviamentos(p.aviamentos_data)}</span></div>
                     </div>
 
@@ -1307,19 +1307,19 @@
                         </div>
                         <div class="details-row"><span class="details-label">Criado em</span><span class="details-value">${formatDateTime(p.created_at)}</span></div>
                         <div class="details-row"><span class="details-label">Atualizado em</span><span class="details-value">${formatDateTime(p.updated_at)}</span></div>
-                        <div class="details-row"><span class="details-label">Foto URL</span><span class="details-value">${p.foto_url ? 'Salva no repositÛrio' : 'Sem foto remota'}</span></div>
+                        <div class="details-row"><span class="details-label">Foto URL</span><span class="details-value">${p.foto_url ? 'Salva no reposit√≥rio' : 'Sem foto remota'}</span></div>
                     </div>
 
                     <div class="details-card">
                         <div class="details-header">
                             <i class="fas fa-comment" style="color: var(--accent-blue);"></i>
-                            <div style="font-weight: 700;">Coment·rios</div>
+                            <div style="font-weight: 700;">Coment√°rios</div>
                         </div>
-                        <div class="comment-history">${p.observacoes ? p.observacoes : 'Sem observaÁıes'}</div>
+                        <div class="comment-history">${p.observacoes ? p.observacoes : 'Sem observa√ß√µes'}</div>
                         <div class="comment-box" style="margin-top:12px;">
-                            <textarea id="comentarioTexto" placeholder="Adicionar coment·rio..."></textarea>
+                            <textarea id="comentarioTexto" placeholder="Adicionar coment√°rio..."></textarea>
                             <div class="comment-actions">
-                                <button class="btn btn-sm btn-gold" onclick="saveComentario()"><i class="fas fa-paper-plane"></i> Salvar coment·rio</button>
+                                <button class="btn btn-sm btn-gold" onclick="saveComentario()"><i class="fas fa-paper-plane"></i> Salvar coment√°rio</button>
                             </div>
                         </div>
                     </div>
@@ -1338,7 +1338,7 @@
             const p = findProdutoById(id);
             if (!p) return;
             sessionStorage.setItem('pc_recalculate_product', JSON.stringify(p));
-            window.location.href = 'precificacao.html?recalculate=1';
+            window.location.href = 'precifica√ß√£o.html?recalculate=1';
         }
 
 
@@ -1521,11 +1521,11 @@
                         </div>
                         <div class="produto-card-kpis">
                             <div class="kpi-chip">
-                                <span class="kpi-label">PreÁo unit·rio</span>
+                                <span class="kpi-label">Pre√ßo unit√°rio</span>
                                 <span class="kpi-value">R$ ${formatMoney(p.preco_venda_unitario || 0)}</span>
                             </div>
                             <div class="kpi-chip kpi-profit">
-                                <span class="kpi-label">Lucro unit·rio</span>
+                                <span class="kpi-label">Lucro unit√°rio</span>
                                 <span class="kpi-value">R$ ${formatMoney(p.lucro_unitario || 0)}</span>
                             </div>
                         </div>
@@ -1651,7 +1651,7 @@
                 observacoes: document.getElementById('produtoObs').value.trim()
             };
 
-            const res = await apiPatch('/precificacao/' + id, payload);
+            const res = await apiPatch('/precifica√ß√£o/' + id, payload);
             if (res.success) {
                 showToast('Produto atualizado!');
                 closeProdutoModal();
@@ -1663,7 +1663,7 @@
 
         async function deleteProduto(id) {
             if (!confirm('Deseja excluir este produto?')) return;
-            const res = await apiDelete('/precificacao/' + id);
+            const res = await apiDelete('/precifica√ß√£o/' + id);
             if (res.success) {
                 showToast('Produto excluido!');
                 refreshData();
@@ -1673,7 +1673,7 @@
         }
 
         async function refreshData() {
-            const res = await apiGet('/precificacao');
+            const res = await apiGet('/precifica√ß√£o');
             if (res.success) {
                 produtos = res.data || [];
                 applySearch();
