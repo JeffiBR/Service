@@ -213,6 +213,7 @@
     if (role === 'desenvolvedor') return 'marketplace.html';
 
     const allowed = Array.isArray(session.allowedPages) ? session.allowedPages : [];
+    if (allowed.includes('marketplace.html')) return 'marketplace.html';
     const first = allowed.find((p) => typeof p === 'string' && p.endsWith('.html'));
     return first || 'marketplace.html';
   }
@@ -554,6 +555,8 @@
             z-index:1200;
             visibility:hidden !important;
             pointer-events:none !important;
+            overflow-y:auto !important;
+            -webkit-overflow-scrolling: touch;
           }
           body.tp-sidebar-open .sidebar,
           .sidebar.open {
@@ -561,6 +564,14 @@
             left:0 !important;
             visibility:visible !important;
             pointer-events:auto !important;
+          }
+          .sidebar,
+          .sidebar * {
+            touch-action: pan-y;
+          }
+          .sidebar-nav {
+            position: relative;
+            z-index: 1201;
           }
           body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
           body.tp-sidebar-open { overflow:hidden; }
@@ -635,8 +646,35 @@
     overlay.onclick = closeMenu;
 
     document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
-      item.addEventListener('click', function () {
-        if (window.innerWidth <= 960) closeMenu();
+      let lastTouchNavTs = 0;
+
+      item.addEventListener('touchend', function (event) {
+        if (window.innerWidth > 960) return;
+        lastTouchNavTs = Date.now();
+        const href = item.getAttribute('href');
+        if (!href || href.startsWith('#')) {
+          closeMenu();
+          return;
+        }
+        event.preventDefault();
+        closeMenu();
+        window.location.assign(href);
+      }, { passive: false });
+
+      item.addEventListener('click', function (event) {
+        if (window.innerWidth > 960) return;
+        if ((Date.now() - lastTouchNavTs) < 500) {
+          event.preventDefault();
+          return;
+        }
+        const href = item.getAttribute('href');
+        if (!href || href.startsWith('#')) {
+          closeMenu();
+          return;
+        }
+        event.preventDefault();
+        closeMenu();
+        window.location.assign(href);
       });
     });
 

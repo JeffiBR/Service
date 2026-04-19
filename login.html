@@ -422,8 +422,7 @@
       }
 
       const params = new URLSearchParams(window.location.search || '');
-      const requestedNext = params.get('next');
-      const next = requestedNext || 'marketplace.html';
+      const next = 'marketplace.html';
 
       if (window.authIsLoggedIn && window.authIsLoggedIn()) {
         window.location.replace(next);
