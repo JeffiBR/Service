@@ -225,58 +225,80 @@
     .operadoras-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
     .operadora-card {
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.14);
       border-radius: 14px;
-      padding: 12px;
-      min-height: 78px;
+      padding: 14px 14px 13px 16px;
+      min-height: 84px;
       color: #fff;
       text-align: left;
-      background: linear-gradient(165deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      background: linear-gradient(180deg, rgba(21,24,33,.92), rgba(14,17,26,.92));
       cursor: pointer;
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,.24);
+    }
+    .operadora-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: rgba(255,255,255,.35);
+      opacity: .9;
     }
     .operadora-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(120% 100% at 100% 0%, rgba(255,255,255,.18), transparent 55%);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), transparent 60%);
       pointer-events: none;
     }
     .operadora-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255,255,255,.35);
-      filter: brightness(1.05);
+      border-color: rgba(255,255,255,.28);
+      box-shadow: 0 12px 24px rgba(0,0,0,.32);
     }
     .operadora-card.active {
-      border-color: rgba(255,255,255,.72);
-      box-shadow: 0 10px 22px rgba(0,0,0,.34), 0 0 0 2px rgba(255,255,255,.18) inset;
-      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.5);
+      box-shadow: 0 14px 28px rgba(0,0,0,.36), 0 0 0 2px rgba(255,255,255,.08) inset;
+      transform: translateY(-1px) scale(1.01);
     }
     .operadora-card .name {
       position: relative;
       z-index: 1;
       display: block;
-      font-size: 1rem;
+      font-size: 1.02rem;
       font-weight: 800;
-      letter-spacing: .01em;
+      letter-spacing: .005em;
     }
     .operadora-card .hint {
       position: relative;
       z-index: 1;
       display: block;
-      margin-top: 4px;
-      font-size: .75rem;
-      color: rgba(255,255,255,.88);
+      margin-top: 6px;
+      font-size: .76rem;
+      color: rgba(255,255,255,.72);
+      font-weight: 600;
     }
-    .operadora-card.tim { background: linear-gradient(160deg, #0b4ad8, #0a2a7a); }
-    .operadora-card.vivo { background: linear-gradient(160deg, #6d28d9, #3b0a86); }
-    .operadora-card.claro { background: linear-gradient(160deg, #dc2626, #8a0f14); }
-    .operadora-card.default { background: linear-gradient(160deg, #334155, #1e293b); }
+    .operadora-card.active .hint { color: rgba(255,255,255,.92); }
+    .operadora-card.tim {
+      background: linear-gradient(180deg, rgba(13,58,173,.42), rgba(11,27,73,.86));
+    }
+    .operadora-card.tim::before { background: #3b82f6; }
+    .operadora-card.vivo {
+      background: linear-gradient(180deg, rgba(109,40,217,.42), rgba(50,18,106,.86));
+    }
+    .operadora-card.vivo::before { background: #a855f7; }
+    .operadora-card.claro {
+      background: linear-gradient(180deg, rgba(220,38,38,.42), rgba(105,16,22,.86));
+    }
+    .operadora-card.claro::before { background: #ef4444; }
+    .operadora-card.default::before { background: #94a3b8; }
     .native-hidden-select {
       position: absolute;
       width: 1px;
