@@ -532,9 +532,16 @@
             transform:translateX(-100%) !important;
             transition:transform .25s ease;
             z-index:1200;
+            visibility:hidden !important;
+            pointer-events:none !important;
           }
-          body.tp-sidebar-open .sidebar { transform:translateX(0); }
+          body.tp-sidebar-open .sidebar { transform:translateX(0) !important; }
           body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
+          body.tp-sidebar-open .sidebar {
+            visibility:visible !important;
+            pointer-events:auto !important;
+          }
+          body.tp-sidebar-open { overflow:hidden; }
           .main, .main-content, main.main-content {
             margin-left:0 !important;
             width:100% !important;
@@ -578,12 +585,16 @@
 
     const closeMenu = function () { document.body.classList.remove('tp-sidebar-open'); };
     const openMenu = function () { document.body.classList.add('tp-sidebar-open'); };
-
-    toggle.onclick = function () {
+    const toggleMenu = function (event) {
+      if (event && typeof event.preventDefault === 'function') event.preventDefault();
       if (document.body.classList.contains('tp-sidebar-open')) closeMenu();
       else openMenu();
     };
+
+    toggle.onclick = toggleMenu;
+    toggle.addEventListener('touchstart', toggleMenu, { passive: false });
     overlay.onclick = closeMenu;
+    overlay.addEventListener('touchstart', closeMenu, { passive: true });
 
     document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
       item.addEventListener('click', function () {

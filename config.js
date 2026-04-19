@@ -3,6 +3,20 @@
   const host = window.location.hostname || '';
   const isLocalHost = host === 'localhost' || host === '127.0.0.1';
 
+  function normalizeApiBase(raw) {
+    const value = String(raw || '').trim().replace(/\/+$/, '');
+    if (!value) return '';
+    try {
+      const url = new URL(value);
+      const path = (url.pathname || '').replace(/\/+$/, '');
+      // Compatibilidade: se o usuario salvou apenas dominio do backend, assume /api.
+      if (!path || path === '/') return `${url.origin}/api`;
+      return `${url.origin}${path}`;
+    } catch (_) {
+      return value;
+    }
+  }
+
   // Priority:
   // 1) window.__API_BASE__ (set manually before this file)
   // 2) localStorage.tp_api_base (optional local override)
@@ -10,7 +24,7 @@
   const runtimeApiBase = window.__API_BASE__ || localStorage.getItem('tp_api_base');
 
   if (runtimeApiBase) {
-    window.API_BASE = runtimeApiBase.replace(/\/+$/, '');
+    window.API_BASE = normalizeApiBase(runtimeApiBase);
   } else if (isLocalHost) {
     window.API_BASE = 'http://localhost:3000/api';
   } else {
