@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuracoes Marketplace (Dev) - Preco Certo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #151821;
+      --panel-soft: #10131c;
+      --line: rgba(255,255,255,.12);
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #fbbf24;
+      --ok: #22c55e;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 260px; background: rgba(10,10,11,.95); backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,.05); position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; z-index: 100;
+    }
+    .sidebar-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,.05); }
+    .brand { display:flex; gap:14px; align-items:center; }
+    .brand-icon { width: 48px; height: 48px; border-radius: 14px; display:flex; align-items:center; justify-content:center; color: #111; font-size: 22px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); box-shadow: 0 0 32px rgba(251,191,36,.25); }
+    .brand-name { font-size: 1.25rem; font-weight: 800; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-tag { font-size: .65rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
+    .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,.05); }
+    .server-status { display:flex; gap:12px; align-items:center; padding:12px; border: 1px solid rgba(255,255,255,.05); border-radius: 12px; background: rgba(255,255,255,.02); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+    .status-info { font-size: .75rem; color: var(--muted); }
+    .status-value { font-size: .85rem; font-weight: 700; color: var(--text); }
+    .main { flex: 1; margin-left: 260px; padding: 24px; }
+    .container { max-width: 1160px; margin: 0 auto; }
+    .header { margin-bottom: 16px; padding-right: 300px; }
+    .title { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .subtitle { margin-top: 6px; color: var(--muted); }
+    .status-box {
+      min-height: 44px; border: 1px solid var(--line); border-radius: 10px; display:flex; align-items:center;
+      padding: 0 12px; margin-bottom: 14px; color: #d1d5db; background: rgba(255,255,255,.02);
+    }
+    .status-box.ok { border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.09); color: #86efac; }
+    .status-box.error { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.09); color: #fca5a5; }
+    .card { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,.24); }
+    .card + .card { margin-top: 14px; }
+    .card-head { padding: 14px 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card-title { margin: 0; font-size: 1rem; font-weight: 700; }
+    .card-body { padding: 14px 16px; background: var(--panel-soft); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .full { grid-column: 1 / -1; }
+    label { font-size: .84rem; font-weight: 700; color: #e5e7eb; }
+    input, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; background: rgba(0,0,0,.22); color: var(--text);
+      padding: 10px 11px; outline: none; font-size: .9rem;
+    }
+    textarea { min-height: 86px; resize: vertical; }
+    input:focus, textarea:focus { border-color: rgba(251,191,36,.7); box-shadow: 0 0 0 3px rgba(251,191,36,.16); }
+    .switch { display:flex; gap:8px; align-items:center; color: var(--muted); font-size: .84rem; font-weight: 700; }
+    .btn {
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: rgba(255,255,255,.05);
+      color: var(--text); font-weight: 700; cursor: pointer; transition: .18s ease;
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+    }
+    .btn:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+    .btn-primary { border-color: transparent; color: #111; background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); }
+    .btn-danger { border-color: rgba(239,68,68,.35); color:#fecaca; background: rgba(239,68,68,.15); }
+    .products { display: grid; gap: 10px; }
+    .product-row {
+      display: grid;
+      grid-template-columns: 96px minmax(0,1fr);
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.02);
+      padding: 10px;
+    }
+    .product-preview { width: 96px; height: 96px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(255,255,255,.1); background: #0c0f17; }
+    .row-grid { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .row-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+    .muted { color: var(--muted); font-size: .84rem; }
+    @media (max-width: 1080px) {
+      .header { padding-right: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+      .row-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .sidebar { position: static; width: 100%; height: auto; }
+      .main { margin-left: 0; padding: 16px; }
+      .app { flex-direction: column; }
+      .product-row { grid-template-columns: 1fr; }
+      .product-preview { width: 100%; height: 180px; }
+    }
+  </style>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+          <div>
+            <div class="brand-name">Preco Certo</div>
+            <div class="brand-tag">PRECO CERTO</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="server-status">
+          <div class="status-dot"></div>
+          <div class="status-info">Servidor<br><span class="status-value">Online</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="container">
+        <div class="header">
+          <h1 class="title">Configuracoes Marketplace (Dev)</h1>
+          <div class="subtitle">Cadastre produtos com imagem, nome, descricao, valor e status ativo/inativo.</div>
+        </div>
+        <div id="status" class="status-box">Carregando...</div>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">Novo produto</h2>
+            <button id="btnCreate" class="btn btn-primary" type="button"><i class="fas fa-plus"></i> Cadastrar produto</button>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div>
+                <label for="newNome">Nome</label>
+                <input id="newNome" type="text" placeholder="Ex.: Camisa Premium">
+              </div>
+              <div>
+                <label for="newValor">Valor (R$)</label>
+                <input id="newValor" type="number" min="0" step="0.01" placeholder="Ex.: 59.90">
+              </div>
+              <div class="full">
+                <label for="newDescricao">Descricao</label>
+                <textarea id="newDescricao" placeholder="Detalhes do produto"></textarea>
+              </div>
+              <div class="full">
+                <label for="newImagemUrl">Imagem (URL https)</label>
+                <input id="newImagemUrl" type="text" placeholder="https://...">
+              </div>
+              <div class="full">
+                <label for="newImagemArquivo">Ou enviar arquivo de imagem</label>
+                <input id="newImagemArquivo" type="file" accept="image/*">
+                <div class="muted">Ao selecionar arquivo, ele sobrescreve a URL no cadastro.</div>
+              </div>
+              <div class="full switch">
+                <input id="newAtivo" type="checkbox" checked style="width:16px;height:16px;">
+                Produto ativo para compra
+              </div>
+              <div class="full">
+                <img id="newPreview" class="product-preview" alt="Preview do produto">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="card-title">Produtos cadastrados</h2>
+            <button id="btnRefresh" class="btn" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+          </div>
+          <div class="card-body">
+            <div id="products" class="products"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/marketplace/products';
+      const statusEl = document.getElementById('status');
+      const productsEl = document.getElementById('products');
+      const btnCreate = document.getElementById('btnCreate');
+      const btnRefresh = document.getElementById('btnRefresh');
+      const newNomeEl = document.getElementById('newNome');
+      const newValorEl = document.getElementById('newValor');
+      const newDescricaoEl = document.getElementById('newDescricao');
+      const newImagemUrlEl = document.getElementById('newImagemUrl');
+      const newImagemArquivoEl = document.getElementById('newImagemArquivo');
+      const newAtivoEl = document.getElementById('newAtivo');
+      const newPreviewEl = document.getElementById('newPreview');
+      const PLACEHOLDER_IMG = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDI2MCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI2MCIgaGVpZ2h0PSIxNjAiIGZpbGw9IiMwQzBGMTEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iI0E4QjBCQSIgZm9udC1zaXplPSIxNCIgZm9udC1mYW1pbHk9IkludGVyLCBzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2VtIGltYWdlbTwvdGV4dD48L3N2Zz4=';
+      let products = [];
+      let newImageDataUrl = '';
+
+      function setStatus(msg, kind) {
+        statusEl.textContent = msg || '';
+        statusEl.className = 'status-box' + (kind ? ' ' + kind : '');
+      }
+
+      function formatMoney(v) {
+        return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      async function fetchJson(url, options) {
+        const r = await fetch(url, options || {});
+        const p = await r.json().catch(() => ({}));
+        if (!r.ok || !p || !p.success) {
+          throw new Error(p && p.error ? p.error : 'Erro na requisicao');
+        }
+        return p.data;
+      }
+
+      function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function () { resolve(String(reader.result || '')); };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function updateNewPreview() {
+        const url = String(newImageDataUrl || newImagemUrlEl.value || '').trim();
+        newPreviewEl.src = url || PLACEHOLDER_IMG;
+      }
+
+      function clearNewForm() {
+        newNomeEl.value = '';
+        newValorEl.value = '';
+        newDescricaoEl.value = '';
+        newImagemUrlEl.value = '';
+        newImagemArquivoEl.value = '';
+        newAtivoEl.checked = true;
+        newImageDataUrl = '';
+        updateNewPreview();
+      }
+
+      function renderRows() {
+        if (!products.length) {
+          productsEl.innerHTML = '<div class="muted">Nenhum produto cadastrado.</div>';
+          return;
+        }
+        productsEl.innerHTML = products.map((p) => `
+          <article class="product-row" data-id="${p.id}">
+            <img class="product-preview row-preview" src="${escapeHtml(p.imagem_url || PLACEHOLDER_IMG)}" alt="${escapeHtml(p.nome || 'Produto')}">
+            <div>
+              <div class="row-grid">
+                <div>
+                  <label>Nome</label>
+                  <input class="r-nome" type="text" value="${escapeHtml(p.nome)}">
+                </div>
+                <div>
+                  <label>Valor (R$)</label>
+                  <input class="r-valor" type="number" min="0" step="0.01" value="${Number(p.valor || 0)}">
+                </div>
+                <div style="grid-column:1 / -1;">
+                  <label>Descricao</label>
+                  <textarea class="r-descricao">${escapeHtml(p.descricao || '')}</textarea>
+                </div>
+                <div style="grid-column:1 / -1;">
+                  <label>Imagem (URL https ou data:image)</label>
+                  <input class="r-imagem-url" type="text" value="${escapeHtml(p.imagem_url || '')}">
+                </div>
+                <div style="grid-column:1 / -1;">
+                  <label>Enviar arquivo para substituir imagem</label>
+                  <input class="r-imagem-file" type="file" accept="image/*">
+                </div>
+                <div class="switch" style="grid-column:1 / -1;">
+                  <input class="r-ativo" type="checkbox" ${p.ativo !== false ? 'checked' : ''} style="width:16px;height:16px;">
+                  Produto ativo para compra
+                </div>
+              </div>
+              <div class="row-actions">
+                <button class="btn btn-primary r-save" type="button"><i class="fas fa-save"></i> Salvar</button>
+                <button class="btn btn-danger r-delete" type="button"><i class="fas fa-trash"></i> Excluir</button>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      async function loadProducts() {
+        const data = await fetchJson(API);
+        products = Array.isArray(data) ? data : [];
+        renderRows();
+      }
+
+      async function createProduct() {
+        const imagem = String(newImageDataUrl || newImagemUrlEl.value || '').trim();
+        const payload = {
+          nome: String(newNomeEl.value || '').trim(),
+          descricao: String(newDescricaoEl.value || '').trim(),
+          imagem_url: imagem,
+          valor: Number(newValorEl.value || 0),
+          ativo: !!newAtivoEl.checked
+        };
+        await fetchJson(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        clearNewForm();
+        await loadProducts();
+      }
+
+      async function saveRow(rowEl) {
+        const id = rowEl.getAttribute('data-id');
+        const nome = rowEl.querySelector('.r-nome').value;
+        const descricao = rowEl.querySelector('.r-descricao').value;
+        const valor = Number(rowEl.querySelector('.r-valor').value || 0);
+        const imagemUrlInput = rowEl.querySelector('.r-imagem-url');
+        const imagemFileInput = rowEl.querySelector('.r-imagem-file');
+        const ativo = !!rowEl.querySelector('.r-ativo').checked;
+        let imagem = String(imagemUrlInput.value || '').trim();
+        const file = imagemFileInput.files && imagemFileInput.files[0] ? imagemFileInput.files[0] : null;
+        if (file) imagem = await fileToDataUrl(file);
+
+        await fetchJson(API + '/' + encodeURIComponent(id), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: String(nome || '').trim(),
+            descricao: String(descricao || '').trim(),
+            valor: Number(valor || 0),
+            imagem_url: imagem,
+            ativo: ativo
+          })
+        });
+        await loadProducts();
+      }
+
+      async function deleteRow(rowEl) {
+        const id = rowEl.getAttribute('data-id');
+        const ok = window.confirm('Deseja excluir este produto?');
+        if (!ok) return;
+        await fetchJson(API + '/' + encodeURIComponent(id), { method: 'DELETE' });
+        await loadProducts();
+      }
+
+      newImagemUrlEl.addEventListener('input', function () {
+        if (!newImageDataUrl) updateNewPreview();
+      });
+
+      newImagemArquivoEl.addEventListener('change', async function () {
+        const file = newImagemArquivoEl.files && newImagemArquivoEl.files[0] ? newImagemArquivoEl.files[0] : null;
+        if (!file) {
+          newImageDataUrl = '';
+          updateNewPreview();
+          return;
+        }
+        try {
+          newImageDataUrl = await fileToDataUrl(file);
+          updateNewPreview();
+        } catch (_) {
+          newImageDataUrl = '';
+          updateNewPreview();
+          setStatus('Falha ao carregar imagem do arquivo.', 'error');
+        }
+      });
+
+      btnCreate.addEventListener('click', async function () {
+        btnCreate.disabled = true;
+        try {
+          setStatus('Cadastrando produto...');
+          await createProduct();
+          setStatus('Produto cadastrado com sucesso.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao cadastrar produto.', 'error');
+        } finally {
+          btnCreate.disabled = false;
+        }
+      });
+
+      btnRefresh.addEventListener('click', async function () {
+        try {
+          setStatus('Atualizando produtos...');
+          await loadProducts();
+          setStatus('Lista de produtos atualizada.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar produtos.', 'error');
+        }
+      });
+
+      productsEl.addEventListener('click', async function (event) {
+        const saveBtn = event.target.closest('.r-save');
+        const deleteBtn = event.target.closest('.r-delete');
+        if (!saveBtn && !deleteBtn) return;
+        const rowEl = event.target.closest('.product-row');
+        if (!rowEl) return;
+        const controlBtn = saveBtn || deleteBtn;
+        controlBtn.disabled = true;
+        try {
+          if (saveBtn) {
+            setStatus('Salvando produto...');
+            await saveRow(rowEl);
+            setStatus('Produto salvo com sucesso.', 'ok');
+          } else {
+            setStatus('Excluindo produto...');
+            await deleteRow(rowEl);
+            setStatus('Produto excluido com sucesso.', 'ok');
+          }
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao processar produto.', 'error');
+        } finally {
+          controlBtn.disabled = false;
+        }
+      });
+
+      (async function init() {
+        const profile = window.authGetSessionProfile && window.authGetSessionProfile();
+        if (!profile || String(profile.group || '').toLowerCase() !== 'desenvolvedor') {
+          window.location.replace('index.html');
+          return;
+        }
+        try {
+          updateNewPreview();
+          setStatus('Carregando produtos do marketplace...');
+          await loadProducts();
+          setStatus('Produtos carregados.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar produtos.', 'error');
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
