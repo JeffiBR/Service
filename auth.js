@@ -538,8 +538,8 @@
         .sidebar-nav .nav-item.active i { color:#111; }
         .sidebar-nav .nav-section-title { margin:6px 10px 12px; color:#8f95a3; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
 
-        .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:1300; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
-        .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1199; }
+        .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:2147483600; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
+        .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:2147483500; }
         @media (max-width: 960px) {
           .tp-sidebar-toggle { display:flex; align-items:center; justify-content:center; }
           body { overflow-x:hidden; }
@@ -552,7 +552,7 @@
             max-width:84vw !important;
             transform:translateX(-108%) !important;
             transition:transform .25s ease;
-            z-index:1200;
+            z-index:2147483550 !important;
             visibility:hidden !important;
             pointer-events:none !important;
             overflow-y:auto !important;
@@ -565,13 +565,29 @@
             visibility:visible !important;
             pointer-events:auto !important;
           }
-          .sidebar,
-          .sidebar * {
-            touch-action: pan-y;
+          .sidebar a,
+          .sidebar button,
+          .sidebar .nav-item {
+            pointer-events: auto !important;
+            touch-action: manipulation;
           }
           .sidebar-nav {
             position: relative;
-            z-index: 1201;
+            z-index: 2147483551;
+          }
+          body.tp-sidebar-open .main,
+          body.tp-sidebar-open .main-content,
+          body.tp-sidebar-open main.main-content {
+            pointer-events: none !important;
+            user-select: none;
+          }
+          body.tp-sidebar-open .sidebar,
+          body.tp-sidebar-open .tp-sidebar-toggle,
+          body.tp-sidebar-open .tp-sidebar-overlay {
+            pointer-events: auto !important;
+          }
+          body.tp-sidebar-open .tp-user-menu {
+            display: none !important;
           }
           body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
           body.tp-sidebar-open { overflow:hidden; }

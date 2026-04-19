@@ -15,6 +15,7 @@
       --text: #f4f4f5;
       --muted: #a1a1aa;
       --accent: #fbbf24;
+      --accent-strong: #f59e0b;
       --ok: #22c55e;
       --danger: #ef4444;
     }
@@ -22,7 +23,10 @@
     body {
       margin: 0;
       font-family: Inter, sans-serif;
-      background: radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%);
+      background:
+        radial-gradient(1100px 600px at 8% 8%, rgba(217, 119, 6, 0.18), transparent 48%),
+        radial-gradient(900px 580px at 92% 92%, rgba(59, 130, 246, 0.14), transparent 50%),
+        radial-gradient(1200px 650px at 10% 10%, #1a1f2b 0%, #0b0c10 56%);
       color: var(--text);
       min-height: 100vh;
     }
@@ -30,6 +34,7 @@
     .sidebar {
       width: 260px;
       background: rgba(10,10,11,.95);
+      backdrop-filter: blur(18px);
       border-right: 1px solid rgba(255,255,255,.05);
       position: fixed;
       inset: 0 auto 0 0;
@@ -44,6 +49,7 @@
       display:flex; align-items:center; justify-content:center;
       color:#111; font-size:22px;
       background: linear-gradient(135deg,#fbbf24 0%,#d97706 100%);
+      box-shadow: 0 12px 28px rgba(245, 158, 11, .32);
     }
     .brand-name { font-size:1.25rem; font-weight:800; background: linear-gradient(135deg,#fbbf24 0%,#d97706 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .brand-tag { font-size:.65rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; font-weight:600; }
@@ -92,33 +98,70 @@
     .container { max-width: 900px; margin: 0 auto; }
     .header { margin-bottom: 16px; padding-right: 300px; }
     .title { margin:0; font-size:2rem; font-weight:800; letter-spacing:-.02em; }
-    .subtitle { margin-top:6px; color:var(--muted); }
+    .subtitle { margin-top:6px; color:var(--muted); max-width: 700px; }
     .status-box {
       min-height: 44px; border:1px solid var(--line); border-radius:10px; display:flex; align-items:center;
       padding:0 12px; margin-bottom:14px; color:#d1d5db; background: rgba(255,255,255,.02);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
     .status-box.ok { border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.09); color:#86efac; }
     .status-box.error { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.09); color:#fca5a5; }
-    .card { border:1px solid var(--line); border-radius:12px; background: var(--panel); overflow:hidden; }
-    .card-head { padding:14px 16px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.02); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .card {
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(21,24,33,.92), rgba(16,19,28,.92));
+      overflow:hidden;
+      box-shadow: 0 20px 38px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .card-head {
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      display:flex; justify-content:space-between; align-items:center; gap:8px;
+    }
     .card-title { margin:0; font-size:1rem; font-weight:700; }
     .card-body { padding:14px 16px; background: var(--panel-soft); }
-    .form-grid { display:grid; gap: 10px; }
+    .form-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
     .field { display:flex; flex-direction:column; gap:6px; }
-    label { font-size:.84rem; font-weight:700; color:#e5e7eb; }
+    label { font-size:.84rem; font-weight:700; color:#e5e7eb; letter-spacing:.01em; }
     input, select {
       width:100%; border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,.22); color: var(--text);
-      padding:10px 11px; outline:none; font-size:.9rem;
+      padding:11px 12px; outline:none; font-size:.92rem;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
-    input:focus, select:focus { border-color: rgba(251,191,36,.7); box-shadow:0 0 0 3px rgba(251,191,36,.16); }
+    input:hover, select:hover { border-color: rgba(255,255,255,.2); background: rgba(0,0,0,.3); }
+    input:focus, select:focus { border-color: rgba(251,191,36,.75); box-shadow:0 0 0 3px rgba(251,191,36,.18), 0 10px 20px rgba(0,0,0,.2); }
     .btn {
       border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:rgba(255,255,255,.05);
       color: var(--text); font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
     }
-    .btn-primary { border-color: transparent; color:#111; background: linear-gradient(180deg,#fbbf24 0%,#f59e0b 100%); }
-    .hint { color: var(--muted); font-size:.82rem; margin-top:8px; }
+    .btn:hover { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.2); transform: translateY(-1px); }
+    .btn-primary {
+      border-color: transparent;
+      color:#111;
+      background: linear-gradient(180deg,var(--accent) 0%,var(--accent-strong) 100%);
+      box-shadow: 0 12px 22px rgba(245,158,11,.26);
+    }
+    .btn-primary:hover { box-shadow: 0 16px 30px rgba(245,158,11,.33); }
+    .hint {
+      color: var(--muted);
+      font-size:.82rem;
+      margin-top:10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(255,255,255,.03);
+      line-height: 1.45;
+    }
     @media (max-width: 1080px) { .header { padding-right: 0; } }
-    @media (max-width: 760px) { .sidebar { position: static; width:100%; height:auto; } .main { margin-left:0; padding:16px; } .app { flex-direction:column; } }
+    @media (max-width: 760px) {
+      .sidebar { position: static; width:100%; height:auto; }
+      .main { margin-left:0; padding:16px; }
+      .app { flex-direction:column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .title { font-size: 1.65rem; }
+    }
       @media (max-width: 960px) {
       body.tp-sidebar-open .sidebar {
         transform: translateX(0) !important;
