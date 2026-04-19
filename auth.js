@@ -539,7 +539,7 @@
         .sidebar-nav .nav-section-title { margin:6px 10px 12px; color:#8f95a3; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
 
         .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:2147483600; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
-        .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:2147483500; }
+        .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:2147483500; pointer-events:none; }
         @media (max-width: 960px) {
           .tp-sidebar-toggle { display:flex; align-items:center; justify-content:center; }
           body { overflow-x:hidden; }
@@ -575,6 +575,10 @@
             position: relative;
             z-index: 2147483551;
           }
+          .sidebar .nav-item {
+            position: relative;
+            z-index: 2147483552;
+          }
           body.tp-sidebar-open .main,
           body.tp-sidebar-open .main-content,
           body.tp-sidebar-open main.main-content {
@@ -589,7 +593,11 @@
           body.tp-sidebar-open .tp-user-menu {
             display: none !important;
           }
-          body.tp-sidebar-open .tp-sidebar-overlay { display:block; }
+          body.tp-sidebar-open .tp-sidebar-overlay {
+            display:block;
+            pointer-events:auto;
+            left:min(84vw, 280px);
+          }
           body.tp-sidebar-open { overflow:hidden; }
           .main, .main-content, main.main-content {
             margin-left:0 !important;
@@ -661,38 +669,22 @@
     toggle.addEventListener('touchstart', onToggleTouchStart, { passive: false });
     overlay.onclick = closeMenu;
 
-    document.querySelectorAll('.sidebar .nav-item').forEach((item) => {
-      let lastTouchNavTs = 0;
-
-      item.addEventListener('touchend', function (event) {
-        if (window.innerWidth > 960) return;
-        lastTouchNavTs = Date.now();
-        const href = item.getAttribute('href');
-        if (!href || href.startsWith('#')) {
-          closeMenu();
-          return;
-        }
+    const navigateFromSidebarItem = function (event) {
+      if (window.innerWidth > 960) return;
+      const target = event.target && event.target.closest ? event.target.closest('.sidebar .nav-item') : null;
+      if (!target) return;
+      const href = target.getAttribute('href');
+      if (!href || href.startsWith('#')) {
         event.preventDefault();
         closeMenu();
-        window.location.assign(href);
-      }, { passive: false });
-
-      item.addEventListener('click', function (event) {
-        if (window.innerWidth > 960) return;
-        if ((Date.now() - lastTouchNavTs) < 500) {
-          event.preventDefault();
-          return;
-        }
-        const href = item.getAttribute('href');
-        if (!href || href.startsWith('#')) {
-          closeMenu();
-          return;
-        }
-        event.preventDefault();
-        closeMenu();
-        window.location.assign(href);
-      });
-    });
+        return;
+      }
+      event.preventDefault();
+      closeMenu();
+      window.location.assign(href);
+    };
+    sidebar.addEventListener('click', navigateFromSidebarItem);
+    sidebar.addEventListener('touchend', navigateFromSidebarItem, { passive: false });
 
     window.addEventListener('resize', function () {
       if (window.innerWidth > 960) closeMenu();

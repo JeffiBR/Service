@@ -134,6 +134,76 @@
       gap: 10px;
       margin-top: 8px;
     }
+    .operadoras-wrap { display: grid; gap: 8px; }
+    .step-label {
+      font-size: .76rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      font-weight: 800;
+    }
+    .operadoras-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .operadora-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 78px;
+      color: #fff;
+      text-align: left;
+      background: linear-gradient(165deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .operadora-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 100% at 100% 0%, rgba(255,255,255,.18), transparent 55%);
+      pointer-events: none;
+    }
+    .operadora-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.35);
+      filter: brightness(1.05);
+    }
+    .operadora-card.active {
+      border-color: rgba(255,255,255,.72);
+      box-shadow: 0 10px 22px rgba(0,0,0,.34), 0 0 0 2px rgba(255,255,255,.18) inset;
+      transform: translateY(-1px);
+    }
+    .operadora-card .name {
+      position: relative;
+      z-index: 1;
+      display: block;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+    .operadora-card .hint {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 4px;
+      font-size: .75rem;
+      color: rgba(255,255,255,.88);
+    }
+    .operadora-card.tim { background: linear-gradient(160deg, #0b4ad8, #0a2a7a); }
+    .operadora-card.vivo { background: linear-gradient(160deg, #6d28d9, #3b0a86); }
+    .operadora-card.claro { background: linear-gradient(160deg, #dc2626, #8a0f14); }
+    .operadora-card.default { background: linear-gradient(160deg, #334155, #1e293b); }
+    .native-hidden-select {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
     .plano-btn {
       border: 1px solid var(--line);
       background: rgba(255,255,255,.03);
@@ -148,11 +218,17 @@
       border-color: rgba(251,191,36,.55);
       background: rgba(251,191,36,.08);
     }
+    .planos-rapidos[data-theme="tim"] .plano-btn:hover { border-color: rgba(59,130,246,.65); background: rgba(59,130,246,.14); }
+    .planos-rapidos[data-theme="vivo"] .plano-btn:hover { border-color: rgba(168,85,247,.65); background: rgba(168,85,247,.14); }
+    .planos-rapidos[data-theme="claro"] .plano-btn:hover { border-color: rgba(239,68,68,.65); background: rgba(239,68,68,.14); }
     .plano-btn.active {
       border-color: rgba(251,191,36,.78);
       background: rgba(251,191,36,.16);
       box-shadow: 0 0 0 2px rgba(251,191,36,.18) inset;
     }
+    .planos-rapidos[data-theme="tim"] .plano-btn.active { border-color: rgba(59,130,246,.8); background: rgba(59,130,246,.2); box-shadow: 0 0 0 2px rgba(59,130,246,.24) inset; }
+    .planos-rapidos[data-theme="vivo"] .plano-btn.active { border-color: rgba(168,85,247,.8); background: rgba(168,85,247,.2); box-shadow: 0 0 0 2px rgba(168,85,247,.24) inset; }
+    .planos-rapidos[data-theme="claro"] .plano-btn.active { border-color: rgba(239,68,68,.8); background: rgba(239,68,68,.2); box-shadow: 0 0 0 2px rgba(239,68,68,.24) inset; }
     .plano-credito { font-weight: 800; font-size: .98rem; }
     .plano-paga { margin-top: 4px; font-size: .8rem; color: #fde68a; }
     .planos-empty { color: var(--muted); font-size: .82rem; }
@@ -235,6 +311,7 @@
     @media (max-width: 1080px) {
       .header { padding-right: 0; }
       .form-grid { grid-template-columns: 1fr; }
+      .operadoras-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       .sidebar { position: static; width: 100%; height: auto; }
@@ -294,18 +371,23 @@
                 </div>
                 <div class="field">
                   <label for="operadora">Operadora</label>
-                  <select id="operadora" required>
+                  <select id="operadora" class="native-hidden-select" tabindex="-1" aria-hidden="true">
                     <option value="">Selecione...</option>
                     <option>Tim</option>
                     <option>Vivo</option>
                     <option>Claro</option>
                   </select>
+                  <div class="operadoras-wrap">
+                    <div class="step-label">1. Escolha a operadora</div>
+                    <div id="operadorasCards" class="operadoras-grid"></div>
+                  </div>
                 </div>
                 <div class="field">
                   <label for="valor">Crédito da recarga (R$)</label>
-                  <select id="valor" required>
+                  <select id="valor" class="native-hidden-select" tabindex="-1" aria-hidden="true">
                     <option value="">Selecione...</option>
                   </select>
+                  <div class="step-label">2. Escolha a recarga</div>
                   <div id="planosRapidos" class="planos-rapidos"></div>
                 </div>
                 <div class="field full">
@@ -392,6 +474,7 @@
       const API_PIX_CONFIG = API + '/pix-config';
       const operadoraEl = document.getElementById('operadora');
       const valorEl = document.getElementById('valor');
+      const operadorasCardsEl = document.getElementById('operadorasCards');
       const planosRapidosEl = document.getElementById('planosRapidos');
       const resumoPrecoEl = document.getElementById('resumoPreco');
       const pixModalOverlay = document.getElementById('pixModalOverlay');
@@ -466,10 +549,47 @@
         return Array.isArray(op.planos) ? op.planos : [];
       }
 
+      function operadoraTheme(operadora) {
+        const v = String(operadora || '').trim().toLowerCase();
+        if (v === 'tim') return 'tim';
+        if (v === 'vivo') return 'vivo';
+        if (v === 'claro') return 'claro';
+        return 'default';
+      }
+
       function renderOperadorasSelect() {
         const options = ['<option value="">Selecione...</option>']
           .concat(getActiveOperadoras().map((op) => `<option value="${op}">${op}</option>`));
         operadoraEl.innerHTML = options.join('');
+        renderOperadorasCards();
+      }
+
+      function renderOperadorasCards() {
+        if (!operadorasCardsEl) return;
+        const operadoras = getActiveOperadoras();
+        if (!operadoras.length) {
+          operadorasCardsEl.innerHTML = '<div class="planos-empty">Nenhuma operadora ativa no momento.</div>';
+          return;
+        }
+        operadorasCardsEl.innerHTML = operadoras.map((op) => {
+          const theme = operadoraTheme(op);
+          return `
+            <button type="button" class="operadora-card ${theme}" data-operadora="${op}">
+              <span class="name">${op}</span>
+              <span class="hint">Toque para selecionar</span>
+            </button>
+          `;
+        }).join('');
+        markOperadoraAtiva();
+      }
+
+      function markOperadoraAtiva() {
+        if (!operadorasCardsEl) return;
+        const atual = String(operadoraEl.value || '');
+        operadorasCardsEl.querySelectorAll('.operadora-card').forEach((btn) => {
+          const op = String(btn.getAttribute('data-operadora') || '');
+          btn.classList.toggle('active', op === atual);
+        });
       }
 
       function renderPlanosSelect(operadora) {
@@ -477,6 +597,7 @@
         const options = ['<option value="">Selecione...</option>']
           .concat(planos.map((p) => `<option value="${p.credito}">Crédito R$ ${formatMoney(p.credito)} -> paga R$ ${formatMoney(p.paga)}</option>`));
         valorEl.innerHTML = options.join('');
+        planosRapidosEl.setAttribute('data-theme', operadoraTheme(operadora));
         renderPlanosRapidos(operadora);
       }
 
@@ -573,6 +694,7 @@
       }
 
       operadoraEl.addEventListener('change', function () {
+        markOperadoraAtiva();
         renderPlanosSelect(operadoraEl.value);
         updateResumoPreco();
       });
@@ -583,6 +705,17 @@
         const credito = String(btn.getAttribute('data-credito') || '');
         if (!credito) return;
         valorEl.value = credito;
+        updateResumoPreco();
+      });
+
+      operadorasCardsEl.addEventListener('click', function (event) {
+        const card = event.target.closest('.operadora-card');
+        if (!card) return;
+        const operadora = String(card.getAttribute('data-operadora') || '');
+        if (!operadora) return;
+        operadoraEl.value = operadora;
+        markOperadoraAtiva();
+        renderPlanosSelect(operadora);
         updateResumoPreco();
       });
 
@@ -610,6 +743,7 @@
             })
           });
           form.reset();
+          markOperadoraAtiva();
           renderPlanosSelect('');
           updateResumoPreco();
           await loadRecargas();
