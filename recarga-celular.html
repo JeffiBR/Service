@@ -241,6 +241,11 @@
       .main { margin-left: 0; padding: 16px; }
       .app { flex-direction: column; }
     }
+      @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>

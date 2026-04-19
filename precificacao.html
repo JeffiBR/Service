@@ -1011,7 +1011,12 @@ input:not([type="file"]):not([type="checkbox"]), select {
                 font-size: 13px;
             }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>

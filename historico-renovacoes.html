@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HistÃ³rico de RenovaÃ§Ãµes - PreÃ§o Certo</title>
+    <title>Histórico de Renovações - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -596,7 +596,12 @@
             .header-actions { width: 100%; }
             .header-actions .form-input { flex: 1; min-width: 160px; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -615,8 +620,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">PreÃ§o Certo</div>
-                <div class="brand-tag">PREÃ‡O CERTO</div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
             </div>
         </div>
     </div>
@@ -644,11 +649,11 @@
         </a>
         <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>PrecificaÃ§Ã£o</span>
+            <span>Precificação</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>RecebÃ­veis Ateli</span>
+            <span>Recebíveis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -660,7 +665,7 @@
         </a>
         <a class="nav-item active" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>HistÃ³rico</span>
+            <span>Histórico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -677,7 +682,7 @@
         <!-- Main -->
         <main class="main">
             <header class="main-header">
-                <h1 class="page-title"><span>HistÃ³rico de RenovaÃ§Ãµes</span></h1>
+                <h1 class="page-title"><span>Histórico de Renovações</span></h1>
                 <div class="header-actions">
                     <select class="form-input" id="mesSelect"></select>
                     <button class="btn btn-dark" onclick="refreshMes()">
@@ -694,7 +699,7 @@
                     <div class="stat-card gold">
                         <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
                         <div class="stat-value" id="statTotal">0</div>
-                        <div class="stat-label">Total de RenovaÃ§Ãµes</div>
+                        <div class="stat-label">Total de Renovações</div>
                     </div>
                     <div class="stat-card green">
                         <div class="stat-icon"><i class="fas fa-user-check"></i></div>
@@ -728,14 +733,14 @@
                                     <th>Servidor</th>
                                     <th>Plano</th>
                                     <th>Valor</th>
-                                    <th>RenovaÃ§Ã£o</th>
+                                    <th>Renovação</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                         <div class="empty-state" id="emptyRenovaram" style="display:none;">
                             <i class="fas fa-user-check"></i>
-                            <p>Nenhuma renovaÃ§Ã£o no mÃªs selecionado</p>
+                            <p>Nenhuma renovação no mês selecionado</p>
                         </div>
                     </div>
                 </div>
@@ -760,7 +765,7 @@
                         </table>
                         <div class="empty-state" id="emptyNaoRenovaram" style="display:none;">
                             <i class="fas fa-user-clock"></i>
-                            <p>Todos os clientes renovaram no mÃªs selecionado</p>
+                            <p>Todos os clientes renovaram no mês selecionado</p>
                         </div>
                     </div>
                 </div>

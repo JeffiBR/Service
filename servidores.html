@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servidores - PreÃ§o Certo</title>
+    <title>Servidores - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -658,7 +658,12 @@
             .stats-grid { grid-template-columns: 1fr; }
             .servidores-grid { grid-template-columns: 1fr; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -677,8 +682,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">PreÃ§o Certo</div>
-                <div class="brand-tag">PREÃ‡O CERTO</div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
             </div>
         </div>
     </div>
@@ -706,11 +711,11 @@
         </a>
         <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>PrecificaÃ§Ã£o</span>
+            <span>Precificação</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>RecebÃ­veis Ateli</span>
+            <span>Recebíveis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -722,7 +727,7 @@
         </a>
         <a class="nav-item" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>HistÃ³rico</span>
+            <span>Histórico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -766,7 +771,7 @@
                     <div class="stat-card purple">
                         <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                         <div class="stat-value" id="statMedia">0</div>
-                        <div class="stat-label">MÃ©dia por Servidor</div>
+                        <div class="stat-label">Média por Servidor</div>
                     </div>
                 </div>
 
@@ -798,7 +803,7 @@
                         <input type="url" class="form-input" id="servidorUrl" placeholder="https://servidor.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">DescriÃ§Ã£o</label>
+                        <label class="form-label">Descrição</label>
                         <textarea class="form-textarea" id="servidorDescricao" placeholder="Descrio do servidor..."></textarea>
                     </div>
                     <div class="form-group">

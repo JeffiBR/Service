@@ -119,6 +119,11 @@
     .hint { color: var(--muted); font-size:.82rem; margin-top:8px; }
     @media (max-width: 1080px) { .header { padding-right: 0; } }
     @media (max-width: 760px) { .sidebar { position: static; width:100%; height:auto; } .main { margin-left:0; padding:16px; } .app { flex-direction:column; } }
+      @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>

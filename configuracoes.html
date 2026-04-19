@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -349,6 +349,11 @@
       .main { margin-left: 0; padding: 16px; }
       .app { flex-direction: column; }
     }
+      @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
@@ -360,8 +365,8 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">PreÃ§o Certo</div>
-            <div class="brand-tag">PREÃ‡O CERTO</div>
+            <div class="brand-name">Preço Certo</div>
+            <div class="brand-tag">PREÇO CERTO</div>
           </div>
         </div>
       </div>
@@ -376,7 +381,7 @@
         <a class="nav-item" href="recebiveis.html"><i class="fas fa-file-invoice-dollar"></i><span>Recebiveis Ateli</span></a>
         <a class="nav-item" href="dindin.html"><i class="fas fa-sack-dollar"></i><span>Dindin pra Receber</span></a>
         <a class="nav-item" href="produtos-atelie.html"><i class="fas fa-box-archive"></i><span>Produtos Registrados</span></a>
-        <a class="nav-item active" href="configuracoes.html"><i class="fas fa-sliders"></i><span>ConfiguraÃ§Ãµes</span></a>
+        <a class="nav-item active" href="configuracoes.html"><i class="fas fa-sliders"></i><span>Configurações</span></a>
       </nav>
       <div class="sidebar-footer">
         <div class="server-status">
@@ -390,26 +395,26 @@
       <div class="container">
     <div class="top">
       <div>
-        <h1 class="title">ConfiguraÃ§Ãµes de <span>PrecificaÃ§Ã£o</span></h1>
-        <p class="subtitle">Cada usuÃ¡rio salva seus prÃ³prios preÃ§os para preenchimento automÃ¡tico na tela de precificaÃ§Ã£o.</p>
+        <h1 class="title">Configurações de <span>Precificação</span></h1>
+        <p class="subtitle">Cada usuário salva seus próprios preços para preenchimento automático na tela de precificação.</p>
       </div>
       <div class="actions">
         <button type="button" class="btn btn-primary" id="btnSalvar">Salvar</button>
       </div>
     </div>
 
-    <div class="status" id="status">Carregando configuraÃ§Ãµes...</div>
+    <div class="status" id="status">Carregando configurações...</div>
 
     <div class="grid">
       <section class="card">
         <div class="card-header">
-          <h2 class="card-title">Tecidos (preÃ§o por metro)</h2>
+          <h2 class="card-title">Tecidos (preço por metro)</h2>
           <button type="button" class="btn btn-add" id="btnAddTecido">+ Adicionar</button>
         </div>
         <div class="card-body">
           <div class="legend-simple">
             <span>Nome</span>
-            <span>PreÃ§o/metro</span>
+            <span>Preço/metro</span>
             <span></span>
           </div>
           <div id="tecidosRows"></div>
@@ -418,13 +423,13 @@
 
       <section class="card">
         <div class="card-header">
-          <h2 class="card-title">Forros (preÃ§o por metro)</h2>
+          <h2 class="card-title">Forros (preço por metro)</h2>
           <button type="button" class="btn btn-add" id="btnAddForro">+ Adicionar</button>
         </div>
         <div class="card-body">
           <div class="legend-simple">
             <span>Nome</span>
-            <span>PreÃ§o/metro</span>
+            <span>Preço/metro</span>
             <span></span>
           </div>
           <div id="forrosRows"></div>
@@ -440,8 +445,8 @@
       <div class="card-body">
         <div class="legend">
           <span>Nome</span>
-          <span>PreÃ§o/metro</span>
-          <span>PreÃ§o/unidade</span>
+          <span>Preço/metro</span>
+          <span>Preço/unidade</span>
           <span></span>
         </div>
         <div id="aviamentosRows"></div>
@@ -469,17 +474,17 @@
       ];
 
       const FORROS = [
-        'Forro de Cetim', 'Forro Acetinado', 'Forro de TafetÃ¡', 'Forro de Viscose', 'Forro de PoliÃ©ster',
-        'Forro de AlgodÃ£o', 'Forro de Seda', 'Forro de Malha', 'Forro de Helanca', 'Forro de Microfibra',
-        'Forro de Flanela', 'Forro de Tricoline', 'Tricoline Fino', 'MatelassÃª', 'Forro de Sarja', 'Forro de Voil',
-        'Forro Cetim', 'Entretela', 'Feltro', 'Malha de Forro', 'Manta AcrÃ­lica', 'Termocolante'
+        'Forro de Cetim', 'Forro Acetinado', 'Forro de Tafetá', 'Forro de Viscose', 'Forro de Poliéster',
+        'Forro de Algodão', 'Forro de Seda', 'Forro de Malha', 'Forro de Helanca', 'Forro de Microfibra',
+        'Forro de Flanela', 'Forro de Tricoline', 'Tricoline Fino', 'Matelassê', 'Forro de Sarja', 'Forro de Voil',
+        'Forro Cetim', 'Entretela', 'Feltro', 'Malha de Forro', 'Manta Acrílica', 'Termocolante'
       ];
 
       const AVIAMENTOS = [
-        'Linha', 'ZÃ­per', 'ZÃ­per InvisÃ­vel', 'ZÃ­per Metal', 'ZÃ­per Nylon', 'BotÃ£o', 'BotÃ£o de PressÃ£o',
-        'BotÃ£o Forrado', 'ElÃ¡stico', 'ViÃ©s', 'Entretela', 'Renda', 'LaÃ§o', 'Fita de Cetim', 'Fita de GorgurÃ£o',
-        'Velcro', 'Passante', 'IlhÃ³s', 'AlÃ§a', 'Argola', 'Meia-argola', 'MosquetÃ£o', 'Fivela', 'Clipe',
-        'Aplique', 'Patch', 'Termocolante', 'Strass', 'PÃ©rola', 'MiÃ§anga', 'Barbatana', 'CordÃ£o', 'Cordel',
+        'Linha', 'Zíper', 'Zíper Invisível', 'Zíper Metal', 'Zíper Nylon', 'Botão', 'Botão de Pressão',
+        'Botão Forrado', 'Elástico', 'Viés', 'Entretela', 'Renda', 'Laço', 'Fita de Cetim', 'Fita de Gorgurão',
+        'Velcro', 'Passante', 'Ilhós', 'Alça', 'Argola', 'Meia-argola', 'Mosquetão', 'Fivela', 'Clipe',
+        'Aplique', 'Patch', 'Termocolante', 'Strass', 'Pérola', 'Miçanga', 'Barbatana', 'Cordão', 'Cordel',
         'Franja', 'Pompom', 'Colchete', 'Gancho', 'Rebite', 'Tachinha', 'Cursor', 'Chaveiro', 'Etiqueta', 'Regulador'
       ];
 
@@ -552,7 +557,7 @@
         btn.type = 'button';
         btn.className = 'btn btn-remove';
         btn.title = 'Remover item';
-        btn.textContent = 'Ã—';
+        btn.textContent = '×';
         btn.addEventListener('click', () => {
           const row = btn.closest('.row');
           if (row) row.remove();
@@ -621,17 +626,17 @@
       async function carregar() {
         try {
           const resp = await fetch(CONFIG_ENDPOINT);
-          if (!resp.ok) throw new Error('Falha ao carregar configuraÃ§Ãµes');
+          if (!resp.ok) throw new Error('Falha ao carregar configurações');
           const json = await resp.json();
           const data = json && json.data ? json.data : {};
           estado.tecidos = data.tecidos && typeof data.tecidos === 'object' ? data.tecidos : {};
           estado.forros = data.forros && typeof data.forros === 'object' ? data.forros : {};
           estado.aviamentos = data.aviamentos && typeof data.aviamentos === 'object' ? data.aviamentos : {};
           render();
-          setStatus('ConfiguraÃ§Ãµes carregadas.', 'ok');
+          setStatus('Configurações carregadas.', 'ok');
         } catch (err) {
           render();
-          setStatus(err && err.message ? err.message : 'Falha ao carregar configuraÃ§Ãµes.', 'error');
+          setStatus(err && err.message ? err.message : 'Falha ao carregar configurações.', 'error');
         }
       }
 
@@ -670,7 +675,7 @@
 
       async function salvar() {
         btnSalvar.disabled = true;
-        setStatus('Salvando configuraÃ§Ãµes...', '');
+        setStatus('Salvando configurações...', '');
         try {
           const payload = coletarPayload();
           const resp = await fetch(CONFIG_ENDPOINT, {
@@ -678,10 +683,10 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (!resp.ok) throw new Error('Falha ao salvar configuraÃ§Ãµes');
-          setStatus('ConfiguraÃ§Ãµes salvas com sucesso.', 'ok');
+          if (!resp.ok) throw new Error('Falha ao salvar configurações');
+          setStatus('Configurações salvas com sucesso.', 'ok');
         } catch (err) {
-          setStatus(err && err.message ? err.message : 'Falha ao salvar configuraÃ§Ãµes.', 'error');
+          setStatus(err && err.message ? err.message : 'Falha ao salvar configurações.', 'error');
         } finally {
           btnSalvar.disabled = false;
         }

@@ -1,9 +1,9 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revendedores - Pre√ßo Certo</title>
+    <title>Revendedores - PreÁo Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -743,7 +743,12 @@
             .modal-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -762,8 +767,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">Pre√ßo Certo</div>
-                <div class="brand-tag">PRE√áO CERTO</div>
+                <div class="brand-name">PreÁo Certo</div>
+                <div class="brand-tag">PRE«O CERTO</div>
             </div>
         </div>
     </div>
@@ -791,11 +796,11 @@
         </a>
         <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>Precifica√ß√£o</span>
+            <span>PrecificaÁ„o</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>Receb√≠veis Ateli</span>
+            <span>RecebÌveis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -807,7 +812,7 @@
         </a>
         <a class="nav-item" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>Hist√≥rico</span>
+            <span>HistÛrico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -851,7 +856,7 @@
                     <div class="stat-card purple">
                         <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                         <div class="stat-value" id="statMedia">0</div>
-                        <div class="stat-label">M√©dia por Revendedor</div>
+                        <div class="stat-label">MÈdia por Revendedor</div>
                     </div>
                 </div>
 
@@ -877,7 +882,7 @@
                         <input type="hidden" id="revendedorId">
 
                         <div class="form-section">
-                            <div class="form-section-title">Dados B√°sicos</div>
+                            <div class="form-section-title">Dados B·sicos</div>
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label class="form-label">Nome do Revendedor *</label>
@@ -912,11 +917,11 @@
                             <div class="form-section-title">Comercial</div>
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label class="form-label">Comiss√£o (%)</label>
+                                    <label class="form-label">Comiss„o (%)</label>
                                     <input type="number" class="form-input" id="revendedorComissao" min="0" max="100" step="1" placeholder="20">
                                 </div>
                                 <div class="form-group full">
-                                    <label class="form-label">Observa√ß√µes</label>
+                                    <label class="form-label">ObservaÁıes</label>
                                     <textarea class="form-textarea" id="revendedorObservacoes" placeholder="Observaes sobre o revendedor..."></textarea>
                                 </div>
                             </div>
@@ -943,7 +948,7 @@
                                 <strong id="previewEmail">-</strong>
                             </div>
                             <div class="panel-row">
-                                <span>Comiss√£o</span>
+                                <span>Comiss„o</span>
                                 <strong id="previewComissao">-</strong>
                             </div>
                             <div class="panel-row">
@@ -956,10 +961,10 @@
                             </div>
                         </div>
                         <div class="panel-card">
-                            <div class="panel-title">Dicas R√°pidas</div>
-                            <div class="panel-tip">Campos obrigat√≥rios: nome.</div>
+                            <div class="panel-title">Dicas R·pidas</div>
+                            <div class="panel-tip">Campos obrigatÛrios: nome.</div>
                             <div class="panel-tip">Use um telefone com DDD para facilitar o contato.</div>
-                            <div class="panel-tip">Comiss√£o em % entre 0 e 100.</div>
+                            <div class="panel-tip">Comiss„o em % entre 0 e 100.</div>
                         </div>
                     </aside>
                 </div>

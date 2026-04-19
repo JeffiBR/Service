@@ -196,6 +196,11 @@
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .product { grid-template-rows: 120px auto; }
     }
+      @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>

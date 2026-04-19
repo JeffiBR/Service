@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensagens - PreÃ§o Certo</title>
+    <title>Mensagens - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -744,7 +744,12 @@
             .stats-grid { grid-template-columns: 1fr; }
             .revendedores-grid { grid-template-columns: 1fr; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -763,8 +768,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">PreÃ§o Certo</div>
-                <div class="brand-tag">PREÃ‡O CERTO</div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
             </div>
         </div>
     </div>
@@ -792,11 +797,11 @@
         </a>
         <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>PrecificaÃ§Ã£o</span>
+            <span>Precificação</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>RecebÃ­veis Ateli</span>
+            <span>Recebíveis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -808,7 +813,7 @@
         </a>
         <a class="nav-item" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>HistÃ³rico</span>
+            <span>Histórico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -825,7 +830,7 @@
         <!-- Main -->
         <main class="main">
             <header class="main-header">
-                <h1 class="page-title"><span>Mensagens de CobranÃ§a</span></h1>
+                <h1 class="page-title"><span>Mensagens de Cobrança</span></h1>
                 <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                     <button class="btn btn-gold" onclick="saveTemplate()">
                         <i class="fas fa-save"></i> Salvar Mensagem
@@ -889,7 +894,7 @@
                     <div class="table-card">
                         <div class="form-group">
                             <label class="form-label">Mensagem (placeholders: {nome}, {vencimento}, {dias}, {valor}, {servidor}, {revendedor})</label>
-<small style="color:var(--white-600);">Use <code>*texto*</code> para **negrito**, <code>_texto_</code> para <em>itÃ¡lico</em> e insira emojis (&#128512;&#128513;&#128514;&#129315;&#128515;&#128516;) a prÃ©-visualizaÃ§Ã£o mostrar o efeito e o WhatsApp interpretar ao colar.</small>
+<small style="color:var(--white-600);">Use <code>*texto*</code> para **negrito**, <code>_texto_</code> para <em>itálico</em> e insira emojis (&#128512;&#128513;&#128514;&#129315;&#128515;&#128516;) a pré-visualização mostrar o efeito e o WhatsApp interpretar ao colar.</small>
 <div class="emoji-toolbar" style="margin-top:8px; position:relative; display:inline-block;">
     <button type="button" id="btnBold" class="btn btn-sm btn-dark" title="Negrito"><i class="fas fa-bold"></i></button>
     <button type="button" id="btnItalic" class="btn btn-sm btn-dark" title="Itlico"><i class="fas fa-italic"></i></button>
@@ -900,7 +905,7 @@
                             <textarea class="form-textarea" id="templateText" style="min-height:120px;"></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">PrÃ©-visualizaÃ§Ã£o</label>
+                            <label class="form-label">Pré-visualização</label>
                             <div class="form-input" id="templatePreview" style="min-height:80px; white-space:pre-wrap;"></div>
                         </div>
                     </div>
@@ -908,7 +913,7 @@
 
                 <div class="section">
                     <div class="section-header">
-                        <h2>CobranÃ§a D-3</h2>
+                        <h2>Cobrança D-3</h2>
                         <span class="section-badge" id="badgeD3">0</span>
                     </div>
                     <div class="table-card">
@@ -933,7 +938,7 @@
 
                 <div class="section">
                     <div class="section-header">
-                        <h2>CobranÃ§a D-2</h2>
+                        <h2>Cobrança D-2</h2>
                         <span class="section-badge" id="badgeD2">0</span>
                     </div>
                     <div class="table-card">
@@ -958,7 +963,7 @@
 
                 <div class="section">
                     <div class="section-header">
-                        <h2>CobranÃ§a D-1</h2>
+                        <h2>Cobrança D-1</h2>
                         <span class="section-badge" id="badgeD1">0</span>
                     </div>
                     <div class="table-card">
@@ -983,7 +988,7 @@
 
                 <div class="section">
                     <div class="section-header">
-                        <h2>CobranÃ§a D0 (Hoje)</h2>
+                        <h2>Cobrança D0 (Hoje)</h2>
                         <span class="section-badge" id="badgeD0">0</span>
                     </div>
                     <div class="table-card">
@@ -1008,7 +1013,7 @@
 
                 <div class="section">
                     <div class="section-header">
-                        <h2>CobranÃ§a D+1 (Expirado)</h2>
+                        <h2>Cobrança D+1 (Expirado)</h2>
                         <span class="section-badge" id="badgeDplus1">0</span>
                     </div>
                     <div class="table-card">

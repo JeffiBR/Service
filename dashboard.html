@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - PreÃ§o Certo</title>
+    <title>Dashboard - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -867,7 +867,12 @@
             .stats-grid { grid-template-columns: 1fr; }
             .main-content { padding: 16px; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -899,8 +904,8 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <div class="brand-name">PreÃ§o Certo</div>
-                <div class="brand-tag">PREÃ‡O CERTO</div>
+                <div class="brand-name">Preço Certo</div>
+                <div class="brand-tag">PREÇO CERTO</div>
             </div>
         </div>
     </div>
@@ -928,11 +933,11 @@
         </a>
         <a class="nav-item" href="precificacao.html">
             <i class="fas fa-calculator"></i>
-            <span>PrecificaÃ§Ã£o</span>
+            <span>Precificação</span>
         </a>
         <a class="nav-item" href="recebiveis.html">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>RecebÃ­veis Ateli</span>
+            <span>Recebíveis Ateli</span>
         </a>
         <a class="nav-item" href="dindin.html">
             <i class="fas fa-sack-dollar"></i>
@@ -944,7 +949,7 @@
         </a>
         <a class="nav-item" href="historico-renovacoes.html">
             <i class="fas fa-clipboard-list"></i>
-            <span>HistÃ³rico</span>
+            <span>Histórico</span>
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -994,7 +999,7 @@
                 <div class="charts-grid">
                     <div class="chart-card">
                         <div class="chart-header">
-                            <h3 class="chart-title"><i class="fas fa-calendar-alt"></i> Vencimentos por PerÃ­odo</h3>
+                            <h3 class="chart-title"><i class="fas fa-calendar-alt"></i> Vencimentos por Período</h3>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartVencimentos"></canvas>
@@ -1126,7 +1131,7 @@
                         <input type="text" class="form-input" id="whatsappClienteNome" disabled>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">PrÃ©-visualizaÃ§Ã£o</label>
+                        <label class="form-label">Pré-visualização</label>
                         <div class="form-input" id="whatsappPreview" style="min-height:120px; white-space:pre-wrap;"></div>
                     </div>
                 </div>

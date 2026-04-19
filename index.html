@@ -1,9 +1,9 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes - PreÃ§o Certo</title>
+    <title>Clientes - Preço Certo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -905,7 +905,12 @@
             .form-grid { grid-template-columns: 1fr; }
             .form-group.full { grid-column: span 1; }
         }
-    </style>
+        @media (max-width: 960px) {
+      body.tp-sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
 </head>
@@ -939,8 +944,8 @@
                         <i class="fas fa-bolt"></i>
                     </div>
                     <div>
-                        <div class="brand-name">PreÃ§o Certo</div>
-                        <div class="brand-tag">PREÃ‡O CERTO</div>
+                        <div class="brand-name">Preço Certo</div>
+                        <div class="brand-tag">PREÇO CERTO</div>
                     </div>
                 </div>
             </div>
@@ -969,11 +974,11 @@
                 </a>
                 <a href="precificacao.html" class="nav-item">
                     <i class="fas fa-calculator"></i>
-                    <span>PrecificaÃ§Ã£o</span>
+                    <span>Precificação</span>
                 </a>
                 <a href="recebiveis.html" class="nav-item">
                     <i class="fas fa-file-invoice-dollar"></i>
-                    <span>RecebÃ­veis Ateli</span>
+                    <span>Recebíveis Ateli</span>
                 </a>
                 <a href="dindin.html" class="nav-item">
                     <i class="fas fa-sack-dollar"></i>
@@ -986,7 +991,7 @@
 
                 <a href="historico-renovacoes.html" class="nav-item">
                     <i class="fas fa-clipboard-list"></i>
-                    <span>HistÃ³rico</span>
+                    <span>Histórico</span>
                 </a>
             </nav>
 
@@ -1068,7 +1073,7 @@
                                     <th>Servidor</th>
                                     <th>Vencimento</th>
                                     <th>Status</th>
-                                    <th>AÃ§Ãµes</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="clientesTable"></tbody>
@@ -1133,7 +1138,7 @@
                             <input type="text" class="form-input" id="clienteValor" placeholder="0,00">
                         </div>
                         <div class="form-group full">
-                            <label class="form-label">ObservaÃ§Ãµes</label>
+                            <label class="form-label">Observações</label>
                             <textarea class="form-textarea" id="clienteObs" placeholder="Observaes..."></textarea>
                         </div>
                     </div>
@@ -1167,7 +1172,7 @@
                         <div class="planos-grid" id="planosRenovacaoGrid"></div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Valor da RenovaÃ§Ã£o (R$)</label>
+                        <label class="form-label">Valor da Renovação (R$)</label>
                         <input type="text" class="form-input" id="renovacaoValor" placeholder="0,00">
                     </div>
                 </div>
@@ -1175,7 +1180,7 @@
             <div class="modal-footer">
                 <button class="btn btn-dark" onclick="closeRenovacaoModal()">Cancelar</button>
                 <button class="btn btn-success" onclick="executarRenovacao()">
-                    <i class="fas fa-check"></i> Confirmar RenovaÃ§Ã£o
+                    <i class="fas fa-check"></i> Confirmar Renovação
                 </button>
             </div>
         </div>
@@ -1207,7 +1212,7 @@
             <div class="modal-footer">
                 <button class="btn btn-dark" onclick="closeMigrarModal()">Cancelar</button>
                 <button class="btn btn-success" onclick="executarMigracao()">
-                    <i class="fas fa-check"></i> Confirmar MigraÃ§Ã£o
+                    <i class="fas fa-check"></i> Confirmar Migração
                 </button>
             </div>
         </div>
@@ -1266,7 +1271,7 @@
                         <input type="text" class="form-input" id="whatsappClienteNome" disabled>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">PrÃ©-visualizaÃ§Ã£o</label>
+                        <label class="form-label">Pré-visualização</label>
                         <div class="form-input" id="whatsappPreview" style="min-height:120px; white-space:pre-wrap;"></div>
                     </div>
                 </div>
