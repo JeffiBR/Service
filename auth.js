@@ -1,7 +1,7 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
   const SIDEBAR_COLLAPSE_KEY = 'tp_sidebar_collapsed';
-  const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html', 'reset-password.html']);
+  const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html', 'reset-password.html', 'forgot-password.html']);
   let heartbeatTimer = null;
   let redirectingToLogin = false;
 
@@ -118,6 +118,8 @@
     const path = window.location.pathname || '';
     return path.endsWith('/login.html')
       || path.endsWith('login.html')
+      || path.endsWith('/forgot-password.html')
+      || path.endsWith('forgot-password.html')
       || path.endsWith('/reset-password.html')
       || path.endsWith('reset-password.html');
   }
