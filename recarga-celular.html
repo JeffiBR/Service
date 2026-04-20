@@ -125,7 +125,89 @@
 
     .main { flex: 1; margin-left: 260px; padding: 24px; }
     .container { max-width: 1180px; margin: 0 auto; position: relative; z-index: 1; }
-    .header { margin-bottom: 16px; padding-right: 300px; }
+    .header { margin-bottom: 16px; }
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      border: 1px solid rgba(125,211,252,.2);
+      border-radius: 16px;
+      background: linear-gradient(105deg, rgba(12,20,38,.92) 0%, rgba(10,16,34,.88) 55%, rgba(8,32,48,.72) 100%);
+      box-shadow: 0 16px 34px rgba(0,0,0,.28);
+    }
+    .header-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .login-info-card {
+      margin-top: 12px;
+      border: 1px solid rgba(148,163,184,.28);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(15,23,42,.62), rgba(12,18,34,.62));
+      padding: 10px 12px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .login-info-card.show { display: flex; }
+    .login-info-main {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+    .login-info-label {
+      font-size: .7rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #93c5fd;
+      font-weight: 800;
+    }
+    .login-info-user {
+      font-size: .92rem;
+      font-weight: 800;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .login-info-email {
+      font-size: .8rem;
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .login-info-role {
+      font-size: .76rem;
+      font-weight: 800;
+      color: #fcd34d;
+      border: 1px solid rgba(251,191,36,.38);
+      background: rgba(251,191,36,.14);
+      border-radius: 999px;
+      padding: 5px 10px;
+      white-space: nowrap;
+    }
+    .header-actions .btn {
+      min-height: 40px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: .86rem;
+      font-weight: 800;
+      border-color: rgba(148,163,184,.35);
+      background: rgba(15,23,42,.55);
+      color: #e5e7eb;
+    }
+    .header-actions .btn:hover {
+      border-color: rgba(125,211,252,.46);
+      background: rgba(30,41,59,.74);
+    }
     .title {
       margin: 0;
       font-size: 2.1rem;
@@ -266,6 +348,61 @@
     .btn-primary:hover::after { transform: translateX(120%); }
 
     .actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .recarga-preview {
+      border: 1px solid rgba(251,191,36,.32);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(251,191,36,.1), rgba(245,158,11,.08));
+      box-shadow: 0 12px 24px rgba(0,0,0,.2);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+    .preview-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .86rem;
+      font-weight: 900;
+      color: #fde68a;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .preview-item {
+      border: 1px solid rgba(251,191,36,.28);
+      border-radius: 10px;
+      padding: 9px 10px;
+      background: rgba(8,12,22,.58);
+      min-height: 66px;
+    }
+    .preview-label {
+      display: block;
+      font-size: .68rem;
+      font-weight: 800;
+      color: #fcd34d;
+      opacity: .94;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .preview-value {
+      display: block;
+      margin-top: 6px;
+      color: #f8fafc;
+      font-size: .92rem;
+      font-weight: 800;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .preview-hint {
+      margin: 0;
+      font-size: .78rem;
+      color: #fde68a;
+      opacity: .95;
+    }
     .planos-rapidos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -716,9 +853,14 @@
     }
 
     @media (max-width: 1080px) {
-      .header { padding-right: 0; }
+      .header-top { flex-direction: column; align-items: stretch; }
       .form-grid { grid-template-columns: 1fr; }
       .operadoras-grid { grid-template-columns: 1fr; }
+      .preview-grid { grid-template-columns: 1fr; }
+      .login-info-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
     @media (max-width: 760px) {
       .sidebar { position: static; width: 100%; height: auto; }
@@ -774,8 +916,24 @@
     <main class="main">
       <div class="container">
         <div class="header">
-          <h1 class="title">Recarga de Celular</h1>
-          <div class="subtitle">Solicite sua recarga e acompanhe o andamento em tempo real.</div>
+          <div class="header-top">
+            <div>
+              <h1 class="title">Recarga de Celular</h1>
+              <div class="subtitle">Solicite sua recarga e acompanhe o andamento em tempo real.</div>
+            </div>
+            <div class="header-actions">
+              <a class="btn" href="marketplace.html"><i class="fas fa-store"></i> Ver produtos</a>
+              <a class="btn" id="headerLoginBtn" href="login.html"><i class="fas fa-right-to-bracket"></i> Entrar</a>
+            </div>
+          </div>
+          <div id="loginInfoCard" class="login-info-card" aria-live="polite">
+            <div class="login-info-main">
+              <span class="login-info-label">Conta conectada</span>
+              <span id="loginInfoUser" class="login-info-user">-</span>
+              <span id="loginInfoEmail" class="login-info-email">-</span>
+            </div>
+            <span id="loginInfoRole" class="login-info-role">-</span>
+          </div>
         </div>
 
         <div id="status" class="status-box">Carregando...</div>
@@ -822,6 +980,26 @@
                 <div class="field full">
                   <label for="comentario">Comentário (opcional)</label>
                   <textarea id="comentario" placeholder="Ex: recarga para uso imediato"></textarea>
+                </div>
+                <div class="field full">
+                  <div class="recarga-preview" id="recargaPreview">
+                    <div class="preview-title"><i class="fas fa-bolt"></i> Resumo rápido</div>
+                    <div class="preview-grid">
+                      <div class="preview-item">
+                        <span class="preview-label">Número</span>
+                        <span class="preview-value" id="previewNumero">-</span>
+                      </div>
+                      <div class="preview-item">
+                        <span class="preview-label">Operadora</span>
+                        <span class="preview-value" id="previewOperadora">-</span>
+                      </div>
+                      <div class="preview-item">
+                        <span class="preview-label">Cliente paga</span>
+                        <span class="preview-value" id="previewValorPago">R$ 0,00</span>
+                      </div>
+                    </div>
+                    <p class="preview-hint">Depois de confirmar, o checkout abre para gerar o PIX da recarga.</p>
+                  </div>
                 </div>
                 <div id="authNotice" class="auth-notice" style="display:none;"></div>
                 <div class="actions full">
@@ -951,6 +1129,15 @@
       const btnRefresh = document.getElementById('btnRefresh');
       const recargasSection = document.getElementById('recargasSection');
       const authNoticeEl = document.getElementById('authNotice');
+      const headerLoginBtn = document.getElementById('headerLoginBtn');
+      const loginInfoCard = document.getElementById('loginInfoCard');
+      const loginInfoUser = document.getElementById('loginInfoUser');
+      const loginInfoEmail = document.getElementById('loginInfoEmail');
+      const loginInfoRole = document.getElementById('loginInfoRole');
+      const numeroEl = document.getElementById('numero');
+      const previewNumeroEl = document.getElementById('previewNumero');
+      const previewOperadoraEl = document.getElementById('previewOperadora');
+      const previewValorPagoEl = document.getElementById('previewValorPago');
       const checkoutModalOverlay = document.getElementById('checkoutModalOverlay');
       const checkoutCloseBtn = document.getElementById('checkoutCloseBtn');
       const checkoutUserLine1 = document.getElementById('checkoutUserLine1');
@@ -1007,6 +1194,14 @@
       }
 
       function onlyDigits(v) { return String(v || '').replace(/\D+/g, ''); }
+      function formatPhoneBr(value) {
+        const digits = onlyDigits(value).slice(0, 11);
+        if (!digits) return '';
+        if (digits.length <= 2) return `(${digits}`;
+        if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+        if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+      }
       function formatMoney(v) { return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
       function formatDate(v) {
         if (!v) return '-';
@@ -1191,14 +1386,20 @@
         const credito = Number(valorEl.value);
         if (!operadora || !Number.isFinite(credito) || credito <= 0) {
           resumoPrecoEl.value = 'Selecione operadora e credito para ver quanto o cliente paga.';
+          if (previewOperadoraEl) previewOperadoraEl.textContent = operadora || '-';
+          if (previewValorPagoEl) previewValorPagoEl.textContent = 'R$ 0,00';
           return;
         }
         const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === credito);
         if (!plano) {
           resumoPrecoEl.value = 'Plano não disponivel para essa operadora.';
+          if (previewOperadoraEl) previewOperadoraEl.textContent = operadora || '-';
+          if (previewValorPagoEl) previewValorPagoEl.textContent = 'R$ 0,00';
           return;
         }
         resumoPrecoEl.value = `Crédito R$ ${formatMoney(plano.credito)} | Cliente paga R$ ${formatMoney(plano.paga)}`;
+        if (previewOperadoraEl) previewOperadoraEl.textContent = operadora || '-';
+        if (previewValorPagoEl) previewValorPagoEl.textContent = `R$ ${formatMoney(plano.paga)}`;
         markPlanoAtivo();
       }
 
@@ -1255,16 +1456,32 @@
 
       function renderAuthState() {
         if (!isLoggedIn()) {
+          if (loginInfoCard) loginInfoCard.classList.remove('show');
+          if (headerLoginBtn) {
+            headerLoginBtn.href = buildLoginTarget();
+            headerLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar';
+          }
           if (authNoticeEl) {
             authNoticeEl.style.display = 'grid';
             authNoticeEl.innerHTML = `
-              <div>Vitrine de recargas liberada. Para solicitar e pagar via PIX, entre na sua conta.</div>
+              <div>Faça login para solicitar recarga e gerar PIX.</div>
               <a class="btn" href="${buildLoginTarget()}"><i class="fas fa-right-to-bracket"></i> Entrar para solicitar</a>
             `;
           }
           if (recargasSection) recargasSection.style.display = 'none';
           btnRefresh.disabled = true;
           return;
+        }
+        const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
+        if (loginInfoCard) {
+          loginInfoCard.classList.add('show');
+          if (loginInfoUser) loginInfoUser.textContent = profile && profile.name ? profile.name : 'Usuário';
+          if (loginInfoEmail) loginInfoEmail.textContent = profile && profile.email ? profile.email : 'Sem e-mail cadastrado';
+          if (loginInfoRole) loginInfoRole.textContent = profile && profile.group ? `Nível: ${profile.group}` : 'Nível: usuário';
+        }
+        if (headerLoginBtn) {
+          headerLoginBtn.href = 'perfil-usuario.html';
+          headerLoginBtn.innerHTML = '<i class="fas fa-user"></i> Minha conta';
         }
         if (authNoticeEl) {
           authNoticeEl.style.display = 'none';
@@ -1318,6 +1535,11 @@
         markOperadoraAtiva();
         renderPlanosSelect(operadoraEl.value);
         updateResumoPreco();
+      });
+      numeroEl.addEventListener('input', function () {
+        const masked = formatPhoneBr(numeroEl.value);
+        numeroEl.value = masked;
+        if (previewNumeroEl) previewNumeroEl.textContent = masked || '-';
       });
       valorEl.addEventListener('change', updateResumoPreco);
       planosRapidosEl.addEventListener('click', function (event) {
@@ -1434,6 +1656,9 @@
       (async function init() {
         try {
           setStatus('Carregando configuracoes de recarga...');
+          if (previewNumeroEl) previewNumeroEl.textContent = '-';
+          if (previewOperadoraEl) previewOperadoraEl.textContent = '-';
+          if (previewValorPagoEl) previewValorPagoEl.textContent = 'R$ 0,00';
           renderAuthState();
           await loadConfig();
           if (isLoggedIn()) await loadPixConfig();
