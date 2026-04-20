@@ -139,6 +139,21 @@
     .badge.erro { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
     .badge.corrigido { color: #93c5fd; border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.14); }
     .muted { color: var(--muted); font-size: .85rem; }
+    .dev-reply { display: grid; gap: 8px; max-width: 360px; }
+    .dev-reply-text { white-space: normal; word-break: break-word; line-height: 1.4; }
+    .dev-reply-text a { color: #93c5fd; text-decoration: underline; word-break: break-all; }
+    .btn-copy-reply {
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      justify-self: start;
+    }
+    .btn-copy-reply:hover { background: rgba(255,255,255,.1); }
 
     @media (max-width: 1080px) {
       .header { padding-right: 0; }
@@ -290,6 +305,44 @@
           .replace(/'/g, '&#39;');
       }
 
+      function linkifyText(value) {
+        const safe = escapeHtml(String(value || '').replace(/\r\n/g, '\n'));
+        return safe
+          .replace(/(https?:\/\/[^\s<]+)/gi, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+          .replace(/\n/g, '<br>');
+      }
+
+      function renderDevReply(rawText) {
+        const text = String(rawText || '').trim();
+        if (!text) return '<span class="muted">-</span>';
+        return `
+          <div class="dev-reply">
+            <div class="dev-reply-text">${linkifyText(text)}</div>
+            <button class="btn-copy-reply" type="button" data-action="copy-reply" data-copy="${encodeURIComponent(text)}">
+              <i class="fas fa-copy"></i> Copiar resposta
+            </button>
+          </div>
+        `;
+      }
+
+      async function copyTextToClipboard(text) {
+        const content = String(text || '');
+        if (!content) return;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(content);
+          return;
+        }
+        const temp = document.createElement('textarea');
+        temp.value = content;
+        temp.setAttribute('readonly', 'readonly');
+        temp.style.position = 'fixed';
+        temp.style.opacity = '0';
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        temp.remove();
+      }
+
       function statusLabel(status) {
         const value = String(status || '').toLowerCase();
         if (value === 'aguardando_pagamento') return 'Aguardando pagamento';
@@ -397,7 +450,7 @@
             <td>${escapeHtml(getCompraLabel(item))}</td>
             <td>R$ ${formatMoney(getValorPago(item))}</td>
             <td>${statusBadge(item.status)}</td>
-            <td>${escapeHtml(item.comentario_desenvolvedor || '-')}</td>
+            <td>${renderDevReply(item.comentario_desenvolvedor || '')}</td>
             <td>${formatDate(item.created_at || item.updated_at)}</td>
           </tr>
         `).join('');
@@ -415,6 +468,16 @@
       searchEl.addEventListener('input', applyFilters);
       statusFilterEl.addEventListener('change', applyFilters);
       periodFilterEl.addEventListener('change', applyFilters);
+      bodyRows.addEventListener('click', async function (event) {
+        const btn = event.target && event.target.closest ? event.target.closest('button[data-action="copy-reply"]') : null;
+        if (!btn) return;
+        try {
+          await copyTextToClipboard(decodeURIComponent(String(btn.getAttribute('data-copy') || '')));
+          setStatus('Resposta copiada.', 'ok');
+        } catch (_) {
+          setStatus('Falha ao copiar resposta.', 'error');
+        }
+      });
 
       btnRefresh.addEventListener('click', async function () {
         try {

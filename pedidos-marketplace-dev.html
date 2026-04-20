@@ -200,13 +200,29 @@
         return `<ul class="order-items">${items.map((item) => `<li>${escapeHtml(item.nome || 'Item')} x${Number(item.quantidade || 0)}</li>`).join('')}</ul>`;
       }
 
+      function buildRequestError(message, status, payload) {
+        const err = new Error(message || 'Erro na requisição');
+        err.status = Number(status || 0);
+        err.payload = payload || null;
+        return err;
+      }
+
+      async function requestJson(url, options) {
+        const response = await fetch(url, options || {});
+        const payload = await response.json().catch(() => ({}));
+        return { response, payload };
+      }
+
       async function fetchJson(url, options) {
-        const r = await fetch(url, options || {});
-        const p = await r.json().catch(() => ({}));
-        if (!r.ok || !p || !p.success) {
-          throw new Error(p && p.error ? p.error : 'Erro na requisiÃ§Ã£o');
+        const result = await requestJson(url, options);
+        if (!result.response.ok || !result.payload || !result.payload.success) {
+          throw buildRequestError(
+            result.payload && result.payload.error ? result.payload.error : 'Erro na requisição',
+            result.response.status,
+            result.payload
+          );
         }
-        return p.data;
+        return result.payload.data;
       }
 
       function applyFilters() {
@@ -281,9 +297,15 @@
       }
 
       async function deleteOrder(orderId) {
-        await fetchJson(`${API}/orders/${orderId}/admin`, {
-          method: 'DELETE'
-        });
+        try {
+          await fetchJson(`${API}/orders/${orderId}/admin`, { method: 'DELETE' });
+          return;
+        } catch (err) {
+          // Fallback para ambientes/proxies que bloqueiam DELETE.
+          const status = Number(err && err.status ? err.status : 0);
+          if (status !== 404 && status !== 405 && status !== 501) throw err;
+        }
+        await fetchJson(`${API}/orders/${orderId}/admin/delete`, { method: 'POST' });
       }
 
       async function loadAll() {

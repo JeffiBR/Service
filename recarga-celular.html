@@ -404,6 +404,175 @@
     .badge.concluido { color: #86efac; border-color: rgba(34,197,94,.38); background: rgba(34,197,94,.14); }
     .badge.erro { color: #fca5a5; border-color: rgba(239,68,68,.38); background: rgba(239,68,68,.14); }
     .muted { color: var(--muted); font-size: .85rem; }
+    .dev-reply { display: grid; gap: 8px; max-width: 360px; }
+    .dev-reply-text { white-space: normal; word-break: break-word; line-height: 1.4; }
+    .dev-reply-text a { color: #93c5fd; text-decoration: underline; word-break: break-all; }
+    .btn-copy-reply {
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,.04);
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      justify-self: start;
+    }
+    .btn-copy-reply:hover { background: rgba(255,255,255,.1); }
+    .auth-notice {
+      margin-top: 10px;
+      border: 1px dashed rgba(251,191,36,.55);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(251,191,36,.08);
+      color: #fde68a;
+      display: grid;
+      gap: 8px;
+      font-size: .84rem;
+    }
+    .auth-notice .btn {
+      width: fit-content;
+      padding: 8px 10px;
+    }
+    .checkout-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1490;
+      padding: 16px;
+    }
+    .checkout-modal-overlay.open { display: flex; }
+    .checkout-modal-shell {
+      width: min(92vw, 430px);
+      display: grid;
+      gap: 0;
+    }
+    .checkout-card {
+      width: 100%;
+      background: #1c1c1c;
+      box-shadow:
+        0 50px 80px rgba(0, 0, 0, 0.35),
+        0 20px 35px rgba(0, 0, 0, 0.28);
+    }
+    .checkout-title {
+      width: 100%;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #2e2e2e;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: #ffffff;
+    }
+    .checkout-title .btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      min-height: 30px;
+    }
+    .checkout-cart { border-radius: 16px 16px 0 0; overflow: hidden; }
+    .checkout-cart .steps { display: flex; flex-direction: column; padding: 16px; }
+    .checkout-cart .step { display: grid; gap: 10px; }
+    .checkout-cart .step span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+      display: block;
+      letter-spacing: .04em;
+    }
+    .checkout-cart .step p {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: #bbbbbb;
+      line-height: 1.35;
+    }
+    .checkout-cart hr { height: 1px; background-color: #2e2e2e; border: none; width: 100%; margin: 4px 0; }
+    .checkout-promo-form {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 8px;
+    }
+    .checkout-promo-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+      background: #333333;
+      color: #ffffff;
+      outline: none;
+    }
+    .checkout-promo-input:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px #555555;
+    }
+    .checkout-promo-apply {
+      width: 100%;
+      height: 36px;
+      border: 0;
+      border-radius: 8px;
+      background: #555555;
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .checkout-promo-hint {
+      margin-top: 5px;
+      color: #9ca3af;
+      font-size: 11px;
+    }
+    .checkout-payments .details {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 8px;
+    }
+    .checkout-payments .details span:nth-child(odd) {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .checkout-payments .details span:nth-child(even) {
+      font-size: 13px;
+      font-weight: 700;
+      color: #d1d5db;
+    }
+    .checkout-confirm { border-radius: 0 0 16px 16px; overflow: hidden; }
+    .checkout-confirm .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      background-color: #2e2e2e;
+    }
+    .checkout-price {
+      font-size: 24px;
+      color: #ffffff;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .checkout-btn {
+      min-width: 155px;
+      height: 38px;
+      background: #555555;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+    .checkout-btn:hover { background-color: #777777; }
     .pix-modal-overlay {
       position: fixed;
       inset: 0;
@@ -523,6 +692,9 @@
       .pix-modal-body { padding: 14px; }
       .pix-qr { width: 240px; height: 240px; }
       .title { font-size: 1.7rem; }
+      .checkout-modal-shell { width: min(96vw, 430px); }
+      .checkout-confirm .footer { flex-direction: column; align-items: stretch; }
+      .checkout-btn { width: 100%; }
     }
     @media (prefers-reduced-motion: reduce) {
       *,
@@ -612,6 +784,7 @@
                   <label for="comentario">Comentário (opcional)</label>
                   <textarea id="comentario" placeholder="Ex: recarga para uso imediato"></textarea>
                 </div>
+                <div id="authNotice" class="auth-notice" style="display:none;"></div>
                 <div class="actions full">
                   <button class="btn btn-primary" id="btnSalvar" type="submit"><i class="fas fa-paper-plane"></i> Solicitar recarga</button>
                 </div>
@@ -619,7 +792,7 @@
             </div>
           </section>
 
-          <section class="card">
+          <section id="recargasSection" class="card">
             <div class="card-head">
               <h2 class="card-title">Minhas recargas</h2>
               <button class="btn" id="btnRefresh" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
@@ -650,6 +823,60 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <div id="checkoutModalOverlay" class="checkout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+    <div class="checkout-modal-shell">
+      <div class="checkout-card checkout-cart">
+        <label id="checkoutModalTitle" class="checkout-title">
+          <span>CHECKOUT</span>
+          <button id="checkoutCloseBtn" class="btn" type="button">Fechar</button>
+        </label>
+        <div class="steps">
+          <div class="step">
+            <div>
+              <span>CONTA</span>
+              <p id="checkoutUserLine1">Usuário logado</p>
+              <p id="checkoutUserLine2">-</p>
+            </div>
+            <hr />
+            <div>
+              <span>RECARGA</span>
+              <p id="checkoutRecargaLine1">Operadora / número</p>
+              <p id="checkoutRecargaLine2">Crédito</p>
+            </div>
+            <hr />
+            <div class="promo">
+              <span>TEM CUPOM PROMOCIONAL?</span>
+              <form class="checkout-promo-form" id="checkoutPromoForm">
+                <input id="checkoutPromoInput" class="checkout-promo-input" placeholder="Digite um cupom" type="text" />
+                <button id="checkoutPromoApply" class="checkout-promo-apply" type="submit">Aplicar</button>
+              </form>
+              <div class="checkout-promo-hint" id="checkoutPromoHint">Cupons serão liberados em breve.</div>
+            </div>
+            <hr />
+            <div class="checkout-payments">
+              <span>PAGAMENTO</span>
+              <div class="details">
+                <span>Subtotal:</span>
+                <span id="checkoutSubtotal">R$ 0,00</span>
+                <span>Taxa:</span>
+                <span id="checkoutTax">R$ 0,00</span>
+                <span>Total:</span>
+                <span id="checkoutTotal">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-card checkout-confirm">
+        <div class="footer">
+          <label class="checkout-price" id="checkoutPrice">R$ 0,00</label>
+          <button id="checkoutConfirmBtn" class="checkout-btn" type="button">Confirmar e gerar PIX</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="pixModalOverlay" class="pix-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pixModalTitle">
@@ -683,6 +910,21 @@
       const form = document.getElementById('formRecarga');
       const btnSalvar = document.getElementById('btnSalvar');
       const btnRefresh = document.getElementById('btnRefresh');
+      const recargasSection = document.getElementById('recargasSection');
+      const authNoticeEl = document.getElementById('authNotice');
+      const checkoutModalOverlay = document.getElementById('checkoutModalOverlay');
+      const checkoutCloseBtn = document.getElementById('checkoutCloseBtn');
+      const checkoutUserLine1 = document.getElementById('checkoutUserLine1');
+      const checkoutUserLine2 = document.getElementById('checkoutUserLine2');
+      const checkoutRecargaLine1 = document.getElementById('checkoutRecargaLine1');
+      const checkoutRecargaLine2 = document.getElementById('checkoutRecargaLine2');
+      const checkoutSubtotalEl = document.getElementById('checkoutSubtotal');
+      const checkoutTaxEl = document.getElementById('checkoutTax');
+      const checkoutTotalEl = document.getElementById('checkoutTotal');
+      const checkoutPriceEl = document.getElementById('checkoutPrice');
+      const checkoutConfirmBtn = document.getElementById('checkoutConfirmBtn');
+      const checkoutPromoForm = document.getElementById('checkoutPromoForm');
+      const checkoutPromoHint = document.getElementById('checkoutPromoHint');
       const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular';
       const API_CONFIG = API + '/config';
       const API_PIX_CONFIG = API + '/pix-config';
@@ -701,6 +943,24 @@
       let configOperadoras = {};
       let pixConfig = { pix_key: '', pix_merchant_name: 'PRECO CERTO', pix_city: 'ARAPIRACA' };
       let pixUi = null;
+      let checkoutBusy = false;
+
+      function isLoggedIn() {
+        return !!(window.authIsLoggedIn && window.authIsLoggedIn());
+      }
+
+      function buildLoginTarget() {
+        const next = window.location.pathname + window.location.search + window.location.hash;
+        return 'login.html?next=' + encodeURIComponent(next);
+      }
+
+      function requireUserLogin(actionLabel) {
+        if (isLoggedIn()) return true;
+        setStatus(`Faça login para ${actionLabel}.`, 'error');
+        const goLogin = window.confirm(`Você precisa estar logado para ${actionLabel}. Deseja ir para a tela de login?`);
+        if (goLogin) window.location.href = buildLoginTarget();
+        return false;
+      }
 
       function setStatus(msg, kind) {
         statusEl.textContent = msg || '';
@@ -714,6 +974,49 @@
         const d = new Date(v);
         if (Number.isNaN(d.getTime())) return '-';
         return d.toLocaleString('pt-BR');
+      }
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+      function linkifyText(value) {
+        const safe = escapeHtml(String(value || '').replace(/\r\n/g, '\n'));
+        return safe
+          .replace(/(https?:\/\/[^\s<]+)/gi, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+          .replace(/\n/g, '<br>');
+      }
+      function renderDevReply(devComment, fallbackComment) {
+        const text = String(devComment || fallbackComment || '').trim();
+        if (!text) return '<span class="muted">-</span>';
+        return `
+          <div class="dev-reply">
+            <div class="dev-reply-text">${linkifyText(text)}</div>
+            <button class="btn-copy-reply" type="button" data-action="copy-reply" data-copy="${encodeURIComponent(text)}">
+              <i class="fas fa-copy"></i> Copiar resposta
+            </button>
+          </div>
+        `;
+      }
+      async function copyTextToClipboard(text) {
+        const content = String(text || '');
+        if (!content) return;
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(content);
+          return;
+        }
+        const temp = document.createElement('textarea');
+        temp.value = content;
+        temp.setAttribute('readonly', 'readonly');
+        temp.style.position = 'fixed';
+        temp.style.opacity = '0';
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        temp.remove();
       }
 
       function statusBadge(status) {
@@ -895,7 +1198,7 @@
               <td>R$ ${formatMoney(credito)}</td>
               <td>R$ ${formatMoney(pago)}</td>
               <td>${statusBadge(r.status)}</td>
-              <td>${r.comentario_desenvolvedor ? r.comentario_desenvolvedor : (r.comentario_cliente || '-')}</td>
+              <td>${renderDevReply(r.comentario_desenvolvedor, r.comentario_cliente)}</td>
               <td>${formatDate(r.updated_at || r.created_at)}</td>
             </tr>
           `;
@@ -903,8 +1206,73 @@
       }
 
       async function loadRecargas() {
+        if (!isLoggedIn()) {
+          renderRows([]);
+          return;
+        }
         const items = await fetchJson(API);
         renderRows(items);
+      }
+
+      function renderAuthState() {
+        if (!isLoggedIn()) {
+          if (authNoticeEl) {
+            authNoticeEl.style.display = 'grid';
+            authNoticeEl.innerHTML = `
+              <div>Vitrine de recargas liberada. Para solicitar e pagar via PIX, entre na sua conta.</div>
+              <a class="btn" href="${buildLoginTarget()}"><i class="fas fa-right-to-bracket"></i> Entrar para solicitar</a>
+            `;
+          }
+          if (recargasSection) recargasSection.style.display = 'none';
+          btnRefresh.disabled = true;
+          return;
+        }
+        if (authNoticeEl) {
+          authNoticeEl.style.display = 'none';
+          authNoticeEl.innerHTML = '';
+        }
+        if (recargasSection) recargasSection.style.display = '';
+        btnRefresh.disabled = false;
+      }
+
+      function getSelectedRecargaData() {
+        const operadora = String(operadoraEl.value || '').trim();
+        const valorCredito = Number(valorEl.value);
+        if (!operadora) throw new Error('Selecione a operadora.');
+        if (!Number.isFinite(valorCredito) || valorCredito <= 0) throw new Error('Selecione um credito valido.');
+        const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === valorCredito);
+        if (!plano) throw new Error('Esse plano não esta disponivel para a operadora selecionada.');
+        const numero = onlyDigits(document.getElementById('numero').value);
+        if (!numero) throw new Error('Informe o número com DDD.');
+        return {
+          operadora,
+          valorCredito,
+          valorPago: Number(plano.paga || valorCredito),
+          numero
+        };
+      }
+
+      function renderCheckoutModal(data) {
+        const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
+        checkoutUserLine1.textContent = profile && profile.name ? profile.name : 'Usuário logado';
+        checkoutUserLine2.textContent = profile && profile.email ? profile.email : 'Conta autenticada';
+        checkoutRecargaLine1.textContent = `${data.operadora} - ${data.numero}`;
+        checkoutRecargaLine2.textContent = `Crédito R$ ${formatMoney(data.valorCredito)}`;
+        checkoutSubtotalEl.textContent = `R$ ${formatMoney(data.valorPago)}`;
+        checkoutTaxEl.textContent = 'R$ 0,00';
+        checkoutTotalEl.textContent = `R$ ${formatMoney(data.valorPago)}`;
+        checkoutPriceEl.textContent = `R$ ${formatMoney(data.valorPago)}`;
+      }
+
+      function openCheckoutModal() {
+        const selected = getSelectedRecargaData();
+        renderCheckoutModal(selected);
+        checkoutModalOverlay.classList.add('open');
+        return selected;
+      }
+
+      function closeCheckoutModal() {
+        checkoutModalOverlay.classList.remove('open');
       }
 
       operadoraEl.addEventListener('change', function () {
@@ -935,27 +1303,46 @@
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
+        if (!requireUserLogin('solicitar recarga')) return;
+        try {
+          openCheckoutModal();
+          setStatus('Revise os dados e confirme o checkout.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao solicitar recarga.', 'error');
+        }
+      });
+
+      checkoutCloseBtn.addEventListener('click', closeCheckoutModal);
+      checkoutModalOverlay.addEventListener('click', function (event) {
+        if (event.target === checkoutModalOverlay) closeCheckoutModal();
+      });
+      checkoutPromoForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        checkoutPromoHint.textContent = 'Cupom recebido, recurso em breve.';
+      });
+      checkoutConfirmBtn.addEventListener('click', async function () {
+        if (checkoutBusy) return;
+        if (!requireUserLogin('solicitar recarga')) return;
+        checkoutBusy = true;
+        checkoutConfirmBtn.disabled = true;
         btnSalvar.disabled = true;
         try {
           setStatus('Enviando solicitação...');
-          const operadora = operadoraEl.value;
-          const valorCredito = Number(valorEl.value);
-          if (!operadora) throw new Error('Selecione a operadora.');
-          if (!Number.isFinite(valorCredito) || valorCredito <= 0) throw new Error('Selecione um credito valido.');
-
-          const plano = getPlanosByOperadora(operadora).find((p) => Number(p.credito) === valorCredito);
-          if (!plano) throw new Error('Esse plano não esta disponivel para a operadora selecionada.');
-
+          const selected = getSelectedRecargaData();
+          if (!pixConfig.pix_key) {
+            await loadPixConfig();
+          }
           const created = await fetchJson(API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              numero: onlyDigits(document.getElementById('numero').value),
-              operadora,
-              valor_credito: valorCredito,
+              numero: selected.numero,
+              operadora: selected.operadora,
+              valor_credito: selected.valorCredito,
               comentario_cliente: document.getElementById('comentario').value.trim()
             })
           });
+          closeCheckoutModal();
           form.reset();
           markOperadoraAtiva();
           renderPlanosSelect('');
@@ -975,11 +1362,17 @@
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao solicitar recarga.', 'error');
         } finally {
+          checkoutBusy = false;
+          checkoutConfirmBtn.disabled = false;
           btnSalvar.disabled = false;
         }
       });
 
       btnRefresh.addEventListener('click', async function () {
+        if (!isLoggedIn()) {
+          renderRows([]);
+          return;
+        }
         try {
           setStatus('Atualizando solicitacoes...');
           await loadRecargas();
@@ -988,20 +1381,32 @@
           setStatus(err && err.message ? err.message : 'Falha ao atualizar lista.', 'error');
         }
       });
+      bodyRows.addEventListener('click', async function (event) {
+        const btn = event.target && event.target.closest ? event.target.closest('button[data-action="copy-reply"]') : null;
+        if (!btn) return;
+        try {
+          await copyTextToClipboard(decodeURIComponent(String(btn.getAttribute('data-copy') || '')));
+          setStatus('Resposta copiada.', 'ok');
+        } catch (_) {
+          setStatus('Falha ao copiar resposta.', 'error');
+        }
+      });
 
       (async function init() {
         try {
           setStatus('Carregando configuracoes de recarga...');
+          renderAuthState();
           await loadConfig();
-          await loadPixConfig();
+          if (isLoggedIn()) await loadPixConfig();
           const hasPlanoAtivo = getActiveOperadoras().some((op) => getPlanosByOperadora(op).length > 0);
           if (!hasPlanoAtivo) {
             setStatus('Nenhuma recarga disponivel no momento. Avise o desenvolvedor.', 'error');
             return;
           }
-          setStatus('Carregando suas recargas...');
+          if (isLoggedIn()) setStatus('Carregando suas recargas...');
+          else setStatus('Vitrine de recargas carregada. Faça login para solicitar.', 'ok');
           await loadRecargas();
-          setStatus('Dados carregados.', 'ok');
+          if (isLoggedIn()) setStatus('Dados carregados.', 'ok');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao carregar recargas.', 'error');
         }

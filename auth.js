@@ -1,5 +1,6 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
+  const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html']);
   let heartbeatTimer = null;
   let redirectingToLogin = false;
 
@@ -221,6 +222,8 @@
   function requireAuth() {
     if (window.AUTH_DISABLED === true) return;
     if (isLoginPage()) return;
+    const page = getCurrentPageFile();
+    if (PUBLIC_PAGE_FILES.has(page)) return;
 
     const session = getStoredSession();
     if (!isLoggedIn()) {
@@ -228,7 +231,6 @@
       return;
     }
 
-    const page = getCurrentPageFile();
     const role = getCurrentRole(session);
 
     if ((page === 'controle-usuarios.html'
@@ -373,6 +375,40 @@
     return payload.data;
   }
 
+  async function requestPasswordReset(identifier) {
+    const base = getAuthBase();
+    if (!base) throw new Error('AUTH_API_BASE não configurada.');
+    const response = await fetchWithWake(base + '/auth/password/forgot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier: String(identifier || '').trim() })
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload || !payload.success) {
+      throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Falha ao solicitar recuperação de senha.'));
+    }
+    return payload.data || {};
+  }
+
+  async function resetPasswordWithCode(identifier, code, newPassword) {
+    const base = getAuthBase();
+    if (!base) throw new Error('AUTH_API_BASE não configurada.');
+    const response = await fetchWithWake(base + '/auth/password/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        identifier: String(identifier || '').trim(),
+        code: String(code || '').trim(),
+        new_password: String(newPassword || '')
+      })
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload || !payload.success) {
+      throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Falha ao redefinir senha.'));
+    }
+    return payload.data || {};
+  }
+
   async function refreshCurrentUser() {
     if (!isLoggedIn()) return null;
 
@@ -501,6 +537,34 @@
     if (!nav) return;
 
     const current = getCurrentPageFile();
+    if (!isLoggedIn()) {
+      nav.innerHTML = '';
+      const section = document.createElement('div');
+      section.className = 'nav-section-title';
+      section.textContent = 'Menu';
+      nav.appendChild(section);
+
+      const market = document.createElement('a');
+      market.href = 'marketplace.html';
+      market.className = 'nav-item' + (current === 'marketplace.html' ? ' active' : '');
+      market.innerHTML = '<i class="fas fa-store"></i><span>Marketplace</span>';
+      nav.appendChild(market);
+
+      const recharge = document.createElement('a');
+      recharge.href = 'recarga-celular.html';
+      recharge.className = 'nav-item' + (current === 'recarga-celular.html' ? ' active' : '');
+      recharge.innerHTML = '<i class="fas fa-mobile-screen-button"></i><span>Recarga Celular</span>';
+      nav.appendChild(recharge);
+
+      const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+      const login = document.createElement('a');
+      login.href = 'login.html?next=' + next;
+      login.className = 'nav-item';
+      login.innerHTML = '<i class="fas fa-right-to-bracket"></i><span>Entrar</span>';
+      nav.appendChild(login);
+      return;
+    }
+
     const session = getStoredSession();
     const role = getCurrentRole(session);
     nav.innerHTML = '';
@@ -572,12 +636,18 @@
             touch-action: manipulation;
           }
           .sidebar-nav {
+            touch-action: pan-y;
+          }
+          .sidebar-nav {
             position: relative;
             z-index: 2147483551;
           }
           .sidebar .nav-item {
             position: relative;
             z-index: 2147483552;
+            padding-top: 14px;
+            padding-bottom: 14px;
+            margin-bottom: 8px;
           }
           body.tp-sidebar-open .main,
           body.tp-sidebar-open .main-content,
@@ -669,22 +739,77 @@
     toggle.addEventListener('touchstart', onToggleTouchStart, { passive: false });
     overlay.onclick = closeMenu;
 
+    const sidebarTouchState = {
+      startX: 0,
+      startY: 0,
+      moved: false,
+      startedOnItem: null
+    };
+    let lastTouchNavTs = 0;
+    let lastTouchNavHref = '';
+    const sidebarTapMoveThreshold = 10;
+    const resetSidebarTouchState = function () {
+      sidebarTouchState.startX = 0;
+      sidebarTouchState.startY = 0;
+      sidebarTouchState.moved = false;
+      sidebarTouchState.startedOnItem = null;
+    };
+    const onSidebarTouchStart = function (event) {
+      if (window.innerWidth > 960) return;
+      const touch = event.touches && event.touches[0];
+      if (!touch) return;
+      sidebarTouchState.startX = touch.clientX;
+      sidebarTouchState.startY = touch.clientY;
+      sidebarTouchState.moved = false;
+      sidebarTouchState.startedOnItem = event.target && event.target.closest ? event.target.closest('.sidebar .nav-item') : null;
+    };
+    const onSidebarTouchMove = function (event) {
+      if (window.innerWidth > 960) return;
+      const touch = event.touches && event.touches[0];
+      if (!touch) return;
+      if (Math.abs(touch.clientX - sidebarTouchState.startX) > sidebarTapMoveThreshold || Math.abs(touch.clientY - sidebarTouchState.startY) > sidebarTapMoveThreshold) {
+        sidebarTouchState.moved = true;
+      }
+    };
     const navigateFromSidebarItem = function (event) {
       if (window.innerWidth > 960) return;
       const target = event.target && event.target.closest ? event.target.closest('.sidebar .nav-item') : null;
       if (!target) return;
+      if (event.type === 'click' && (Date.now() - lastTouchNavTs) < 700 && target.getAttribute('href') === lastTouchNavHref) {
+        event.preventDefault();
+        return;
+      }
+      if (event.type === 'touchend') {
+        if (sidebarTouchState.moved) {
+          resetSidebarTouchState();
+          return;
+        }
+        if (!sidebarTouchState.startedOnItem || sidebarTouchState.startedOnItem !== target) {
+          resetSidebarTouchState();
+          return;
+        }
+      }
       const href = target.getAttribute('href');
       if (!href || href.startsWith('#')) {
         event.preventDefault();
         closeMenu();
+        resetSidebarTouchState();
         return;
       }
       event.preventDefault();
       closeMenu();
+      if (event.type === 'touchend') {
+        lastTouchNavTs = Date.now();
+        lastTouchNavHref = href;
+      }
+      resetSidebarTouchState();
       window.location.assign(href);
     };
     sidebar.addEventListener('click', navigateFromSidebarItem);
+    sidebar.addEventListener('touchstart', onSidebarTouchStart, { passive: true });
+    sidebar.addEventListener('touchmove', onSidebarTouchMove, { passive: true });
     sidebar.addEventListener('touchend', navigateFromSidebarItem, { passive: false });
+    sidebar.addEventListener('touchcancel', resetSidebarTouchState, { passive: true });
 
     window.addEventListener('resize', function () {
       if (window.innerWidth > 960) closeMenu();
@@ -863,6 +988,8 @@
   window.authGetSessionProfile = getSessionProfile;
   window.authLogin = login;
   window.authRegister = register;
+  window.authRequestPasswordReset = requestPasswordReset;
+  window.authResetPasswordWithCode = resetPasswordWithCode;
   window.authRefreshCurrentUser = refreshCurrentUser;
   window.authUpdateMyProfile = updateMyProfile;
   window.authPrewarm = prewarmAuthServer;

@@ -116,6 +116,160 @@
     .qty-value { min-width: 22px; text-align: center; font-weight: 700; }
     .cart-total { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 8px; font-size: .9rem; color: var(--muted); }
     .cart-total strong { color: #fff; font-size: 1rem; }
+    .auth-notice {
+      margin-top: 10px;
+      border: 1px dashed rgba(251,191,36,.55);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(251,191,36,.08);
+      color: #fde68a;
+      display: grid;
+      gap: 8px;
+      font-size: .84rem;
+    }
+    .auth-notice .btn {
+      width: fit-content;
+      padding: 8px 10px;
+    }
+    .checkout-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1490;
+      padding: 16px;
+    }
+    .checkout-modal-overlay.open { display: flex; }
+    .checkout-modal-shell {
+      width: min(92vw, 430px);
+      display: grid;
+      gap: 0;
+    }
+    .checkout-card {
+      width: 100%;
+      background: #1c1c1c;
+      box-shadow:
+        0 50px 80px rgba(0, 0, 0, 0.35),
+        0 20px 35px rgba(0, 0, 0, 0.28);
+    }
+    .checkout-title {
+      width: 100%;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #2e2e2e;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: #ffffff;
+    }
+    .checkout-title .btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      min-height: 30px;
+    }
+    .checkout-cart { border-radius: 16px 16px 0 0; overflow: hidden; }
+    .checkout-cart .steps { display: flex; flex-direction: column; padding: 16px; }
+    .checkout-cart .step { display: grid; gap: 10px; }
+    .checkout-cart .step span {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+      display: block;
+      letter-spacing: .04em;
+    }
+    .checkout-cart .step p {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: #bbbbbb;
+      line-height: 1.35;
+    }
+    .checkout-cart hr { height: 1px; background-color: #2e2e2e; border: none; width: 100%; margin: 4px 0; }
+    .checkout-promo-form {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 8px;
+    }
+    .checkout-promo-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+      background: #333333;
+      color: #ffffff;
+      outline: none;
+    }
+    .checkout-promo-input:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px #555555;
+    }
+    .checkout-promo-apply {
+      width: 100%;
+      height: 36px;
+      border: 0;
+      border-radius: 8px;
+      background: #555555;
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .checkout-promo-hint {
+      margin-top: 5px;
+      color: #9ca3af;
+      font-size: 11px;
+    }
+    .checkout-payments .details {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 8px;
+    }
+    .checkout-payments .details span:nth-child(odd) {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .checkout-payments .details span:nth-child(even) {
+      font-size: 13px;
+      font-weight: 700;
+      color: #d1d5db;
+    }
+    .checkout-confirm { border-radius: 0 0 16px 16px; overflow: hidden; }
+    .checkout-confirm .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      background-color: #2e2e2e;
+    }
+    .checkout-price {
+      font-size: 24px;
+      color: #ffffff;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .checkout-btn {
+      min-width: 155px;
+      height: 38px;
+      background: #555555;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color .2s ease;
+    }
+    .checkout-btn:hover { background-color: #777777; }
     .orders-table { width: 100%; border-collapse: collapse; min-width: 680px; }
     .orders-wrap { overflow-x: auto; }
     .orders-table th, .orders-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); vertical-align: top; }
@@ -252,6 +406,9 @@
       .pix-modal { max-width: 100%; border-radius: 16px; }
       .pix-modal-body { padding: 14px; }
       .pix-qr { width: 240px; height: 240px; }
+      .checkout-modal-shell { width: min(96vw, 430px); }
+      .checkout-confirm .footer { flex-direction: column; align-items: stretch; }
+      .checkout-btn { width: 100%; }
     }
       @media (max-width: 960px) {
       body.tp-sidebar-open .sidebar {
@@ -322,6 +479,7 @@
                 <label for="checkoutNote" style="font-size:.82rem;color:#e5e7eb;font-weight:700;">Comentario no pedido (opcional)</label>
                 <textarea id="checkoutNote" placeholder="Ex.: entregar amanha"></textarea>
               </div>
+              <div id="authNotice" class="auth-notice" style="display:none;"></div>
               <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px;">
                 <button id="btnCheckout" class="btn btn-primary" type="button"><i class="fas fa-qrcode"></i> Finalizar no PIX</button>
               </div>
@@ -329,7 +487,7 @@
           </section>
         </div>
 
-        <section class="card" style="margin-top:14px;">
+        <section id="ordersSection" class="card" style="margin-top:14px;">
           <div class="card-head">
             <h2 class="card-title">Meus pedidos</h2>
             <button id="btnRefreshOrders" class="btn" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
@@ -353,6 +511,60 @@
         </section>
       </div>
     </main>
+  </div>
+
+  <div id="checkoutModalOverlay" class="checkout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+    <div class="checkout-modal-shell">
+      <div class="checkout-card checkout-cart">
+        <label id="checkoutModalTitle" class="checkout-title">
+          <span>CHECKOUT</span>
+          <button id="checkoutCloseBtn" class="btn" type="button">Fechar</button>
+        </label>
+        <div class="steps">
+          <div class="step">
+            <div>
+              <span>CONTA</span>
+              <p id="checkoutUserLine1">Usuário logado</p>
+              <p id="checkoutUserLine2">-</p>
+            </div>
+            <hr />
+            <div>
+              <span>MÉTODO DE PAGAMENTO</span>
+              <p>PIX</p>
+              <p>Pagamento instantâneo</p>
+            </div>
+            <hr />
+            <div class="promo">
+              <span>TEM CUPOM PROMOCIONAL?</span>
+              <form class="checkout-promo-form" id="checkoutPromoForm">
+                <input id="checkoutPromoInput" class="checkout-promo-input" placeholder="Digite um cupom" type="text" />
+                <button id="checkoutPromoApply" class="checkout-promo-apply" type="submit">Aplicar</button>
+              </form>
+              <div class="checkout-promo-hint" id="checkoutPromoHint">Cupons serão liberados em breve.</div>
+            </div>
+            <hr />
+            <div class="checkout-payments">
+              <span>PAGAMENTO</span>
+              <div class="details">
+                <span>Subtotal:</span>
+                <span id="checkoutSubtotal">R$ 0,00</span>
+                <span>Taxa:</span>
+                <span id="checkoutTax">R$ 0,00</span>
+                <span>Total:</span>
+                <span id="checkoutTotal">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkout-card checkout-confirm">
+        <div class="footer">
+          <label class="checkout-price" id="checkoutPrice">R$ 0,00</label>
+          <button id="checkoutConfirmBtn" class="checkout-btn" type="button">Confirmar e gerar PIX</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="pixModalOverlay" class="pix-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pixModalTitle">
@@ -396,6 +608,19 @@
       const btnRefresh = document.getElementById('btnRefresh');
       const btnRefreshOrders = document.getElementById('btnRefreshOrders');
       const ordersRows = document.getElementById('ordersRows');
+      const ordersSection = document.getElementById('ordersSection');
+      const authNoticeEl = document.getElementById('authNotice');
+      const checkoutModalOverlay = document.getElementById('checkoutModalOverlay');
+      const checkoutCloseBtn = document.getElementById('checkoutCloseBtn');
+      const checkoutUserLine1 = document.getElementById('checkoutUserLine1');
+      const checkoutUserLine2 = document.getElementById('checkoutUserLine2');
+      const checkoutSubtotalEl = document.getElementById('checkoutSubtotal');
+      const checkoutTaxEl = document.getElementById('checkoutTax');
+      const checkoutTotalEl = document.getElementById('checkoutTotal');
+      const checkoutPriceEl = document.getElementById('checkoutPrice');
+      const checkoutConfirmBtn = document.getElementById('checkoutConfirmBtn');
+      const checkoutPromoForm = document.getElementById('checkoutPromoForm');
+      const checkoutPromoHint = document.getElementById('checkoutPromoHint');
       const pixModalOverlay = document.getElementById('pixModalOverlay');
       const pixCloseBtn = document.getElementById('pixCloseBtn');
       const pixResumo = document.getElementById('pixResumo');
@@ -409,6 +634,24 @@
       let pixConfig = { pix_key: '', pix_merchant_name: 'PRECO CERTO', pix_city: 'ARAPIRACA' };
       let pixTimerId = null;
       let pixExpiresAt = 0;
+      let checkoutBusy = false;
+
+      function isLoggedIn() {
+        return !!(window.authIsLoggedIn && window.authIsLoggedIn());
+      }
+
+      function buildLoginTarget() {
+        const next = window.location.pathname + window.location.search + window.location.hash;
+        return 'login.html?next=' + encodeURIComponent(next);
+      }
+
+      function requireUserLogin(actionLabel) {
+        if (isLoggedIn()) return true;
+        setStatus(`Faça login para ${actionLabel}.`, 'error');
+        const goLogin = window.confirm(`Você precisa estar logado para ${actionLabel}. Deseja ir para a tela de login?`);
+        if (goLogin) window.location.href = buildLoginTarget();
+        return false;
+      }
 
       function setStatus(msg, kind) {
         statusEl.textContent = msg || '';
@@ -549,6 +792,10 @@
       }
 
       function renderOrders(rows) {
+        if (!isLoggedIn()) {
+          ordersRows.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">Faça login para visualizar seus pedidos.</td></tr>';
+          return;
+        }
         const items = Array.isArray(rows) ? rows : [];
         if (!items.length) {
           ordersRows.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">Nenhum pedido encontrado.</td></tr>';
@@ -585,8 +832,33 @@
       }
 
       async function loadOrders() {
+        if (!isLoggedIn()) {
+          renderOrders([]);
+          return;
+        }
         const data = await fetchJson(API + '/orders');
         renderOrders(data);
+      }
+
+      function renderAuthState() {
+        if (!isLoggedIn()) {
+          btnRefreshOrders.disabled = true;
+          btnCheckout.disabled = false;
+          if (ordersSection) ordersSection.style.display = '';
+          if (authNoticeEl) {
+            authNoticeEl.style.display = 'grid';
+            authNoticeEl.innerHTML = `
+              <div>Vitrine pública liberada. Para comprar e ver pedidos, entre na sua conta.</div>
+              <a class="btn" href="${buildLoginTarget()}"><i class="fas fa-right-to-bracket"></i> Entrar para comprar</a>
+            `;
+          }
+          return;
+        }
+        btnRefreshOrders.disabled = false;
+        if (authNoticeEl) {
+          authNoticeEl.style.display = 'none';
+          authNoticeEl.innerHTML = '';
+        }
       }
 
       async function loadPixConfig() {
@@ -621,6 +893,36 @@
         cart = [];
         persistCart();
         renderCart();
+      }
+
+      function getCheckoutTotals() {
+        const subtotal = Number(getCartTotal() || 0);
+        const tax = 0;
+        const total = Math.max(0, subtotal + tax);
+        return { subtotal, tax, total };
+      }
+
+      function renderCheckoutModal() {
+        const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
+        const line1 = profile && profile.name ? profile.name : 'Usuário logado';
+        const line2 = profile && profile.email ? profile.email : 'Conta autenticada';
+        const totals = getCheckoutTotals();
+        checkoutUserLine1.textContent = line1;
+        checkoutUserLine2.textContent = line2;
+        checkoutSubtotalEl.textContent = `R$ ${formatMoney(totals.subtotal)}`;
+        checkoutTaxEl.textContent = `R$ ${formatMoney(totals.tax)}`;
+        checkoutTotalEl.textContent = `R$ ${formatMoney(totals.total)}`;
+        checkoutPriceEl.textContent = `R$ ${formatMoney(totals.total)}`;
+      }
+
+      function openCheckoutModal() {
+        if (!cart.length) throw new Error('Adicione itens no carrinho antes de finalizar.');
+        renderCheckoutModal();
+        checkoutModalOverlay.classList.add('open');
+      }
+
+      function closeCheckoutModal() {
+        checkoutModalOverlay.classList.remove('open');
       }
 
       function closePixModal() {
@@ -718,6 +1020,7 @@
             return;
           }
           if (action === 'buy') {
+            if (!requireUserLogin('finalizar a compra')) return;
             button.disabled = true;
             setStatus('Criando pedido...');
             await buyNow(productId);
@@ -744,14 +1047,36 @@
       });
 
       btnCheckout.addEventListener('click', async function () {
-        btnCheckout.disabled = true;
+        if (!requireUserLogin('finalizar a compra')) return;
         try {
+          openCheckoutModal();
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao finalizar compra.', 'error');
+        }
+      });
+
+      checkoutCloseBtn.addEventListener('click', closeCheckoutModal);
+      checkoutModalOverlay.addEventListener('click', function (event) {
+        if (event.target === checkoutModalOverlay) closeCheckoutModal();
+      });
+      checkoutPromoForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        checkoutPromoHint.textContent = 'Cupom recebido, recurso em breve.';
+      });
+      checkoutConfirmBtn.addEventListener('click', async function () {
+        if (checkoutBusy) return;
+        if (!requireUserLogin('confirmar o checkout')) return;
+        checkoutBusy = true;
+        checkoutConfirmBtn.disabled = true;
+        try {
+          closeCheckoutModal();
           setStatus('Criando pedido...');
           await checkoutCurrentCart();
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao finalizar compra.', 'error');
         } finally {
-          btnCheckout.disabled = false;
+          checkoutBusy = false;
+          checkoutConfirmBtn.disabled = false;
         }
       });
 
@@ -766,6 +1091,10 @@
       });
 
       btnRefreshOrders.addEventListener('click', async function () {
+        if (!isLoggedIn()) {
+          renderOrders([]);
+          return;
+        }
         try {
           setStatus('Atualizando pedidos...');
           await loadOrders();
@@ -797,12 +1126,14 @@
       (async function init() {
         try {
           setStatus('Carregando marketplace...');
+          renderAuthState();
           loadCart();
-          await loadPixConfig();
+          if (isLoggedIn()) await loadPixConfig();
           await loadCategories();
           await loadProducts();
           await loadOrders();
-          setStatus('Marketplace pronto para compras.', 'ok');
+          if (isLoggedIn()) setStatus('Marketplace pronto para compras.', 'ok');
+          else setStatus('Vitrine pública carregada. Faça login para comprar.', 'ok');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao carregar marketplace.', 'error');
         }
