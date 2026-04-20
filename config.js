@@ -83,4 +83,13 @@
     script.setAttribute('data-tp-feedback', '1');
     document.head.appendChild(script);
   }
+
+  // Tema visual global no padrão Marketplace para todas as páginas.
+  if (!document.querySelector('link[data-tp-theme="marketplace"]')) {
+    const themeLink = document.createElement('link');
+    themeLink.rel = 'stylesheet';
+    themeLink.href = 'theme-marketplace.css';
+    themeLink.setAttribute('data-tp-theme', 'marketplace');
+    document.head.appendChild(themeLink);
+  }
 })();

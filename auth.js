@@ -1,6 +1,5 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
-  const SIDEBAR_COLLAPSE_KEY = 'tp_sidebar_collapsed';
   const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html', 'reset-password.html', 'forgot-password.html']);
   let heartbeatTimer = null;
   let redirectingToLogin = false;
@@ -570,29 +569,6 @@
     const current = getCurrentPageFile();
     if (!isLoggedIn()) {
       nav.innerHTML = '';
-      const section = document.createElement('div');
-      section.className = 'nav-section-title';
-      section.textContent = 'Menu';
-      nav.appendChild(section);
-
-      const market = document.createElement('a');
-      market.href = 'marketplace.html';
-      market.className = 'nav-item' + (current === 'marketplace.html' ? ' active' : '');
-      market.innerHTML = '<i class="fas fa-store"></i><span>Marketplace</span>';
-      nav.appendChild(market);
-
-      const recharge = document.createElement('a');
-      recharge.href = 'recarga-celular.html';
-      recharge.className = 'nav-item' + (current === 'recarga-celular.html' ? ' active' : '');
-      recharge.innerHTML = '<i class="fas fa-mobile-screen-button"></i><span>Recarga Celular</span>';
-      nav.appendChild(recharge);
-
-      const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-      const login = document.createElement('a');
-      login.href = 'login.html?next=' + next;
-      login.className = 'nav-item';
-      login.innerHTML = '<i class="fas fa-right-to-bracket"></i><span>Entrar</span>';
-      nav.appendChild(login);
       return;
     }
 
@@ -618,8 +594,21 @@
 
   function setupSidebarMobileToggle() {
     if (isLoginPage()) return;
+    if (!isLoggedIn()) return;
     const sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;
+    document.body.classList.remove('tp-sidebar-collapsed');
+    try { localStorage.removeItem('tp_sidebar_collapsed'); } catch (_) {}
+    const oldCollapseBtn = document.getElementById('tpSidebarCollapseBtn');
+    if (oldCollapseBtn) oldCollapseBtn.remove();
+    document.querySelectorAll('.tp-sidebar-collapse-btn,[aria-label*="menu lateral"],[title*="menu"]').forEach(function (el) {
+      if (el && el.classList && el.classList.contains('tp-sidebar-toggle')) return;
+      if (!el || !el.closest || !el.closest('.sidebar')) return;
+      const txt = String(el.textContent || '').trim();
+      if (el.classList.contains('tp-sidebar-collapse-btn') || txt === '<<' || txt === '>>' || txt === '«' || txt === '»') {
+        el.remove();
+      }
+    });
 
     if (!document.getElementById('tpSidebarMobileStyle')) {
       const style = document.createElement('style');
@@ -636,27 +625,6 @@
         .sidebar-nav .nav-item.active i { color:#111; }
         .sidebar-nav .nav-section-title { margin:6px 10px 12px; color:#8f95a3; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
 
-        .tp-sidebar-collapse-btn { border:1px solid rgba(255,255,255,.18); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); color:#fff; border-radius:10px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s ease; box-shadow:0 8px 18px rgba(0,0,0,.25); }
-        .tp-sidebar-collapse-btn:hover { border-color:rgba(245,185,21,.45); color:#f5b915; transform:translateY(-1px); }
-        .sidebar .sidebar-header { position:relative; }
-        .sidebar .sidebar-header .tp-sidebar-collapse-btn { position:absolute; right:14px; top:14px; z-index:2; }
-
-        @media (min-width: 961px) {
-          body.tp-sidebar-collapsed .sidebar { width:88px !important; min-width:88px !important; }
-          body.tp-sidebar-collapsed .sidebar .sidebar-header { padding-left:10px !important; padding-right:10px !important; }
-          body.tp-sidebar-collapsed .sidebar .brand { justify-content:center; }
-          body.tp-sidebar-collapsed .sidebar .brand > div:not(.brand-icon) { display:none !important; }
-          body.tp-sidebar-collapsed .sidebar .sidebar-nav { padding-left:8px !important; padding-right:8px !important; }
-          body.tp-sidebar-collapsed .sidebar .nav-section-title { display:none !important; }
-          body.tp-sidebar-collapsed .sidebar .nav-item { justify-content:center; padding-left:8px !important; padding-right:8px !important; gap:0; }
-          body.tp-sidebar-collapsed .sidebar .nav-item span { opacity:0; transform:translateX(-6px); width:0; overflow:hidden; pointer-events:none; }
-          body.tp-sidebar-collapsed .sidebar .nav-item i { width:auto; font-size:18px; }
-          body.tp-sidebar-collapsed .sidebar .server-status { justify-content:center; }
-          body.tp-sidebar-collapsed .sidebar .server-status .status-info { display:none !important; }
-          body.tp-sidebar-collapsed .main,
-          body.tp-sidebar-collapsed .main-content,
-          body.tp-sidebar-collapsed main.main-content { margin-left:88px !important; }
-        }
 
         .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:2147483600; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
         .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:2147483500; pointer-events:none; }
@@ -685,14 +653,6 @@
             visibility:visible !important;
             pointer-events:auto !important;
           }
-          body.tp-sidebar-open.tp-sidebar-collapsed .sidebar,
-          body.tp-sidebar-collapsed .sidebar.open {
-            width:88px !important;
-            max-width:88px !important;
-          }
-          body.tp-sidebar-collapsed .sidebar .nav-section-title { display:none !important; }
-          body.tp-sidebar-collapsed .sidebar .nav-item { justify-content:center; gap:0; padding-left:8px !important; padding-right:8px !important; }
-          body.tp-sidebar-collapsed .sidebar .nav-item span { opacity:0; width:0; overflow:hidden; pointer-events:none; }
           .sidebar a,
           .sidebar button,
           .sidebar .nav-item {
@@ -732,7 +692,6 @@
             pointer-events:auto;
             left:min(84vw, 280px);
           }
-          body.tp-sidebar-open.tp-sidebar-collapsed .tp-sidebar-overlay { left:88px !important; }
           body.tp-sidebar-open { overflow:hidden; }
           .main, .main-content, main.main-content {
             margin-left:0 !important;
@@ -783,57 +742,6 @@
       document.body.classList.add('tp-sidebar-open');
       sidebar.classList.add('open');
     };
-
-    const sidebarHeader = sidebar.querySelector('.sidebar-header');
-    let collapseBtn = document.getElementById('tpSidebarCollapseBtn');
-    if (!collapseBtn) {
-      collapseBtn = document.createElement('button');
-      collapseBtn.id = 'tpSidebarCollapseBtn';
-      collapseBtn.className = 'tp-sidebar-collapse-btn';
-      collapseBtn.type = 'button';
-      collapseBtn.setAttribute('aria-label', 'Recolher menu lateral');
-      collapseBtn.setAttribute('title', 'Recolher menu');
-      collapseBtn.innerHTML = '<i class="fas fa-angles-left" aria-hidden="true"></i>';
-      if (sidebarHeader) sidebarHeader.appendChild(collapseBtn);
-      else sidebar.insertBefore(collapseBtn, sidebar.firstChild);
-    } else if (!collapseBtn.parentElement || collapseBtn.parentElement !== sidebarHeader) {
-      if (sidebarHeader) sidebarHeader.appendChild(collapseBtn);
-    }
-
-    const applyCollapsedState = function (collapsed) {
-      const isCollapsed = !!collapsed;
-      document.body.classList.toggle('tp-sidebar-collapsed', isCollapsed);
-      if (isCollapsed) {
-        collapseBtn.setAttribute('aria-label', 'Expandir menu lateral');
-        collapseBtn.setAttribute('title', 'Expandir menu');
-        collapseBtn.innerHTML = '<i class="fas fa-angles-right" aria-hidden="true"></i>';
-      } else {
-        collapseBtn.setAttribute('aria-label', 'Recolher menu lateral');
-        collapseBtn.setAttribute('title', 'Recolher menu');
-        collapseBtn.innerHTML = '<i class="fas fa-angles-left" aria-hidden="true"></i>';
-      }
-      try {
-        localStorage.setItem(SIDEBAR_COLLAPSE_KEY, isCollapsed ? '1' : '0');
-      } catch (_) {}
-    };
-
-    let storedCollapsed = false;
-    try {
-      storedCollapsed = localStorage.getItem(SIDEBAR_COLLAPSE_KEY) === '1';
-    } catch (_) {
-      storedCollapsed = false;
-    }
-    applyCollapsedState(storedCollapsed);
-
-    collapseBtn.addEventListener('click', function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      const nextCollapsed = !document.body.classList.contains('tp-sidebar-collapsed');
-      applyCollapsedState(nextCollapsed);
-      if (window.innerWidth <= 960 && !document.body.classList.contains('tp-sidebar-open')) {
-        openMenu();
-      }
-    });
 
     let lastTouchToggleTs = 0;
     const toggleMenu = function (event) {
@@ -940,6 +848,45 @@
   function mountDeveloperSidebarLink() {
     // Links de desenvolvedor ficam apenas no menu de perfil (top-right).
     return;
+  }
+
+  function applySidebarVisibilityByAuth() {
+    if (isLoginPage()) return;
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    if (!document.getElementById('tpSidebarAuthVisibilityStyle')) {
+      const style = document.createElement('style');
+      style.id = 'tpSidebarAuthVisibilityStyle';
+      style.textContent = `
+        body.tp-no-sidebar .sidebar { display:none !important; }
+        body.tp-no-sidebar .tp-sidebar-toggle,
+        body.tp-no-sidebar .tp-sidebar-overlay { display:none !important; }
+        body.tp-no-sidebar .main,
+        body.tp-no-sidebar .main-content,
+        body.tp-no-sidebar main.main-content { margin-left:0 !important; width:100% !important; max-width:100% !important; }
+      `;
+      document.head.appendChild(style);
+    }
+
+    if (isLoggedIn()) {
+      document.body.classList.remove('tp-no-sidebar');
+      sidebar.style.display = '';
+      return;
+    }
+
+    document.body.classList.add('tp-no-sidebar');
+    sidebar.style.display = 'none';
+    const nav = sidebar.querySelector('.sidebar-nav');
+    if (nav) nav.innerHTML = '';
+    sidebar.querySelectorAll('.tp-sidebar-collapse-btn,[aria-label*="menu lateral"],[title*="menu"]').forEach(function (el) {
+      if (!el || !el.closest || !el.closest('.sidebar')) return;
+      el.remove();
+    });
+    const toggle = document.getElementById('tpSidebarToggle');
+    const overlay = document.getElementById('tpSidebarOverlay');
+    if (toggle) toggle.remove();
+    if (overlay) overlay.remove();
   }
 
   function ensureMenuStyles() {
@@ -1116,6 +1063,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     requireAuth();
+    applySidebarVisibilityByAuth();
     standardizeSidebarMenu();
     setupSidebarMobileToggle();
     startHeartbeat();
