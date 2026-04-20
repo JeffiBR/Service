@@ -555,11 +555,8 @@
         setStatus('');
       });
       document.getElementById('btnShowRecover').addEventListener('click', function () {
-        const identifierField = document.getElementById('identifier');
-        if (recoverEmailInput && identifierField && !recoverEmailInput.value.trim()) {
-          recoverEmailInput.value = identifierField.value.trim();
-        }
-        recoverPanel.classList.toggle('active');
+        const nextTarget = params.get('next') || 'marketplace.html';
+        window.location.href = 'forgot-password.html?next=' + encodeURIComponent(nextTarget);
       });
 
       const initialMode = params.get('mode') === 'signup' ? 'signup' : 'signin';

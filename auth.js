@@ -1,5 +1,6 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
+  const SIDEBAR_COLLAPSE_KEY = 'tp_sidebar_collapsed';
   const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html', 'reset-password.html']);
   let heartbeatTimer = null;
   let redirectingToLogin = false;
@@ -623,12 +624,37 @@
       style.id = 'tpSidebarMobileStyle';
       style.textContent = `
         /* baseline shared sidebar look to avoid unstyled links in new pages */
+        .sidebar { transition: width .25s ease, transform .25s ease; }
         .sidebar-nav .nav-item { display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:6px; border-radius:12px; color:#a1a1aa; text-decoration:none; font-weight:600; border:1px solid transparent; transition:all .2s ease; }
-        .sidebar-nav .nav-item i { width:18px; text-align:center; color:#9ca3af; }
+        .sidebar-nav .nav-item i { width:18px; text-align:center; color:#9ca3af; transition: transform .2s ease, color .2s ease, filter .2s ease; }
+        .sidebar-nav .nav-item span { transition: opacity .2s ease, transform .2s ease; white-space: nowrap; }
         .sidebar-nav .nav-item:hover { color:#fff; background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.10); }
+        .sidebar-nav .nav-item:hover i { transform: translateY(-1px) scale(1.14) rotate(-6deg); color:#f5b915; filter: drop-shadow(0 0 8px rgba(245,185,21,.35)); }
         .sidebar-nav .nav-item.active { color:#111; background:#f5b915; border-color:#f5b915; box-shadow:0 6px 18px rgba(245,185,21,.22); }
         .sidebar-nav .nav-item.active i { color:#111; }
         .sidebar-nav .nav-section-title { margin:6px 10px 12px; color:#8f95a3; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+
+        .tp-sidebar-collapse-btn { border:1px solid rgba(255,255,255,.18); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); color:#fff; border-radius:10px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s ease; box-shadow:0 8px 18px rgba(0,0,0,.25); }
+        .tp-sidebar-collapse-btn:hover { border-color:rgba(245,185,21,.45); color:#f5b915; transform:translateY(-1px); }
+        .sidebar .sidebar-header { position:relative; }
+        .sidebar .sidebar-header .tp-sidebar-collapse-btn { position:absolute; right:14px; top:14px; z-index:2; }
+
+        @media (min-width: 961px) {
+          body.tp-sidebar-collapsed .sidebar { width:88px !important; min-width:88px !important; }
+          body.tp-sidebar-collapsed .sidebar .sidebar-header { padding-left:10px !important; padding-right:10px !important; }
+          body.tp-sidebar-collapsed .sidebar .brand { justify-content:center; }
+          body.tp-sidebar-collapsed .sidebar .brand > div:not(.brand-icon) { display:none !important; }
+          body.tp-sidebar-collapsed .sidebar .sidebar-nav { padding-left:8px !important; padding-right:8px !important; }
+          body.tp-sidebar-collapsed .sidebar .nav-section-title { display:none !important; }
+          body.tp-sidebar-collapsed .sidebar .nav-item { justify-content:center; padding-left:8px !important; padding-right:8px !important; gap:0; }
+          body.tp-sidebar-collapsed .sidebar .nav-item span { opacity:0; transform:translateX(-6px); width:0; overflow:hidden; pointer-events:none; }
+          body.tp-sidebar-collapsed .sidebar .nav-item i { width:auto; font-size:18px; }
+          body.tp-sidebar-collapsed .sidebar .server-status { justify-content:center; }
+          body.tp-sidebar-collapsed .sidebar .server-status .status-info { display:none !important; }
+          body.tp-sidebar-collapsed .main,
+          body.tp-sidebar-collapsed .main-content,
+          body.tp-sidebar-collapsed main.main-content { margin-left:88px !important; }
+        }
 
         .tp-sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:2147483600; width:42px; height:42px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:#11131c; color:#fff; font-size:18px; }
         .tp-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:2147483500; pointer-events:none; }
@@ -657,6 +683,14 @@
             visibility:visible !important;
             pointer-events:auto !important;
           }
+          body.tp-sidebar-open.tp-sidebar-collapsed .sidebar,
+          body.tp-sidebar-collapsed .sidebar.open {
+            width:88px !important;
+            max-width:88px !important;
+          }
+          body.tp-sidebar-collapsed .sidebar .nav-section-title { display:none !important; }
+          body.tp-sidebar-collapsed .sidebar .nav-item { justify-content:center; gap:0; padding-left:8px !important; padding-right:8px !important; }
+          body.tp-sidebar-collapsed .sidebar .nav-item span { opacity:0; width:0; overflow:hidden; pointer-events:none; }
           .sidebar a,
           .sidebar button,
           .sidebar .nav-item {
@@ -696,6 +730,7 @@
             pointer-events:auto;
             left:min(84vw, 280px);
           }
+          body.tp-sidebar-open.tp-sidebar-collapsed .tp-sidebar-overlay { left:88px !important; }
           body.tp-sidebar-open { overflow:hidden; }
           .main, .main-content, main.main-content {
             margin-left:0 !important;
@@ -746,6 +781,58 @@
       document.body.classList.add('tp-sidebar-open');
       sidebar.classList.add('open');
     };
+
+    const sidebarHeader = sidebar.querySelector('.sidebar-header');
+    let collapseBtn = document.getElementById('tpSidebarCollapseBtn');
+    if (!collapseBtn) {
+      collapseBtn = document.createElement('button');
+      collapseBtn.id = 'tpSidebarCollapseBtn';
+      collapseBtn.className = 'tp-sidebar-collapse-btn';
+      collapseBtn.type = 'button';
+      collapseBtn.setAttribute('aria-label', 'Recolher menu lateral');
+      collapseBtn.setAttribute('title', 'Recolher menu');
+      collapseBtn.innerHTML = '<i class="fas fa-angles-left" aria-hidden="true"></i>';
+      if (sidebarHeader) sidebarHeader.appendChild(collapseBtn);
+      else sidebar.insertBefore(collapseBtn, sidebar.firstChild);
+    } else if (!collapseBtn.parentElement || collapseBtn.parentElement !== sidebarHeader) {
+      if (sidebarHeader) sidebarHeader.appendChild(collapseBtn);
+    }
+
+    const applyCollapsedState = function (collapsed) {
+      const isCollapsed = !!collapsed;
+      document.body.classList.toggle('tp-sidebar-collapsed', isCollapsed);
+      if (isCollapsed) {
+        collapseBtn.setAttribute('aria-label', 'Expandir menu lateral');
+        collapseBtn.setAttribute('title', 'Expandir menu');
+        collapseBtn.innerHTML = '<i class="fas fa-angles-right" aria-hidden="true"></i>';
+      } else {
+        collapseBtn.setAttribute('aria-label', 'Recolher menu lateral');
+        collapseBtn.setAttribute('title', 'Recolher menu');
+        collapseBtn.innerHTML = '<i class="fas fa-angles-left" aria-hidden="true"></i>';
+      }
+      try {
+        localStorage.setItem(SIDEBAR_COLLAPSE_KEY, isCollapsed ? '1' : '0');
+      } catch (_) {}
+    };
+
+    let storedCollapsed = false;
+    try {
+      storedCollapsed = localStorage.getItem(SIDEBAR_COLLAPSE_KEY) === '1';
+    } catch (_) {
+      storedCollapsed = false;
+    }
+    applyCollapsedState(storedCollapsed);
+
+    collapseBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const nextCollapsed = !document.body.classList.contains('tp-sidebar-collapsed');
+      applyCollapsedState(nextCollapsed);
+      if (window.innerWidth <= 960 && !document.body.classList.contains('tp-sidebar-open')) {
+        openMenu();
+      }
+    });
+
     let lastTouchToggleTs = 0;
     const toggleMenu = function (event) {
       if (event && typeof event.preventDefault === 'function') event.preventDefault();

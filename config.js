@@ -74,4 +74,13 @@
   if (typeof window.AUTH_DISABLED !== 'boolean') {
     window.AUTH_DISABLED = false;
   }
+
+  // Notificações visuais globais (toasts)
+  if (!document.querySelector('script[data-tp-feedback="1"]')) {
+    const script = document.createElement('script');
+    script.src = 'ui-feedback.js';
+    script.defer = true;
+    script.setAttribute('data-tp-feedback', '1');
+    document.head.appendChild(script);
+  }
 })();

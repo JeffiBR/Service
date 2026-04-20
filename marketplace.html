@@ -135,12 +135,12 @@
       justify-content: flex-end;
       align-items: center;
       gap: 16px;
-      margin-bottom: 16px;
-      padding: 14px 16px;
-      border: 1px solid rgba(148,163,184,.18);
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(15,23,42,.46));
-      box-shadow: 0 15px 38px rgba(2,6,23,.45);
+      margin-bottom: 12px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
     }
     .topbar-actions {
       display: flex;
@@ -728,7 +728,7 @@
     }
     @media (max-width: 760px) {
       .main { margin-left: 0; padding: 14px; }
-      .topbar { padding: 12px 12px 12px 52px; }
+      .topbar { padding: 0 0 0 52px; }
       .topbar-btn { min-height: 38px; padding: 8px 10px; }
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .product { grid-template-rows: 120px auto; }
@@ -1002,8 +1002,14 @@
       }
 
       function setStatus(msg, kind) {
-        statusEl.textContent = msg || '';
+        const text = String(msg || '').trim();
+        statusEl.textContent = text;
         statusEl.className = 'status-box' + (kind ? ' ' + kind : '');
+        if (!text) {
+          statusEl.style.display = 'none';
+          return;
+        }
+        statusEl.style.display = 'flex';
       }
 
       function formatMoney(v) {
