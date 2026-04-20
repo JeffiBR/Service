@@ -143,57 +143,6 @@
       gap: 8px;
       flex-wrap: wrap;
     }
-    .login-info-card {
-      margin-top: 12px;
-      border: 1px solid rgba(148,163,184,.28);
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(15,23,42,.62), rgba(12,18,34,.62));
-      padding: 10px 12px;
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .login-info-card.show { display: flex; }
-    .login-info-main {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
-    }
-    .login-info-label {
-      font-size: .7rem;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: #93c5fd;
-      font-weight: 800;
-    }
-    .login-info-user {
-      font-size: .92rem;
-      font-weight: 800;
-      color: #f8fafc;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    .login-info-email {
-      font-size: .8rem;
-      color: #cbd5e1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    .login-info-role {
-      font-size: .76rem;
-      font-weight: 800;
-      color: #fcd34d;
-      border: 1px solid rgba(251,191,36,.38);
-      background: rgba(251,191,36,.14);
-      border-radius: 999px;
-      padding: 5px 10px;
-      white-space: nowrap;
-    }
     .header-actions .btn {
       min-height: 40px;
       padding: 10px 14px;
@@ -857,10 +806,6 @@
       .form-grid { grid-template-columns: 1fr; }
       .operadoras-grid { grid-template-columns: 1fr; }
       .preview-grid { grid-template-columns: 1fr; }
-      .login-info-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
     }
     @media (max-width: 760px) {
       .sidebar { position: static; width: 100%; height: auto; }
@@ -925,14 +870,6 @@
               <a class="btn" href="marketplace.html"><i class="fas fa-store"></i> Ver produtos</a>
               <a class="btn" id="headerLoginBtn" href="login.html"><i class="fas fa-right-to-bracket"></i> Entrar</a>
             </div>
-          </div>
-          <div id="loginInfoCard" class="login-info-card" aria-live="polite">
-            <div class="login-info-main">
-              <span class="login-info-label">Conta conectada</span>
-              <span id="loginInfoUser" class="login-info-user">-</span>
-              <span id="loginInfoEmail" class="login-info-email">-</span>
-            </div>
-            <span id="loginInfoRole" class="login-info-role">-</span>
           </div>
         </div>
 
@@ -1130,10 +1067,6 @@
       const recargasSection = document.getElementById('recargasSection');
       const authNoticeEl = document.getElementById('authNotice');
       const headerLoginBtn = document.getElementById('headerLoginBtn');
-      const loginInfoCard = document.getElementById('loginInfoCard');
-      const loginInfoUser = document.getElementById('loginInfoUser');
-      const loginInfoEmail = document.getElementById('loginInfoEmail');
-      const loginInfoRole = document.getElementById('loginInfoRole');
       const numeroEl = document.getElementById('numero');
       const previewNumeroEl = document.getElementById('previewNumero');
       const previewOperadoraEl = document.getElementById('previewOperadora');
@@ -1456,7 +1389,6 @@
 
       function renderAuthState() {
         if (!isLoggedIn()) {
-          if (loginInfoCard) loginInfoCard.classList.remove('show');
           if (headerLoginBtn) {
             headerLoginBtn.href = buildLoginTarget();
             headerLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar';
@@ -1471,13 +1403,6 @@
           if (recargasSection) recargasSection.style.display = 'none';
           btnRefresh.disabled = true;
           return;
-        }
-        const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
-        if (loginInfoCard) {
-          loginInfoCard.classList.add('show');
-          if (loginInfoUser) loginInfoUser.textContent = profile && profile.name ? profile.name : 'Usuário';
-          if (loginInfoEmail) loginInfoEmail.textContent = profile && profile.email ? profile.email : 'Sem e-mail cadastrado';
-          if (loginInfoRole) loginInfoRole.textContent = profile && profile.group ? `Nível: ${profile.group}` : 'Nível: usuário';
         }
         if (headerLoginBtn) {
           headerLoginBtn.href = 'perfil-usuario.html';

@@ -894,7 +894,7 @@
     const style = document.createElement('style');
     style.id = 'tpUserMenuStyle';
     style.textContent = `
-      .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: "Plus Jakarta Sans", Inter, sans-serif; }
+      .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif; }
       .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: linear-gradient(180deg, rgba(18,21,32,.94), rgba(11,13,21,.94)); color:#fafafa; border-radius:14px; padding:8px 10px; min-width:220px; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
       .tp-user-menu-btn:hover { transform: translateY(-1px); border-color: rgba(251,191,36,.45); box-shadow: 0 14px 26px rgba(0,0,0,.4), 0 0 0 1px rgba(251,191,36,.2); }
       .tp-user-menu.open .tp-user-menu-btn { border-color: rgba(251,191,36,.45); box-shadow: 0 14px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(251,191,36,.22); }
