@@ -1,6 +1,6 @@
 ﻿(function () {
   const SESSION_KEY = 'tp_auth_session';
-  const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html']);
+  const PUBLIC_PAGE_FILES = new Set(['marketplace.html', 'recarga-celular.html', 'reset-password.html']);
   let heartbeatTimer = null;
   let redirectingToLogin = false;
 
@@ -115,7 +115,10 @@
 
   function isLoginPage() {
     const path = window.location.pathname || '';
-    return path.endsWith('/login.html') || path.endsWith('login.html');
+    return path.endsWith('/login.html')
+      || path.endsWith('login.html')
+      || path.endsWith('/reset-password.html')
+      || path.endsWith('reset-password.html');
   }
 
   function getCurrentPageFile() {
@@ -227,7 +230,7 @@
 
     const session = getStoredSession();
     if (!isLoggedIn()) {
-      window.location.replace(buildLoginTarget());
+      window.location.replace('marketplace.html');
       return;
     }
 
@@ -378,10 +381,11 @@
   async function requestPasswordReset(identifier) {
     const base = getAuthBase();
     if (!base) throw new Error('AUTH_API_BASE não configurada.');
+    const email = String(identifier || '').trim();
     const response = await fetchWithWake(base + '/auth/password/forgot', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier: String(identifier || '').trim() })
+      body: JSON.stringify({ email, identifier: email })
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || !payload || !payload.success) {
