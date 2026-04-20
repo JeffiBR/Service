@@ -132,7 +132,7 @@
     .container { max-width: 1440px; margin: 0 auto; }
     .topbar {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       gap: 16px;
       margin-bottom: 16px;
@@ -141,22 +141,6 @@
       border-radius: 16px;
       background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(15,23,42,.46));
       box-shadow: 0 15px 38px rgba(2,6,23,.45);
-    }
-    .topbar-left {
-      display: grid;
-      gap: 2px;
-    }
-    .topbar-kicker {
-      font-size: .7rem;
-      letter-spacing: .11em;
-      text-transform: uppercase;
-      color: #7dd3fc;
-      font-weight: 800;
-    }
-    .topbar-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: .01em;
     }
     .topbar-actions {
       display: flex;
@@ -229,7 +213,7 @@
       font-size: 15px;
       background: #1a1a1a;
       color: #ffffff;
-      border: 1px solid rgba(34,197,94,.32);
+      border: 1px solid rgba(251,191,36,.42);
       border-radius: 10px;
       cursor: pointer;
       display: inline-flex;
@@ -241,7 +225,7 @@
     .pay-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 28px rgba(0, 0, 0, .38);
-      border-color: rgba(34,197,94,.55);
+      border-color: rgba(245,158,11,.62);
     }
     .pay-btn .icon-container {
       position: relative;
@@ -255,7 +239,7 @@
       left: 0;
       width: 24px;
       height: 24px;
-      color: #22c55e;
+      color: #fbbf24;
       opacity: 0;
       visibility: hidden;
     }
@@ -745,7 +729,6 @@
     @media (max-width: 760px) {
       .main { margin-left: 0; padding: 14px; }
       .topbar { padding: 12px 12px 12px 52px; }
-      .topbar-title { font-size: .92rem; }
       .topbar-btn { min-height: 38px; padding: 8px 10px; }
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .product { grid-template-rows: 120px auto; }
@@ -790,10 +773,6 @@
     <main class="main">
       <div class="container">
         <div class="topbar">
-          <div class="topbar-left">
-            <div class="topbar-kicker">Loja Oficial</div>
-            <div class="topbar-title">Compre com segurança e pague via PIX</div>
-          </div>
           <div class="topbar-actions">
             <a id="topLoginBtn" class="btn topbar-btn" href="login.html"><i class="fas fa-right-to-bracket"></i> Entrar</a>
             <button id="topCartBtn" class="btn topbar-btn cart" type="button">
@@ -1246,11 +1225,8 @@
           btnCheckout.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar para concluir';
           if (ordersSection) ordersSection.style.display = 'none';
           if (authNoticeEl) {
-            authNoticeEl.style.display = 'grid';
-            authNoticeEl.innerHTML = `
-              <div>Vitrine pública liberada. Para comprar e ver pedidos, entre na sua conta.</div>
-              <a class="btn" href="${buildLoginTarget()}"><i class="fas fa-right-to-bracket"></i> Entrar para comprar</a>
-            `;
+            authNoticeEl.style.display = 'none';
+            authNoticeEl.innerHTML = '';
           }
           return;
         }
@@ -1553,7 +1529,7 @@
           await loadProducts();
           await loadOrders();
           if (isLoggedIn()) setStatus('Marketplace pronto para compras.', 'ok');
-          else setStatus('Vitrine pública carregada. Faça login para comprar.', 'ok');
+          else setStatus('');
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao carregar marketplace.', 'error');
         }

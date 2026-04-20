@@ -382,35 +382,59 @@
     const base = getAuthBase();
     if (!base) throw new Error('AUTH_API_BASE não configurada.');
     const email = String(identifier || '').trim();
-    const response = await fetchWithWake(base + '/auth/password/forgot', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, identifier: email })
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok || !payload || !payload.success) {
-      throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Falha ao solicitar recuperação de senha.'));
+    const paths = ['/auth/password/forgot', '/api/auth/password/forgot', '/password/forgot', '/api/password/forgot'];
+    let lastPayload = null;
+    let lastStatus = 0;
+    for (const path of paths) {
+      const response = await fetchWithWake(base + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, identifier: email })
+      });
+      const payload = await response.json().catch(() => ({}));
+      lastPayload = payload;
+      lastStatus = Number(response.status || 0);
+      if (response.ok && payload && payload.success) {
+        return payload.data || {};
+      }
+      if (lastStatus !== 404) break;
     }
-    return payload.data || {};
+    throw new Error(lastPayload && lastPayload.detail
+      ? lastPayload.detail
+      : (lastPayload && lastPayload.error
+        ? lastPayload.error
+        : 'Falha ao solicitar recuperação de senha.'));
   }
 
   async function resetPasswordWithCode(identifier, code, newPassword) {
     const base = getAuthBase();
     if (!base) throw new Error('AUTH_API_BASE não configurada.');
-    const response = await fetchWithWake(base + '/auth/password/reset', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        identifier: String(identifier || '').trim(),
-        code: String(code || '').trim(),
-        new_password: String(newPassword || '')
-      })
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok || !payload || !payload.success) {
-      throw new Error(payload && payload.detail ? payload.detail : (payload && payload.error ? payload.error : 'Falha ao redefinir senha.'));
+    const paths = ['/auth/password/reset', '/api/auth/password/reset', '/password/reset', '/api/password/reset'];
+    let lastPayload = null;
+    let lastStatus = 0;
+    for (const path of paths) {
+      const response = await fetchWithWake(base + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identifier: String(identifier || '').trim(),
+          code: String(code || '').trim(),
+          new_password: String(newPassword || '')
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      lastPayload = payload;
+      lastStatus = Number(response.status || 0);
+      if (response.ok && payload && payload.success) {
+        return payload.data || {};
+      }
+      if (lastStatus !== 404) break;
     }
-    return payload.data || {};
+    throw new Error(lastPayload && lastPayload.detail
+      ? lastPayload.detail
+      : (lastPayload && lastPayload.error
+        ? lastPayload.error
+        : 'Falha ao redefinir senha.'));
   }
 
   async function refreshCurrentUser() {
