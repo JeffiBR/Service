@@ -353,6 +353,36 @@
       align-items: center;
       background: rgba(255,255,255,.03);
     }
+    .cart-item-main {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+    .cart-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,.24);
+      background: #0f172a;
+      object-fit: cover;
+      box-shadow: 0 6px 14px rgba(0,0,0,.28);
+    }
+    .cart-thumb-placeholder {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,.24);
+      background: linear-gradient(180deg, rgba(30,41,59,.6), rgba(15,23,42,.52));
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.28);
+    }
+    .cart-item-info { min-width: 0; }
     .cart-name { margin: 0; font-weight: 700; font-size: .9rem; }
     .cart-price { color: #fde68a; font-size: .82rem; margin-top: 2px; }
     .qty-row { display: inline-flex; align-items: center; gap: 6px; }
@@ -439,6 +469,12 @@
     .auth-notice .btn {
       width: fit-content;
       padding: 8px 10px;
+    }
+    #btnCheckout.login-required {
+      border-color: rgba(148,163,184,.35);
+      background: linear-gradient(180deg, rgba(30,41,59,.65), rgba(15,23,42,.58));
+      color: #e5e7eb;
+      box-shadow: none;
     }
     .checkout-modal-overlay {
       position: fixed;
@@ -760,7 +796,6 @@
           </div>
           <div class="topbar-actions">
             <a id="topLoginBtn" class="btn topbar-btn" href="login.html"><i class="fas fa-right-to-bracket"></i> Entrar</a>
-            <a id="topAccountBtn" class="btn topbar-btn" href="perfil-usuario.html" style="display:none;"><i class="fas fa-user"></i> Minha conta</a>
             <button id="topCartBtn" class="btn topbar-btn cart" type="button">
               <i class="fas fa-cart-shopping"></i> Carrinho
               <span id="topCartCount" class="cart-badge">0</span>
@@ -957,7 +992,6 @@
       const pixCodeField = document.getElementById('pixCodeField');
       const pixCopyBtn = document.getElementById('pixCopyBtn');
       const topLoginBtn = document.getElementById('topLoginBtn');
-      const topAccountBtn = document.getElementById('topAccountBtn');
       const topCartBtn = document.getElementById('topCartBtn');
       const topCartCount = document.getElementById('topCartCount');
       const cartDrawer = document.getElementById('cartDrawer');
@@ -1079,11 +1113,18 @@
         cartListEl.innerHTML = cart.map((item) => {
           const p = getProductById(item.product_id);
           if (!p) return '';
+          const imageUrl = String(p.imagem_url || '').trim();
+          const thumbMarkup = imageUrl
+            ? `<img class="cart-thumb" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(p.nome || 'Produto')}">`
+            : '<div class="cart-thumb-placeholder"><i class="fas fa-box"></i></div>';
           return `
             <article class="cart-item">
-              <div>
-                <h4 class="cart-name">${escapeHtml(p.nome)}</h4>
-                <div class="cart-price">R$ ${formatMoney(Number(p.valor || 0) * Number(item.quantidade || 0))}</div>
+              <div class="cart-item-main">
+                ${thumbMarkup}
+                <div class="cart-item-info">
+                  <h4 class="cart-name">${escapeHtml(p.nome)}</h4>
+                  <div class="cart-price">R$ ${formatMoney(Number(p.valor || 0) * Number(item.quantidade || 0))}</div>
+                </div>
               </div>
               <div class="qty-row">
                 <button class="btn qty-btn" data-action="dec" data-id="${p.id}" type="button">-</button>
@@ -1197,14 +1238,13 @@
       }
 
       function renderAuthState() {
-        const profile = window.authGetSessionProfile ? window.authGetSessionProfile() : null;
         topLoginBtn.href = buildLoginTarget();
         if (!isLoggedIn()) {
-          topLoginBtn.style.display = 'inline-flex';
-          topAccountBtn.style.display = 'none';
           btnRefreshOrders.disabled = true;
           btnCheckout.disabled = false;
-          if (ordersSection) ordersSection.style.display = '';
+          btnCheckout.classList.add('login-required');
+          btnCheckout.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar para concluir';
+          if (ordersSection) ordersSection.style.display = 'none';
           if (authNoticeEl) {
             authNoticeEl.style.display = 'grid';
             authNoticeEl.innerHTML = `
@@ -1214,11 +1254,10 @@
           }
           return;
         }
-        topLoginBtn.style.display = 'none';
-        topAccountBtn.style.display = 'inline-flex';
-        topAccountBtn.textContent = '';
-        topAccountBtn.innerHTML = `<i class="fas fa-user"></i> ${escapeHtml((profile && profile.name) ? profile.name : 'Minha conta')}`;
         btnRefreshOrders.disabled = false;
+        btnCheckout.classList.remove('login-required');
+        btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Finalizar no PIX';
+        if (ordersSection) ordersSection.style.display = '';
         if (authNoticeEl) {
           authNoticeEl.style.display = 'none';
           authNoticeEl.innerHTML = '';

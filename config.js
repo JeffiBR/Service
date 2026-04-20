@@ -17,6 +17,20 @@
     }
   }
 
+  function normalizeAuthBase(raw) {
+    const value = String(raw || '').trim().replace(/\/+$/, '');
+    if (!value) return '';
+    try {
+      const url = new URL(value);
+      const path = (url.pathname || '').replace(/\/+$/, '');
+      // Evita duplicação de "/auth" no frontend (base + "/auth/login").
+      if (!path || path === '/' || path === '/auth') return url.origin;
+      return `${url.origin}${path}`;
+    } catch (_) {
+      return value.replace(/\/auth$/i, '');
+    }
+  }
+
   // Priority:
   // 1) window.__API_BASE__ (set manually before this file)
   // 2) localStorage.tp_api_base (optional local override)
@@ -37,7 +51,7 @@
   const ignoreLegacyAuthBase = normalizedRuntimeAuthBase === 'https://certoauth.onrender.com';
 
   if (normalizedRuntimeAuthBase && !ignoreLegacyAuthBase) {
-    window.AUTH_API_BASE = runtimeAuthBase.replace(/\/+$/, '');
+    window.AUTH_API_BASE = normalizeAuthBase(runtimeAuthBase);
   } else if (isLocalHost) {
     window.AUTH_API_BASE = 'http://localhost:8000';
   } else {

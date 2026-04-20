@@ -235,43 +235,47 @@
 
     .recover-panel {
       margin-top: 8px;
-      padding: 12px;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.03);
+      padding: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 14px;
+      background:
+        radial-gradient(120% 90% at 0% 0%, rgba(59,130,246,.08), transparent 52%),
+        rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
       display: none;
-      gap: 8px;
+      gap: 10px;
     }
-
     .recover-panel.active { display: grid; }
     .recover-panel-title {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
-      color: #e5e7eb;
+      color: #f8fafc;
     }
     .recover-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 8px;
     }
     .recover-btn {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      font-size: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 10px;
+      min-height: 46px;
+      padding: 11px 12px;
+      background: linear-gradient(180deg, rgba(30,41,59,.55), rgba(15,23,42,.42));
+      color: #f8fafc;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
+      transition: all .2s ease;
     }
-    .recover-code-preview {
-      font-size: 12px;
-      color: #86efac;
-      min-height: 16px;
-      word-break: break-word;
+    .recover-btn:hover {
+      border-color: rgba(251,191,36,.48);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(0,0,0,.26);
     }
+    .recover-btn:disabled { opacity: .72; cursor: not-allowed; transform: none; }
     .recover-hint {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       line-height: 1.4;
     }
@@ -411,28 +415,7 @@
         <div class="recover-actions">
           <button id="btnRequestResetCode" class="recover-btn" type="button">Enviar link</button>
         </div>
-        <div id="recoverCodePreview" class="recover-code-preview"></div>
         <div class="recover-hint">Enviaremos um link com código de redefinição para seu e-mail.</div>
-      </div>
-
-      <div id="resetByLinkPanel" class="recover-panel">
-        <div class="recover-panel-title">Definir nova senha</div>
-        <div class="field">
-          <label for="resetEmail">E-mail</label>
-          <input id="resetEmail" type="email" readonly>
-        </div>
-        <div class="field">
-          <label for="resetNewPassword">Nova senha</label>
-          <input id="resetNewPassword" type="password" placeholder="Nova senha (mínimo 6 caracteres)">
-        </div>
-        <div class="field">
-          <label for="resetConfirmPassword">Confirmar nova senha</label>
-          <input id="resetConfirmPassword" type="password" placeholder="Repita a nova senha">
-        </div>
-        <div class="recover-actions">
-          <button id="btnResetPasswordFromLink" class="recover-btn" type="button">Redefinir senha</button>
-        </div>
-        <div class="recover-hint">Token recebido por link de recuperação.</div>
       </div>
 
       <button id="btnLogin" class="submit" type="submit">Entrar</button>
@@ -540,11 +523,6 @@
       const signUpForm = document.getElementById('signUpForm');
       const recoverPanel = document.getElementById('recoverPanel');
       const recoverEmailInput = document.getElementById('recoverEmail');
-      const recoverCodePreview = document.getElementById('recoverCodePreview');
-      const resetByLinkPanel = document.getElementById('resetByLinkPanel');
-      const resetEmailInput = document.getElementById('resetEmail');
-      const resetNewPasswordInput = document.getElementById('resetNewPassword');
-      const resetConfirmPasswordInput = document.getElementById('resetConfirmPassword');
 
       function setStatus(message, isError, isOk) {
         statusEl.textContent = message || '';
@@ -582,16 +560,10 @@
           recoverEmailInput.value = identifierField.value.trim();
         }
         recoverPanel.classList.toggle('active');
-        recoverCodePreview.textContent = '';
       });
 
       const initialMode = params.get('mode') === 'signup' ? 'signup' : 'signin';
       setMode(initialMode);
-      if (recoverEmailFromUrl && recoverCodeFromUrl) {
-        if (resetByLinkPanel) resetByLinkPanel.classList.add('active');
-        if (resetEmailInput) resetEmailInput.value = recoverEmailFromUrl;
-        setStatus('Link de recuperação detectado. Defina sua nova senha.', false, true);
-      }
 
       if (window.authPrewarm) {
         setStatus('Conectando ao servidor...');
@@ -770,56 +742,17 @@
           setStatus('Informe o e-mail cadastrado para recuperação.', true, false);
           return;
         }
-        recoverCodePreview.textContent = '';
+        const button = document.getElementById('btnRequestResetCode');
+        button.disabled = true;
         setStatus('Enviando link de recuperação...');
         try {
           if (!window.authRequestPasswordReset) throw new Error('Função de recuperação não disponível.');
           const data = await window.authRequestPasswordReset(email);
-          recoverCodePreview.textContent = data && data.reset_code
-            ? `Código de teste: ${data.reset_code}`
-            : 'Link enviado. Verifique sua caixa de entrada.';
           setStatus(data && data.message ? data.message : 'Se o e-mail existir, o link foi enviado.', false, true);
         } catch (err) {
           setStatus(err && err.message ? err.message : 'Falha ao solicitar recuperação.', true, false);
-        }
-      });
-
-      document.getElementById('btnResetPasswordFromLink').addEventListener('click', async function () {
-        const email = (resetEmailInput && resetEmailInput.value ? resetEmailInput.value : recoverEmailFromUrl).trim();
-        const code = recoverCodeFromUrl;
-        const newPassword = resetNewPasswordInput.value;
-        const confirmPassword = resetConfirmPasswordInput.value;
-        if (!email || !code || !newPassword || !confirmPassword) {
-          setStatus('Preencha os campos para redefinir a senha.', true, false);
-          return;
-        }
-        if (newPassword.length < 6) {
-          setStatus('A nova senha deve ter no mínimo 6 caracteres.', true, false);
-          return;
-        }
-        if (newPassword !== confirmPassword) {
-          setStatus('A confirmação da senha não confere.', true, false);
-          return;
-        }
-        setStatus('Redefinindo senha...');
-        try {
-          if (!window.authResetPasswordWithCode) throw new Error('Função de redefinição não disponível.');
-          const data = await window.authResetPasswordWithCode(email, code, newPassword);
-          setStatus(data && data.message ? data.message : 'Senha redefinida com sucesso.', false, true);
-          document.getElementById('identifier').value = email;
-          document.getElementById('password').value = '';
-          resetNewPasswordInput.value = '';
-          resetConfirmPasswordInput.value = '';
-          recoverCodePreview.textContent = '';
-          if (resetByLinkPanel) resetByLinkPanel.classList.remove('active');
-          if (window.history && window.history.replaceState) {
-            const cleanParams = new URLSearchParams(window.location.search || '');
-            ['recover', 'recover_email', 'recover_code', 'email', 'code'].forEach((k) => cleanParams.delete(k));
-            const qs = cleanParams.toString();
-            window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
-          }
-        } catch (err) {
-          setStatus(err && err.message ? err.message : 'Falha ao redefinir senha.', true, false);
+        } finally {
+          button.disabled = false;
         }
       });
 
