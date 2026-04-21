@@ -770,10 +770,27 @@
       white-space: nowrap;
     }
     .topbar-btn.cart {
-      position: relative;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1300;
+      min-height: 52px;
+      padding: 12px 16px;
+      border-radius: 999px;
       border-color: rgba(56,189,248,.33);
       background: linear-gradient(180deg, rgba(14,165,233,.15), rgba(14,165,233,.06));
       color: #dbeafe;
+      box-shadow: 0 14px 28px rgba(2,6,23,.5), 0 0 0 1px rgba(125,211,252,.2) inset;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .topbar-btn.cart:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125,211,252,.6);
+      box-shadow: 0 18px 34px rgba(2,6,23,.58), 0 0 0 1px rgba(125,211,252,.32) inset;
+      background: linear-gradient(180deg, rgba(14,165,233,.25), rgba(14,165,233,.12));
+    }
+    .topbar-btn.cart:active {
+      transform: translateY(0);
     }
     .cart-badge {
       min-width: 22px;
@@ -1107,6 +1124,12 @@
       .main { margin-left: 0; padding: 14px; }
       .topbar { padding: 0 0 0 52px; }
       .topbar-btn { min-height: 38px; padding: 8px 10px; }
+      .topbar-btn.cart {
+        right: 12px;
+        bottom: 12px;
+        min-height: 46px;
+        padding: 10px 13px;
+      }
       .products { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .product { grid-template-rows: 120px auto; }
       .pix-modal { max-width: 100%; border-radius: 16px; }
@@ -1696,6 +1719,8 @@
       function renderAuthState() {
         topLoginBtn.href = buildLoginTarget();
         if (!isLoggedIn()) {
+          topLoginBtn.style.display = '';
+          topLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar';
           btnRefreshOrders.disabled = true;
           btnCheckout.disabled = false;
           btnCheckout.classList.add('login-required');
@@ -1707,6 +1732,7 @@
           }
           return;
         }
+        topLoginBtn.style.display = 'none';
         btnRefreshOrders.disabled = false;
         btnCheckout.classList.remove('login-required');
         btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Finalizar no PIX';
