@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -457,6 +457,9 @@
       .main { padding: 20px; }
     }
   </style>
+  <link rel="stylesheet" href="theme-unified.css">
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
 </head>
 <body>
 
@@ -580,8 +583,15 @@
 
   <script>
     (function() {
-      const API = 'https://api.manus.im/v1'; // Exemplo de API
-      const PIX_API = 'https://api.manus.im/v1/pix';
+      const API = (window.API_BASE || (window.location.origin + '/api'));
+      const PRODUCTS_ENDPOINT = API + '/marketplace/products';
+      const ORDERS_ENDPOINT = API + '/marketplace/orders';
+      const fallbackProducts = [
+        { id: 1, nome: "Curso de Marketing Digital", categoria: "Cursos", valor: 297.00, descricao: "Aprenda as melhores estratégias.", imagem_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" },
+        { id: 2, nome: "E-book: Gestão Financeira", categoria: "E-books", valor: 47.90, descricao: "Domine suas finanças.", imagem_url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500&q=80" },
+        { id: 3, nome: "Template Dashboard Pro", categoria: "Templates", valor: 129.00, descricao: "Dashboard moderno em React.", imagem_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" },
+        { id: 4, nome: "Mentoria VIP Individual", categoria: "Serviços", valor: 997.00, descricao: "Acelere seus resultados.", imagem_url: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80" }
+      ];
       
       let products = [];
       let cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -600,27 +610,59 @@
       const btnCheckout = document.getElementById('btnCheckout');
 
       // Funções de UI
-      function formatMoney(v) { return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); }
+      function formatMoney(v) { return Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function notify(msg, type) {
+        if (window.tpFeedback && typeof window.tpFeedback.show === 'function') {
+          window.tpFeedback.show(type || 'info', msg, { onlyLogged: false, durationMs: 3200 });
+          return;
+        }
+        if (type === 'error') console.error(msg);
+      }
+
+      async function apiGet(url) {
+        const res = await fetch(url, { cache: 'no-store' });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok || payload.success === false) {
+          throw new Error((payload && payload.error) || ('Erro HTTP ' + res.status));
+        }
+        return payload;
+      }
+
+      async function apiPost(url, body) {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body || {})
+        });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok || payload.success === false) {
+          throw new Error((payload && payload.error) || ('Erro HTTP ' + res.status));
+        }
+        return payload;
+      }
 
       function renderProducts() {
         const term = searchEl.value.toLowerCase();
         const cat = categoryFilterEl.value;
         
         const filtered = products.filter(p => {
-          const matchTerm = p.nome.toLowerCase().includes(term) || p.descricao.toLowerCase().includes(term);
-          const matchCat = !cat || p.categoria === cat;
+          const nome = String(p && p.nome ? p.nome : '').toLowerCase();
+          const descricao = String(p && p.descricao ? p.descricao : '').toLowerCase();
+          const categoria = String(p && p.categoria ? p.categoria : '');
+          const matchTerm = nome.includes(term) || descricao.includes(term);
+          const matchCat = !cat || categoria === cat;
           return matchTerm && matchCat;
         });
 
         productsEl.innerHTML = filtered.map(p => `
           <article class="product-card">
             <div class="product-image">
-              <img src="${p.imagem_url || 'https://via.placeholder.com/300'}" alt="${p.nome}">
+              <img src="${p.imagem_url || 'https://via.placeholder.com/300'}" alt="${p.nome || 'Produto'}">
               <span class="product-badge">Digital</span>
             </div>
             <div class="product-info">
-              <div class="product-category">${p.categoria}</div>
-              <h3 class="product-name">${p.nome}</h3>
+              <div class="product-category">${p.categoria || 'Categoria'}</div>
+              <h3 class="product-name">${p.nome || 'Produto sem nome'}</h3>
               <div class="product-price">R$ ${formatMoney(p.valor)}</div>
               <div class="product-actions">
                 <button class="btn btn-primary" onclick="addToCart(${p.id})">
@@ -646,7 +688,7 @@
           if (!p) return '';
           return `
             <div class="cart-item">
-              <img src="${p.imagem_url}" class="cart-item-img">
+              <img src="${p.imagem_url || 'https://via.placeholder.com/120'}" class="cart-item-img">
               <div class="cart-item-info">
                 <h4>${p.nome}</h4>
                 <p>${item.quantidade}x R$ ${formatMoney(p.valor)}</p>
@@ -687,29 +729,64 @@
       searchEl.oninput = renderProducts;
       categoryFilterEl.onchange = renderProducts;
 
-      // Simulação de Carga de Dados (Substituir por fetch real)
+      async function checkout() {
+        if (!cart.length) {
+          notify('Adicione ao menos um item no carrinho.', 'warning');
+          return;
+        }
+        if (typeof window.authIsLoggedIn === 'function' && !window.authIsLoggedIn()) {
+          notify('Faça login para finalizar a compra.', 'warning');
+          const next = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+          window.location.href = 'login.html?next=' + next;
+          return;
+        }
+
+        btnCheckout.disabled = true;
+        try {
+          const items = cart.map(function (item) {
+            return { product_id: item.product_id, quantidade: Math.max(1, Number(item.quantidade || 1)) };
+          });
+          await apiPost(ORDERS_ENDPOINT, { items, comentario_cliente: '' });
+          cart = [];
+          localStorage.setItem('cart', JSON.stringify(cart));
+          renderCart();
+          cartDrawer.classList.remove('open');
+          notify('Pedido criado com sucesso! Acompanhe no histórico de compras.', 'success');
+        } catch (err) {
+          notify(err && err.message ? err.message : 'Falha ao criar pedido.', 'error');
+        } finally {
+          btnCheckout.disabled = false;
+        }
+      }
+
       async function init() {
-        document.getElementById('productsLoader').style.display = 'block';
-        // Simulando delay de rede
-        await new Promise(r => setTimeout(r, 800));
-        
-        products = [
-          { id: 1, nome: "Curso de Marketing Digital", categoria: "Cursos", valor: 297.00, descricao: "Aprenda as melhores estratégias.", imagem_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=80" },
-          { id: 2, nome: "E-book: Gestão Financeira", categoria: "E-books", valor: 47.90, descricao: "Domine suas finanças.", imagem_url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500&q=80" },
-          { id: 3, nome: "Template Dashboard Pro", categoria: "Templates", valor: 129.00, descricao: "Dashboard moderno em React.", imagem_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" },
-          { id: 4, nome: "Mentoria VIP Individual", categoria: "Serviços", valor: 997.00, descricao: "Acelere seus resultados.", imagem_url: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&q=80" }
-        ];
+        const loader = document.getElementById('productsLoader');
+        if (loader) loader.style.display = 'block';
+        try {
+          const response = await apiGet(PRODUCTS_ENDPOINT);
+          products = Array.isArray(response.data) ? response.data : [];
+          if (!products.length) {
+            products = fallbackProducts.slice();
+          }
+        } catch (err) {
+          console.warn('Falha ao carregar marketplace da API. Usando fallback local.', err);
+          products = fallbackProducts.slice();
+          notify('API indisponível no momento. Exibindo catálogo local.', 'warning');
+        }
 
         categories = [...new Set(products.map(p => p.categoria))];
         categoryFilterEl.innerHTML += categories.map(c => `<option value="${c}">${c}</option>`).join('');
         
-        document.getElementById('productsLoader').style.display = 'none';
+        if (loader) loader.style.display = 'none';
         renderProducts();
         renderCart();
       }
 
+      btnCheckout.onclick = checkout;
       init();
     })();
   </script>
 </body>
 </html>
+
+

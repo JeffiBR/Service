@@ -84,12 +84,13 @@
     document.head.appendChild(script);
   }
 
-  // Tema visual global no padrão Marketplace para todas as páginas.
-  if (!document.querySelector('link[data-tp-theme="marketplace"]')) {
+  // Garantia de tema global unificado caso alguma página esqueça de linkar.
+  const hasUnifiedTheme = !!document.querySelector('link[href*="theme-unified.css"]');
+  if (!hasUnifiedTheme) {
     const themeLink = document.createElement('link');
     themeLink.rel = 'stylesheet';
-    themeLink.href = 'theme-marketplace.css';
-    themeLink.setAttribute('data-tp-theme', 'marketplace');
+    themeLink.href = 'theme-unified.css';
+    themeLink.setAttribute('data-tp-theme', 'unified');
     document.head.appendChild(themeLink);
   }
 })();

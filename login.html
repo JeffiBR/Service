@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -112,40 +112,6 @@
     .brand-header {
       text-align: center;
       margin-bottom: 32px;
-    }
-
-    /* Ícone Principal Melhorado */
-    .brand-logo {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 100%);
-      border-radius: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
-      border: 1px solid rgba(16, 185, 129, 0.1);
-      position: relative;
-      transition: transform 0.3s ease;
-    }
-
-    .brand-logo:hover {
-      transform: translateY(-5px) rotate(2deg);
-    }
-
-    .brand-logo svg {
-      width: 44px;
-      height: 44px;
-    }
-
-    .layer-top { fill: var(--primary); animation: layer-float 3s infinite ease-in-out; }
-    .layer-mid { fill: var(--primary-dark); opacity: 0.7; animation: layer-float 3s infinite ease-in-out 0.5s; }
-    .layer-bot { fill: var(--primary-dark); opacity: 0.4; animation: layer-float 3s infinite ease-in-out 1s; }
-
-    @keyframes layer-float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
     }
 
     .brand-header h2 {
@@ -463,6 +429,9 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="theme-unified.css">
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
 </head>
 <body>
 
@@ -479,14 +448,6 @@
   <div class="container">
     <div class="form-content">
       <div class="brand-header">
-        <div class="brand-logo">
-          <!-- Ícone de Camadas (Layers) Redesenhado -->
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path class="layer-bot" d="M12 21.5L2 16.5L12 11.5L22 16.5L12 21.5Z"/>
-            <path class="layer-mid" d="M12 16.5L2 11.5L12 6.5L22 11.5L12 16.5Z"/>
-            <path class="layer-top" d="M12 11.5L2 6.5L12 1.5L22 6.5L12 11.5Z"/>
-          </svg>
-        </div>
         <h2 id="formTitle">Preço Certo</h2>
         <p id="formSubtitle">Acesse sua conta para continuar.</p>
       </div>
@@ -645,7 +606,7 @@
       }
 
       const params = new URLSearchParams(window.location.search || '');
-      const next = 'marketplace.html';
+      const next = params.get('next') || 'marketplace.html';
       
       const statusEl = document.getElementById('status');
       const signInForm = document.getElementById('signInForm');
@@ -655,8 +616,21 @@
       const formSubtitle = document.getElementById('formSubtitle');
 
       function setStatus(message, isError, isOk) {
-        statusEl.textContent = message || '';
-        statusEl.className = 'status' + (isError ? ' error' : '') + (isOk ? ' ok' : '');
+        const text = String(message || '');
+        statusEl.textContent = text;
+        if (!text) {
+          statusEl.className = 'status';
+          return;
+        }
+        if (isError) {
+          statusEl.className = 'status error';
+          return;
+        }
+        if (isOk) {
+          statusEl.className = 'status ok';
+          return;
+        }
+        statusEl.className = 'status ok flow';
       }
 
       function setFlowStatus(message, done) {
@@ -837,3 +811,5 @@
   </script>
 </body>
 </html>
+
+

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuários Online (Dev) - Preço Certo</title>
+  <title>UsuÃ¡rios Online (Dev) - PreÃ§o Certo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -58,6 +58,7 @@
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
+  <link rel="stylesheet" href="theme-unified.css">
 </head>
 <body>
   <div class="app">
@@ -66,8 +67,8 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">Preço Certo</div>
-            <div class="brand-tag">PREÇO CERTO</div>
+            <div class="brand-name">PreÃ§o Certo</div>
+            <div class="brand-tag">PREÃ‡O CERTO</div>
           </div>
         </div>
       </div>
@@ -83,11 +84,11 @@
     <main class="main">
       <div class="container">
         <div class="header">
-          <h1 class="title">Usuários Online (Dev)</h1>
-          <div class="subtitle">Veja quem está com sessão ativa em tempo real.</div>
+          <h1 class="title">UsuÃ¡rios Online (Dev)</h1>
+          <div class="subtitle">Veja quem estÃ¡ com sessÃ£o ativa em tempo real.</div>
         </div>
 
-        <div id="status" class="status-box">Carregando usuários online...</div>
+        <div id="status" class="status-box">Carregando usuÃ¡rios online...</div>
 
         <section class="stats">
           <article class="stat-card">
@@ -95,7 +96,7 @@
             <div id="statOnline" class="stat-value">0</div>
           </article>
           <article class="stat-card">
-            <div class="stat-label">Última atualização</div>
+            <div class="stat-label">Ãšltima atualizaÃ§Ã£o</div>
             <div id="statUpdated" class="stat-value" style="font-size:1rem;">-</div>
           </article>
           <article class="stat-card">
@@ -106,7 +107,7 @@
 
         <section class="card">
           <div class="card-head">
-            <h2 class="card-title">Sessões ativas</h2>
+            <h2 class="card-title">SessÃµes ativas</h2>
             <button class="btn" id="btnRefresh" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
           </div>
           <div class="card-body">
@@ -122,8 +123,8 @@
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Telefone</th>
-                    <th>Nível</th>
-                    <th>Último ping</th>
+                    <th>NÃ­vel</th>
+                    <th>Ãšltimo ping</th>
                   </tr>
                 </thead>
                 <tbody id="rows"></tbody>
@@ -173,7 +174,7 @@
         const r = await fetch(authBase + path);
         const p = await r.json().catch(() => ({}));
         if (!r.ok || !p || !p.success) {
-          throw new Error(p && p.error ? p.error : (p && p.detail ? p.detail : 'Erro na requisição'));
+          throw new Error(p && p.error ? p.error : (p && p.detail ? p.detail : 'Erro na requisiÃ§Ã£o'));
         }
         return p.data;
       }
@@ -195,7 +196,7 @@
         statUpdatedEl.textContent = formatDate(new Date().toISOString());
 
         if (!list.length) {
-          rowsEl.innerHTML = '<tr><td colspan="6" class="muted">Nenhum usuário online agora.</td></tr>';
+          rowsEl.innerHTML = '<tr><td colspan="6" class="muted">Nenhum usuÃ¡rio online agora.</td></tr>';
           return;
         }
 
@@ -220,9 +221,9 @@
       async function refresh() {
         try {
           await loadOnline();
-          setStatus('Usuários online atualizados.', 'ok');
+          setStatus('UsuÃ¡rios online atualizados.', 'ok');
         } catch (err) {
-          setStatus(err && err.message ? err.message : 'Falha ao carregar usuários online.', 'error');
+          setStatus(err && err.message ? err.message : 'Falha ao carregar usuÃ¡rios online.', 'error');
         }
       }
 
@@ -231,11 +232,11 @@
 
       (async function init() {
         if (!authBase) {
-          setStatus('AUTH_API_BASE não configurada.', 'error');
+          setStatus('AUTH_API_BASE nÃ£o configurada.', 'error');
           return;
         }
         try {
-          setStatus('Carregando usuários online...');
+          setStatus('Carregando usuÃ¡rios online...');
           await refresh();
           timer = setInterval(refresh, 10000);
         } catch (_) {
@@ -250,3 +251,5 @@
   </script>
 </body>
 </html>
+
+

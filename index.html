@@ -906,8 +906,410 @@
       }
     }
   </style>
+  <style>
+    :root {
+      --black-900: #050913;
+      --black-800: #0b1220;
+      --black-700: #111b2d;
+      --black-600: #172337;
+      --black-500: #22314b;
+      --black-400: #314361;
+      --black-300: #4a5e80;
+      --white: #f4f8ff;
+      --white-800: #d6e2f3;
+      --white-600: #8fa3bf;
+      --accent-gold: #59c3ff;
+      --accent-gold-light: #86d7ff;
+      --accent-gold-dark: #2b8cff;
+      --accent-blue: #4f94ff;
+      --accent-cyan: #45d2ff;
+      --gradient-gold: linear-gradient(135deg, #7be0ff 0%, #3f8fff 100%);
+      --gradient-dark: linear-gradient(160deg, #071120 0%, #02060f 100%);
+      --glow-gold: 0 10px 35px rgba(63, 143, 255, 0.35);
+      --transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      background: radial-gradient(1100px 700px at -5% -10%, rgba(79, 148, 255, 0.18) 0%, transparent 55%),
+                  radial-gradient(1200px 800px at 120% 110%, rgba(69, 210, 255, 0.12) 0%, transparent 60%),
+                  var(--black-900);
+      color: var(--white);
+    }
+
+    body::before {
+      background: radial-gradient(60rem 40rem at 25% 20%, rgba(89, 195, 255, 0.12) 0%, transparent 55%),
+                  radial-gradient(55rem 38rem at 82% 78%, rgba(79, 148, 255, 0.1) 0%, transparent 60%);
+      animation: driftAura 16s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 64px 64px;
+      opacity: 0.6;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(11, 18, 32, 0.94) 0%, rgba(9, 15, 27, 0.9) 100%);
+      border-right: 1px solid rgba(143, 163, 191, 0.2);
+      box-shadow: 16px 0 48px rgba(2, 6, 15, 0.6);
+    }
+
+    .sidebar-header,
+    .sidebar-footer {
+      border-color: rgba(143, 163, 191, 0.16);
+    }
+
+    .nav-item {
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      transform: translateX(4px);
+      background: rgba(89, 195, 255, 0.1);
+      border-color: rgba(89, 195, 255, 0.24);
+      color: #ffffff;
+    }
+
+    .nav-item.active {
+      color: #021225;
+      background: var(--gradient-gold);
+      box-shadow: var(--glow-gold);
+    }
+
+    .main-header {
+      background: linear-gradient(108deg, rgba(10, 20, 38, 0.88) 0%, rgba(7, 17, 33, 0.84) 100%);
+      border-bottom: 1px solid rgba(143, 163, 191, 0.22);
+      box-shadow: 0 10px 28px rgba(3, 8, 19, 0.35);
+    }
+
+    .page-title span {
+      background: linear-gradient(135deg, #8de4ff 0%, #4f94ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .main-content {
+      padding: clamp(18px, 3vw, 34px);
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-gold {
+      background: var(--gradient-gold);
+      color: #021225;
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-gold);
+    }
+
+    .btn-dark {
+      background: rgba(10, 23, 39, 0.5);
+      border-color: rgba(143, 163, 191, 0.24);
+    }
+
+    .btn-dark:hover {
+      background: rgba(18, 38, 62, 0.58);
+      border-color: rgba(89, 195, 255, 0.36);
+    }
+
+    .search-input,
+    .filter-select,
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: rgba(10, 23, 39, 0.45);
+      border-color: rgba(143, 163, 191, 0.2);
+    }
+
+    .search-input:focus,
+    .filter-select:focus,
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(89, 195, 255, 0.18);
+    }
+
+    .stat-card,
+    .card,
+    .modal {
+      background: linear-gradient(160deg, rgba(18, 30, 49, 0.58) 0%, rgba(13, 24, 41, 0.52) 100%);
+      border: 1px solid rgba(143, 163, 191, 0.2);
+      box-shadow: 0 16px 34px rgba(3, 8, 20, 0.3);
+      backdrop-filter: blur(10px);
+      animation: riseIn 0.5s both;
+    }
+
+    .stat-card:hover,
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(89, 195, 255, 0.34);
+      box-shadow: 0 24px 40px rgba(7, 17, 33, 0.46);
+    }
+
+    .stat-card::before {
+      height: 4px;
+      opacity: 0.95;
+    }
+
+    .stat-icon {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .card-header,
+    .modal-header,
+    .modal-footer {
+      border-color: rgba(143, 163, 191, 0.16);
+    }
+
+    .table thead th {
+      background: rgba(12, 24, 40, 0.82);
+      border-bottom-color: rgba(143, 163, 191, 0.18);
+    }
+
+    .table tbody tr:hover {
+      background: rgba(89, 195, 255, 0.08);
+    }
+
+    .toast {
+      background: rgba(8, 16, 29, 0.92);
+      border-color: rgba(143, 163, 191, 0.26);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.36);
+    }
+
+    .stats-grid .stat-card:nth-child(2) { animation-delay: 0.06s; }
+    .stats-grid .stat-card:nth-child(3) { animation-delay: 0.12s; }
+    .stats-grid .stat-card:nth-child(4) { animation-delay: 0.18s; }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes driftAura {
+      from {
+        transform: translate3d(0, -8px, 0) scale(1);
+      }
+      to {
+        transform: translate3d(0, 10px, 0) scale(1.04);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+    :root {
+      --accent-gold: #22d3a6;
+      --accent-gold-light: #5eead4;
+      --accent-gold-dark: #0f9f86;
+      --accent-blue: #38bdf8;
+      --gradient-gold: linear-gradient(135deg, #5eead4 0%, #22d3a6 55%, #14b8a6 100%);
+      --glow-gold: 0 16px 34px rgba(34, 211, 166, 0.28);
+      --radius: 14px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+    }
+
+    body {
+      font-family: "Sora", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(900px 520px at -10% -20%, rgba(56, 189, 248, 0.22) 0%, transparent 55%),
+        radial-gradient(780px 560px at 115% 120%, rgba(34, 211, 166, 0.18) 0%, transparent 60%),
+        #04070c;
+    }
+
+    body::before,
+    body::after {
+      opacity: 0.75;
+    }
+
+    .app {
+      padding: 16px 18px;
+      gap: 18px;
+    }
+
+    .sidebar {
+      left: 18px;
+      top: 16px;
+      height: calc(100vh - 32px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(175deg, rgba(8, 15, 26, 0.95), rgba(10, 23, 33, 0.9));
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    .brand-name {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #8ff7df, #37d8ae);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-tag {
+      font-family: "IBM Plex Mono", monospace;
+      letter-spacing: 0.18em;
+      font-size: 0.58rem;
+    }
+
+    .nav-section-title {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.6rem;
+      color: rgba(218, 233, 255, 0.52);
+    }
+
+    .nav-item {
+      margin-bottom: 8px;
+      border-radius: 999px;
+      padding: 12px 16px;
+    }
+
+    .nav-item:hover {
+      transform: translateX(8px);
+      background: rgba(34, 211, 166, 0.12);
+    }
+
+    .main {
+      margin-left: 282px;
+      padding: 0 0 18px;
+    }
+
+    .main-header {
+      top: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(115deg, rgba(9, 18, 30, 0.88), rgba(11, 26, 38, 0.8));
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
+      padding: 18px 24px;
+    }
+
+    .page-title {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .main-content {
+      padding: 24px 4px 8px;
+    }
+
+    .stat-card,
+    .card,
+    .modal {
+      border-radius: 22px;
+      background: linear-gradient(162deg, rgba(14, 31, 46, 0.78), rgba(8, 20, 32, 0.7));
+      border: 1px solid rgba(94, 234, 212, 0.15);
+      box-shadow: 0 18px 30px rgba(0, 0, 0, 0.27);
+    }
+
+    .stat-card::before {
+      height: 5px;
+      border-radius: 999px;
+      left: 14px;
+      right: 14px;
+      top: 10px;
+    }
+
+    .stat-icon {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(6px);
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .card-title,
+    .status-value,
+    .btn,
+    .tag,
+    .badge,
+    .table thead th {
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 11px 20px;
+    }
+
+    .btn-dark {
+      border-color: rgba(94, 234, 212, 0.24);
+    }
+
+    .search-input,
+    .filter-select,
+    .form-input,
+    .form-select,
+    .form-textarea {
+      border-radius: 999px;
+      border-color: rgba(94, 234, 212, 0.24);
+      background: rgba(9, 22, 36, 0.62);
+    }
+
+    .search-box .search-input {
+      padding-left: 46px;
+    }
+
+    .table tbody tr:hover {
+      transform: translateX(3px);
+    }
+
+    .toast {
+      border-radius: 999px;
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        padding: 0;
+      }
+
+      .sidebar {
+        left: 0;
+        top: 0;
+        height: 100vh;
+        border-radius: 0 20px 20px 0;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 0;
+      }
+
+      .main-header {
+        top: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
+  <link rel="stylesheet" href="theme-unified.css">
 </head>
 <body>
     <!-- Loading Screen -->
@@ -2121,6 +2523,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
