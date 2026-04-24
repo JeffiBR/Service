@@ -207,6 +207,8 @@ h1 {
   box-shadow: 20px 0 48px rgba(2, 6, 23, 0.42), inset -1px 0 0 rgba(255, 255, 255, 0.03) !important;
   overflow: hidden !important;
   isolation: isolate;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .sidebar::before {
@@ -238,6 +240,17 @@ h1 {
   padding: 22px 18px 18px !important;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16) !important;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.62), rgba(15, 23, 42, 0.2)) !important;
+  flex: 0 0 auto !important;
+  min-height: 106px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.sidebar-header .brand {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .sidebar-nav {
@@ -245,6 +258,8 @@ h1 {
   overflow-y: auto !important;
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+  flex: 1 1 auto !important;
+  margin-top: 6px !important;
 }
 
 .sidebar-nav::-webkit-scrollbar {
