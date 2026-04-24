@@ -1162,7 +1162,8 @@
   <script src="pix-recarga.js"></script>
   <link rel="stylesheet" href="theme-white-green.css">
   <link rel="stylesheet" href="login-theme.css">
-  <link rel="icon" type="image/png" href="onepay-icon.png">
+  <link rel="stylesheet" href="theme-marketplace.css">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/bjgRWvLg/logo-2.png">
 </head>
 <body>
   <div class="app">
@@ -1189,7 +1190,6 @@
       <div class="container">
         <div class="topbar">
           <div class="topbar-actions">
-            <a id="topLoginBtn" class="btn topbar-btn" href="login.html"><i class="fas fa-right-to-bracket"></i> Entrar</a>
             <button id="topCartBtn" class="btn topbar-btn cart" type="button">
               <i class="fas fa-cart-shopping"></i> Carrinho
               <span id="topCartCount" class="cart-badge">0</span>
@@ -1197,17 +1197,18 @@
           </div>
         </div>
         <div class="header">
+          <img class="marketplace-logo" src="https://i.ibb.co/2YK5Wq4k/logo.png" alt="Stream Pay">
           <h1 class="title">Marketplace</h1>
           <div class="subtitle">Escolha produtos, adicione no carrinho e finalize a compra via PIX.</div>
         </div>
         <div id="status" class="status-box">Carregando...</div>
 
         <div class="layout">
-          <section class="card">
+          <section id="productsPanel" class="card tab-panel" data-panel="produtos">
             <div class="card-head">
               <div class="catalog-tabs" role="tablist" aria-label="Catálogo">
-                <button class="catalog-tab active" type="button" role="tab" aria-selected="true"><i class="fas fa-store"></i> Produtos</button>
-                <a class="catalog-tab" href="recarga-celular.html" role="tab" aria-selected="false"><i class="fas fa-mobile-screen-button"></i> Recarga</a>
+                <button class="catalog-tab active" type="button" role="tab" aria-selected="true" data-tab="produtos"><i class="fas fa-store"></i> Produtos</button>
+                <button class="catalog-tab" type="button" role="tab" aria-selected="false" data-tab="recarga"><i class="fas fa-mobile-screen-button"></i> Recarga</button>
               </div>
               <button id="btnRefresh" class="btn" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
             </div>
@@ -1233,6 +1234,94 @@
                 </div>
               </div>
               <div id="products" class="products"></div>
+            </div>
+          </section>
+
+          <section id="rechargePanel" class="card tab-panel" data-panel="recarga" hidden>
+            <div class="card-head">
+              <div class="catalog-tabs" role="tablist" aria-label="Catálogo">
+                <button class="catalog-tab" type="button" role="tab" aria-selected="false" data-tab="produtos"><i class="fas fa-store"></i> Produtos</button>
+                <button class="catalog-tab active" type="button" role="tab" aria-selected="true" data-tab="recarga"><i class="fas fa-mobile-screen-button"></i> Recarga</button>
+              </div>
+              <button id="btnRefreshRecargas" class="btn" type="button"><i class="fas fa-rotate-right"></i> Atualizar</button>
+            </div>
+            <div class="card-body recharge-body">
+              <form id="recargaForm" class="recharge-form">
+                <input id="recargaOperadora" type="hidden">
+                <input id="recargaValor" type="hidden">
+
+                <div class="recharge-section full">
+                  <div class="step-label">1. Escolha a operadora</div>
+                  <div id="recargaOperadorasCards" class="operadoras-grid"></div>
+                </div>
+
+                <div class="recharge-section full">
+                  <div class="step-label">2. Escolha a recarga</div>
+                  <div id="recargaPlanosRapidos" class="planos-rapidos"></div>
+                </div>
+
+                <div class="field">
+                  <label for="recargaNumero">Número com DDD</label>
+                  <input id="recargaNumero" class="input-ddd" type="tel" placeholder="(82) 99999-9999" inputmode="tel" autocomplete="tel">
+                </div>
+
+                <div class="field">
+                  <label for="recargaResumoPreco">Resumo</label>
+                  <input id="recargaResumoPreco" type="text" value="Selecione operadora e crédito para ver o total." readonly>
+                </div>
+
+                <div class="field full">
+                  <label for="recargaComentario">Observação</label>
+                  <textarea id="recargaComentario" placeholder="Ex: recarga para uso imediato"></textarea>
+                </div>
+
+                <div class="recarga-preview full">
+                  <div class="preview-title"><i class="fas fa-receipt"></i> Prévia da recarga</div>
+                  <div class="preview-grid">
+                    <div class="preview-item">
+                      <span class="preview-label">Operadora</span>
+                      <strong id="recargaPreviewOperadora" class="preview-value">-</strong>
+                    </div>
+                    <div class="preview-item">
+                      <span class="preview-label">Crédito</span>
+                      <strong id="recargaPreviewCredito" class="preview-value">R$ 0,00</strong>
+                    </div>
+                    <div class="preview-item">
+                      <span class="preview-label">Você paga</span>
+                      <strong id="recargaPreviewValorPago" class="preview-value">R$ 0,00</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="actions full">
+                  <button class="btn btn-primary" id="btnSolicitarRecarga" type="submit"><i class="fas fa-paper-plane"></i> Solicitar recarga</button>
+                </div>
+              </form>
+
+              <section id="recargasSection" class="recargas-section">
+                <div class="table-head">
+                  <h2 class="card-title">Minhas recargas</h2>
+                  <span id="recargasCount" class="muted">0 solicitação(ões)</span>
+                </div>
+                <div class="orders-wrap">
+                  <table class="orders-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Operadora</th>
+                        <th>Número</th>
+                        <th>Crédito</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recargasRows">
+                      <tr><td colspan="7" style="color:var(--muted);">Carregando...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
             </div>
           </section>
         </div>
@@ -1366,6 +1455,8 @@
   <script>
     (function () {
       const API = String(window.API_BASE || '').replace(/\/+$/, '') + '/marketplace';
+      const RECARGA_API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular';
+      const RECARGA_CONFIG_API = RECARGA_API + '/config';
       const PIX_API = String(window.API_BASE || '').replace(/\/+$/, '') + '/recargas-celular/pix-config';
       const CART_KEY = 'tp_marketplace_cart';
       const FAVORITES_KEY = 'tp_marketplace_favorites';
@@ -1403,20 +1494,42 @@
       const pixQrImage = document.getElementById('pixQrImage');
       const pixCodeField = document.getElementById('pixCodeField');
       const pixCopyBtn = document.getElementById('pixCopyBtn');
-      const topLoginBtn = document.getElementById('topLoginBtn');
       const topCartBtn = document.getElementById('topCartBtn');
       const topCartCount = document.getElementById('topCartCount');
       const cartDrawer = document.getElementById('cartDrawer');
       const cartDrawerOverlay = document.getElementById('cartDrawerOverlay');
       const cartDrawerCloseBtn = document.getElementById('cartDrawerCloseBtn');
+      const titleEl = document.querySelector('.header .title');
+      const subtitleEl = document.querySelector('.header .subtitle');
+      const productsPanel = document.getElementById('productsPanel');
+      const rechargePanel = document.getElementById('rechargePanel');
+      const recargaForm = document.getElementById('recargaForm');
+      const recargaOperadoraEl = document.getElementById('recargaOperadora');
+      const recargaValorEl = document.getElementById('recargaValor');
+      const recargaNumeroEl = document.getElementById('recargaNumero');
+      const recargaComentarioEl = document.getElementById('recargaComentario');
+      const recargaResumoPrecoEl = document.getElementById('recargaResumoPreco');
+      const recargaOperadorasCardsEl = document.getElementById('recargaOperadorasCards');
+      const recargaPlanosRapidosEl = document.getElementById('recargaPlanosRapidos');
+      const recargaPreviewOperadoraEl = document.getElementById('recargaPreviewOperadora');
+      const recargaPreviewCreditoEl = document.getElementById('recargaPreviewCredito');
+      const recargaPreviewValorPagoEl = document.getElementById('recargaPreviewValorPago');
+      const btnSolicitarRecarga = document.getElementById('btnSolicitarRecarga');
+      const btnRefreshRecargas = document.getElementById('btnRefreshRecargas');
+      const recargasRows = document.getElementById('recargasRows');
+      const recargasCount = document.getElementById('recargasCount');
+      const recargasSection = document.getElementById('recargasSection');
       let products = [];
       let categories = [];
       let cart = [];
       let favorites = [];
+      let configOperadoras = {};
+      let recargaConfigLoaded = false;
       let pixConfig = { pix_key: '', pix_merchant_name: 'ONE PAY', pix_city: 'ARAPIRACA' };
       let pixTimerId = null;
       let pixExpiresAt = 0;
       let checkoutBusy = false;
+      let recargaBusy = false;
 
       function isLoggedIn() {
         return !!(window.authIsLoggedIn && window.authIsLoggedIn());
@@ -1430,8 +1543,7 @@
       function requireUserLogin(actionLabel) {
         if (isLoggedIn()) return true;
         setStatus(`Faça login para ${actionLabel}.`, 'error');
-        const goLogin = window.confirm(`Você precisa estar logado para ${actionLabel}. Deseja ir para a tela de login?`);
-        if (goLogin) window.location.href = buildLoginTarget();
+        window.location.href = buildLoginTarget();
         return false;
       }
 
@@ -1485,6 +1597,250 @@
           throw new Error(p && p.error ? p.error : 'Erro na requisicao');
         }
         return p.data;
+      }
+
+      function onlyDigits(value) {
+        return String(value || '').replace(/\D+/g, '');
+      }
+
+      function formatPhoneBr(value) {
+        const digits = onlyDigits(value).slice(0, 11);
+        if (!digits) return '';
+        if (digits.length <= 2) return `(${digits}`;
+        if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+        if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+      }
+
+      function switchCatalogTab(tab, options) {
+        const nextTab = tab === 'recarga' ? 'recarga' : 'produtos';
+        productsPanel.hidden = nextTab !== 'produtos';
+        rechargePanel.hidden = nextTab !== 'recarga';
+        document.querySelectorAll('.catalog-tab[data-tab]').forEach((button) => {
+          const isActive = button.getAttribute('data-tab') === nextTab;
+          button.classList.toggle('active', isActive);
+          button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        if (titleEl) titleEl.textContent = nextTab === 'recarga' ? 'Recarga de Celular' : 'Marketplace';
+        if (subtitleEl) {
+          subtitleEl.textContent = nextTab === 'recarga'
+            ? 'Solicite recargas, gere o PIX e acompanhe suas solicitações.'
+            : 'Escolha produtos, adicione no carrinho e finalize a compra via PIX.';
+        }
+        document.title = nextTab === 'recarga' ? 'Recarga de Celular - One Pay' : 'Marketplace - One Pay';
+        if (ordersSection) {
+          ordersSection.style.display = nextTab === 'produtos' && isLoggedIn() ? '' : 'none';
+        }
+        if (!options || options.updateHash !== false) {
+          const hash = nextTab === 'recarga' ? '#recarga' : '#produtos';
+          if (window.location.hash !== hash) history.replaceState(null, '', hash);
+        }
+        if (nextTab === 'recarga') ensureRecargaReady();
+      }
+
+      function getActiveOperadoras() {
+        return Object.keys(configOperadoras).filter((name) => {
+          const op = configOperadoras[name] || {};
+          return op.ativa !== false;
+        });
+      }
+
+      function getPlanosByOperadora(operadora) {
+        const op = configOperadoras[operadora] || {};
+        return Array.isArray(op.planos) ? op.planos : [];
+      }
+
+      function operadoraTheme(operadora) {
+        const value = String(operadora || '').trim().toLowerCase();
+        if (value === 'tim') return 'tim';
+        if (value === 'vivo') return 'vivo';
+        if (value === 'claro') return 'claro';
+        return 'default';
+      }
+
+      function renderRecargaOperadoras() {
+        const operadoras = getActiveOperadoras();
+        if (!operadoras.length) {
+          recargaOperadorasCardsEl.innerHTML = '<div class="planos-empty">Nenhuma operadora ativa no momento.</div>';
+          return;
+        }
+        recargaOperadorasCardsEl.innerHTML = operadoras.map((op) => `
+          <button type="button" class="operadora-card ${operadoraTheme(op)}" data-operadora="${escapeHtml(op)}">
+            <span class="name">${escapeHtml(op)}</span>
+            <span class="hint">Toque para selecionar</span>
+          </button>
+        `).join('');
+        markRecargaOperadoraAtiva();
+      }
+
+      function markRecargaOperadoraAtiva() {
+        const atual = String(recargaOperadoraEl.value || '');
+        recargaOperadorasCardsEl.querySelectorAll('.operadora-card').forEach((button) => {
+          button.classList.toggle('active', String(button.getAttribute('data-operadora') || '') === atual);
+        });
+      }
+
+      function renderRecargaPlanos() {
+        const operadora = String(recargaOperadoraEl.value || '');
+        const planos = getPlanosByOperadora(operadora);
+        if (!operadora) {
+          recargaPlanosRapidosEl.innerHTML = '<div class="planos-empty">Selecione a operadora para ver os planos disponíveis.</div>';
+          return;
+        }
+        if (!planos.length) {
+          recargaPlanosRapidosEl.innerHTML = '<div class="planos-empty">Nenhum plano disponível para essa operadora.</div>';
+          return;
+        }
+        recargaPlanosRapidosEl.innerHTML = planos.map((p) => `
+          <button type="button" class="plano-btn" data-credito="${Number(p.credito || 0)}">
+            <span class="plano-credito">Crédito R$ ${formatMoney(p.credito)}</span>
+            <span class="plano-paga">Você paga R$ ${formatMoney(p.paga)}</span>
+          </button>
+        `).join('');
+        markRecargaPlanoAtivo();
+      }
+
+      function markRecargaPlanoAtivo() {
+        const atual = String(recargaValorEl.value || '');
+        recargaPlanosRapidosEl.querySelectorAll('.plano-btn').forEach((button) => {
+          button.classList.toggle('active', String(button.getAttribute('data-credito') || '') === atual);
+        });
+      }
+
+      function getSelectedRecargaPlan() {
+        const operadora = String(recargaOperadoraEl.value || '');
+        const credito = Number(recargaValorEl.value || 0);
+        return getPlanosByOperadora(operadora).find((plan) => Number(plan.credito) === credito) || null;
+      }
+
+      function updateRecargaResumo() {
+        const operadora = String(recargaOperadoraEl.value || '');
+        const plan = getSelectedRecargaPlan();
+        recargaPreviewOperadoraEl.textContent = operadora || '-';
+        if (!operadora || !plan) {
+          recargaResumoPrecoEl.value = 'Selecione operadora e crédito para ver o total.';
+          recargaPreviewCreditoEl.textContent = 'R$ 0,00';
+          recargaPreviewValorPagoEl.textContent = 'R$ 0,00';
+          markRecargaPlanoAtivo();
+          return;
+        }
+        recargaResumoPrecoEl.value = `Crédito R$ ${formatMoney(plan.credito)} | Você paga R$ ${formatMoney(plan.paga)}`;
+        recargaPreviewCreditoEl.textContent = `R$ ${formatMoney(plan.credito)}`;
+        recargaPreviewValorPagoEl.textContent = `R$ ${formatMoney(plan.paga)}`;
+        markRecargaPlanoAtivo();
+      }
+
+      function renderRecargas(rows) {
+        if (!isLoggedIn()) {
+          recargasSection.style.display = 'none';
+          recargasRows.innerHTML = '<tr><td colspan="7" style="color:var(--muted);">Faça login para visualizar suas recargas.</td></tr>';
+          recargasCount.textContent = '0 solicitação(ões)';
+          return;
+        }
+        recargasSection.style.display = '';
+        const list = Array.isArray(rows) ? rows : [];
+        recargasCount.textContent = `${list.length} solicitação(ões)`;
+        if (!list.length) {
+          recargasRows.innerHTML = '<tr><td colspan="7" style="color:var(--muted);">Nenhuma recarga solicitada.</td></tr>';
+          return;
+        }
+        recargasRows.innerHTML = list.map((item) => {
+          const credito = Number(item.valor_credito || item.valor || 0);
+          const pago = Number(item.valor_pago || item.valor || 0);
+          return `
+            <tr>
+              <td>#${escapeHtml(item.id)}</td>
+              <td>${escapeHtml(item.operadora || '-')}</td>
+              <td>${escapeHtml(formatPhoneBr(item.numero || ''))}</td>
+              <td>R$ ${formatMoney(credito)}</td>
+              <td>R$ ${formatMoney(pago)}</td>
+              <td>${statusBadge(item.status)}</td>
+              <td>${formatDate(item.updated_at || item.created_at)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async function loadRecargaConfig() {
+        const cfg = await fetchJson(RECARGA_CONFIG_API);
+        configOperadoras = (cfg && cfg.operadoras && typeof cfg.operadoras === 'object') ? cfg.operadoras : {};
+        renderRecargaOperadoras();
+        renderRecargaPlanos();
+        updateRecargaResumo();
+        recargaConfigLoaded = true;
+      }
+
+      async function loadRecargas() {
+        if (!isLoggedIn()) {
+          renderRecargas([]);
+          return;
+        }
+        const rows = await fetchJson(RECARGA_API);
+        renderRecargas(rows);
+      }
+
+      async function ensureRecargaReady() {
+        try {
+          if (!recargaConfigLoaded) {
+            setStatus('Carregando recargas...');
+            await loadRecargaConfig();
+          }
+          await loadRecargas();
+          setStatus('');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao carregar recargas.', 'error');
+        }
+      }
+
+      function getSelectedRecargaData() {
+        const operadora = String(recargaOperadoraEl.value || '').trim();
+        const numero = onlyDigits(recargaNumeroEl.value);
+        const plan = getSelectedRecargaPlan();
+        if (!operadora) throw new Error('Selecione a operadora.');
+        if (!plan) throw new Error('Selecione um valor de recarga.');
+        if (numero.length < 10 || numero.length > 11) throw new Error('Informe o número com DDD.');
+        return { operadora, numero, valorCredito: Number(plan.credito), valorPago: Number(plan.paga) };
+      }
+
+      async function submitRecarga() {
+        if (!requireUserLogin('solicitar recarga')) return;
+        if (recargaBusy) return;
+        recargaBusy = true;
+        btnSolicitarRecarga.disabled = true;
+        try {
+          const selected = getSelectedRecargaData();
+          if (!pixConfig.pix_key) await loadPixConfig();
+          setStatus('Enviando solicitação de recarga...');
+          const created = await fetchJson(RECARGA_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              numero: selected.numero,
+              operadora: selected.operadora,
+              valor_credito: selected.valorCredito,
+              comentario_cliente: recargaComentarioEl.value.trim()
+            })
+          });
+          recargaForm.reset();
+          recargaOperadoraEl.value = '';
+          recargaValorEl.value = '';
+          markRecargaOperadoraAtiva();
+          renderRecargaPlanos();
+          updateRecargaResumo();
+          await loadRecargas();
+          setStatus('Recarga solicitada com sucesso. Pague com PIX para concluir.', 'ok');
+          openPixModal({
+            id: created.id,
+            total: Number(created.valor_pago || created.valor || selected.valorPago),
+            pix_description: `Recarga ${selected.operadora} #${created.id}`,
+            pix_txid_prefix: 'REC'
+          });
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao solicitar recarga.', 'error');
+        } finally {
+          recargaBusy = false;
+          btnSolicitarRecarga.disabled = false;
+        }
       }
 
       function getProductById(id) {
@@ -1732,14 +2088,11 @@
       }
 
       function renderAuthState() {
-        topLoginBtn.href = buildLoginTarget();
         if (!isLoggedIn()) {
-          topLoginBtn.style.display = '';
-          topLoginBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar';
           btnRefreshOrders.disabled = true;
           btnCheckout.disabled = false;
           btnCheckout.classList.add('login-required');
-          btnCheckout.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar para concluir';
+          btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Finalizar no PIX';
           if (ordersSection) ordersSection.style.display = 'none';
           if (authNoticeEl) {
             authNoticeEl.style.display = 'none';
@@ -1747,7 +2100,6 @@
           }
           return;
         }
-        topLoginBtn.style.display = 'none';
         btnRefreshOrders.disabled = false;
         btnCheckout.classList.remove('login-required');
         btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Finalizar no PIX';
@@ -1865,16 +2217,18 @@
         if (!window.PixRecarga || typeof window.PixRecarga.buildPixCode !== 'function') {
           throw new Error('Modulo PIX não carregado');
         }
+        const txPrefix = String(order.pix_txid_prefix || 'MKT').replace(/\W+/g, '').slice(0, 3) || 'MKT';
+        const total = Number(order.total || 0);
         const code = window.PixRecarga.buildPixCode({
           pix_key: pixConfig.pix_key,
           pix_merchant_name: pixConfig.pix_merchant_name,
           pix_city: pixConfig.pix_city,
-          amount: Number(order.total || 0),
-          description: `Pedido marketplace #${order.id}`,
-          txid: `MKT${String(order.id).replace(/\D+/g, '').slice(0, 22)}`
+          amount: total,
+          description: order.pix_description || `Pedido marketplace #${order.id}`,
+          txid: `${txPrefix}${String(order.id).replace(/\D+/g, '').slice(0, 22)}`
         });
         if (!code) throw new Error('A chave PIX não esta configurada. Avise o desenvolvedor.');
-        pixResumo.textContent = `Pedido #${order.id} criado com sucesso. Total a pagar: R$ ${formatMoney(order.total)}.`;
+        pixResumo.textContent = `${order.pix_description || `Pedido #${order.id}`} criado com sucesso. Total a pagar: R$ ${formatMoney(total)}.`;
         pixCodeField.value = code;
         pixQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(code)}`;
         pixCopyBtn.disabled = false;
@@ -1913,6 +2267,51 @@
         openPixModal(created);
         setStatus('Pedido criado com sucesso. Pague com PIX para concluir.', 'ok');
       }
+
+      document.querySelectorAll('.catalog-tab[data-tab]').forEach((button) => {
+        button.addEventListener('click', function () {
+          switchCatalogTab(button.getAttribute('data-tab'));
+        });
+      });
+
+      window.addEventListener('hashchange', function () {
+        switchCatalogTab(window.location.hash === '#recarga' ? 'recarga' : 'produtos', { updateHash: false });
+      });
+
+      recargaOperadorasCardsEl.addEventListener('click', function (event) {
+        const card = event.target.closest('.operadora-card');
+        if (!card) return;
+        recargaOperadoraEl.value = String(card.getAttribute('data-operadora') || '');
+        recargaValorEl.value = '';
+        markRecargaOperadoraAtiva();
+        renderRecargaPlanos();
+        updateRecargaResumo();
+      });
+
+      recargaPlanosRapidosEl.addEventListener('click', function (event) {
+        const button = event.target.closest('.plano-btn');
+        if (!button) return;
+        recargaValorEl.value = String(button.getAttribute('data-credito') || '');
+        updateRecargaResumo();
+      });
+
+      recargaNumeroEl.addEventListener('input', function () {
+        recargaNumeroEl.value = formatPhoneBr(recargaNumeroEl.value);
+      });
+
+      recargaForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        submitRecarga();
+      });
+
+      btnRefreshRecargas.addEventListener('click', async function () {
+        try {
+          await ensureRecargaReady();
+          setStatus('Recargas atualizadas.', 'ok');
+        } catch (err) {
+          setStatus(err && err.message ? err.message : 'Falha ao atualizar recargas.', 'error');
+        }
+      });
 
       searchEl.addEventListener('input', renderProducts);
       categoryFilterEl.addEventListener('change', renderProducts);
@@ -2058,6 +2457,7 @@
         try {
           setStatus('Carregando marketplace...');
           renderAuthState();
+          switchCatalogTab(window.location.hash === '#recarga' ? 'recarga' : 'produtos', { updateHash: false });
           loadFavorites();
           loadCart();
           if (isLoggedIn()) await loadPixConfig();
