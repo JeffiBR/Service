@@ -17,15 +17,22 @@
   --glow-gold: 0 0 38px rgba(34, 197, 94, 0.32);
   --success: var(--sp-brand-500);
 
-  --bg: var(--sp-bg);
-  --panel: var(--sp-panel);
-  --panel-soft: var(--sp-panel-soft);
-  --line: var(--sp-line);
-  --text: var(--sp-text);
-  --muted: var(--sp-muted);
+  --bg: var(--sp-bg) !important;
+  --panel: var(--sp-panel) !important;
+  --panel-soft: var(--sp-panel-soft) !important;
+  --line: var(--sp-line) !important;
+  --text: #eaf2ff !important;
+  --muted: #a9bbd6 !important;
   --accent: var(--sp-brand-500);
   --ok: var(--sp-brand-500);
-  --sp-logo-url: url("https://i.ibb.co/FLzsWB16/Chat-GPT-Image-23-de-abr-de-2026-21-19-37.png");
+  --sp-logo-url: url("onepay-logo-sidebar.png");
+  --white: #f8fbff !important;
+  --white-800: #dce9ff !important;
+  --white-600: #a9bbd6 !important;
+  --text-light: #a9bbd6 !important;
+  --text-dark: #f8fbff !important;
+  --dark-color: #f8fbff !important;
+  --gray-dark: rgba(201, 218, 243, 0.86) !important;
 }
 
 html,
@@ -111,8 +118,20 @@ h1 {
   border-radius: 10px !important;
   border: 0 !important;
   position: relative;
-  background: var(--sp-logo-url) center/contain no-repeat !important;
+  background: transparent !important;
+  background-image: var(--sp-logo-url) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
   box-shadow: none !important;
+}
+
+.sidebar .sidebar-header .brand-icon,
+.sidebar-header .brand .brand-icon {
+  background-image: var(--sp-logo-url) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
 }
 
 .brand-icon--hero {
@@ -415,6 +434,12 @@ h1 {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 20px rgba(2, 6, 23, 0.28) !important;
 }
 
+/* Remove bloco "Servidor Online" de todas as páginas */
+.sidebar-footer,
+.server-status {
+  display: none !important;
+}
+
 .catalog-tab.active,
 .tab.active,
 .btn-primary,
@@ -430,6 +455,48 @@ button.primary,
 .btn:hover,
 button:hover {
   border-color: rgba(74, 222, 128, 0.4) !important;
+}
+
+/* Contraste de leitura no conteúdo principal */
+.main,
+.main .card,
+.main .panel,
+.main .section,
+.main .table-wrap,
+.main .status-box {
+  color: #eaf2ff !important;
+}
+
+.main h1,
+.main h2,
+.main h3,
+.main h4,
+.main .page-title,
+.main .card-title,
+.main .section-title,
+.main .stat-value,
+.main strong {
+  color: #f8fbff !important;
+}
+
+.main p,
+.main label,
+.main li,
+.main small,
+.main .muted,
+.main .subtitle,
+.main .status-info,
+.main .stat-label {
+  color: #afc0da !important;
+}
+
+.main td {
+  color: #d9e7ff !important;
+}
+
+.main th {
+  color: #eff6ff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 input,

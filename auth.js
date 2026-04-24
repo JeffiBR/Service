@@ -895,43 +895,44 @@
     style.id = 'tpUserMenuStyle';
     style.textContent = `
       .tp-user-menu { position: fixed; top: 12px; right: 14px; z-index: 9999; font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif; }
-      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,.18); background: linear-gradient(180deg, rgba(18,21,32,.94), rgba(11,13,21,.94)); color:#fafafa; border-radius:14px; padding:8px 10px; min-width:220px; cursor:pointer; box-shadow: 0 10px 24px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
-      .tp-user-menu-btn:hover { transform: translateY(-1px); border-color: rgba(251,191,36,.45); box-shadow: 0 14px 26px rgba(0,0,0,.4), 0 0 0 1px rgba(251,191,36,.2); }
-      .tp-user-menu.open .tp-user-menu-btn { border-color: rgba(251,191,36,.45); box-shadow: 0 14px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(251,191,36,.22); }
-      .tp-user-avatar { width:36px; height:36px; border-radius:50%; background: radial-gradient(circle at 30% 20%, #ffd979, #fbbf24 55%, #cf8f00 100%); color:#111; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; flex-shrink:0; box-shadow: 0 6px 16px rgba(251,191,36,.35); }
+      .tp-user-menu-btn { display:flex; align-items:center; gap:10px; border:1px solid rgba(34,197,94,.42); background: linear-gradient(180deg, rgba(34,197,94,.95), rgba(22,163,74,.95)); color:#f8fafc; border-radius:16px; padding:9px 12px; min-width:248px; cursor:pointer; box-shadow: 0 12px 26px rgba(2,6,23,.42), 0 0 0 1px rgba(74,222,128,.18) inset; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, filter .2s ease; }
+      .tp-user-menu-btn:hover { transform: translateY(-1px); border-color: rgba(134,239,172,.62); box-shadow: 0 16px 28px rgba(2,6,23,.5), 0 0 0 1px rgba(134,239,172,.32) inset; filter: saturate(1.06); }
+      .tp-user-menu.open .tp-user-menu-btn { border-color: rgba(134,239,172,.68); box-shadow: 0 18px 34px rgba(2,6,23,.55), 0 0 0 1px rgba(134,239,172,.34) inset; }
+      .tp-user-avatar { width:38px; height:38px; border-radius:50%; background: radial-gradient(circle at 30% 20%, #bbf7d0, #4ade80 55%, #16a34a 100%); color:#052e16; display:flex; align-items:center; justify-content:center; font-weight:800; overflow:hidden; flex-shrink:0; box-shadow: 0 6px 16px rgba(34,197,94,.35), 0 0 0 2px rgba(255,255,255,.45); }
       .tp-user-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
       .tp-user-meta { line-height:1.25; min-width:0; flex:1; text-align:left; }
-      .tp-user-name { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .tp-user-group { font-size:11px; color:#a1a1aa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:capitalize; }
-      .tp-user-caret { color:#a1a1aa; font-size:12px; transition: transform .22s ease, color .22s ease; }
-      .tp-user-menu.open .tp-user-caret { transform: rotate(180deg); color:#fbbf24; }
-      .tp-user-dropdown { display:block; position:absolute; top:calc(100% + 10px); right:0; width:310px; border-radius:16px; border:1px solid rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(20,24,37,.88), rgba(10,13,22,.88)); backdrop-filter: blur(14px); box-shadow: 0 24px 48px rgba(0,0,0,.48), 0 0 0 1px rgba(255,255,255,.04) inset; overflow:hidden; opacity:0; transform: translateY(-8px) scale(.985); pointer-events:none; transition: opacity .2s ease, transform .22s ease; }
-      .tp-user-dropdown::before { content:""; position:absolute; inset:0; background: radial-gradient(120% 70% at 100% 0%, rgba(251,191,36,.13), transparent 55%); pointer-events:none; }
+      .tp-user-name { font-size:13px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .tp-user-group { font-size:11px; color:rgba(231,255,240,.88); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:capitalize; }
+      .tp-user-caret { color:rgba(231,255,240,.88); font-size:12px; transition: transform .22s ease, color .22s ease; }
+      .tp-user-menu.open .tp-user-caret { transform: rotate(180deg); color:#dcfce7; }
+      .tp-user-dropdown { display:block; position:absolute; top:calc(100% + 10px); right:0; width:388px; border-radius:18px; border:1px solid rgba(148,163,184,.28); background: linear-gradient(180deg, rgba(15,23,42,.9), rgba(2,6,23,.9)); backdrop-filter: blur(16px); box-shadow: 0 28px 56px rgba(2,6,23,.6), 0 0 0 1px rgba(148,163,184,.1) inset; overflow:hidden; opacity:0; transform: translateY(-8px) scale(.985); pointer-events:none; transition: opacity .2s ease, transform .22s ease; }
+      .tp-user-dropdown::before { content:""; position:absolute; inset:0; background: radial-gradient(120% 70% at 100% 0%, rgba(74,222,128,.14), transparent 55%); pointer-events:none; }
       .tp-user-menu.open .tp-user-dropdown { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
-      .tp-user-profile { position:relative; z-index:1; padding:14px; border-bottom:1px solid rgba(255,255,255,.1); }
-      .tp-user-profile .tp-user-name { font-size:14px; }
-      .tp-user-profile .tp-user-email { color:#a1a1aa; font-size:12px; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .tp-user-profile .tp-user-group { margin-top:6px; font-size:12px; color:#fbbf24; font-weight:700; letter-spacing:.01em; }
-      .tp-user-pages { margin-top:8px; color:#a1a1aa; font-size:11px; }
-      .tp-user-actions { position:relative; z-index:1; padding:8px; display:grid; gap:4px; }
-      .tp-user-actions a, .tp-user-actions button { width:100%; border:1px solid transparent; background:transparent; color:#eef1f6; text-decoration:none; text-align:left; padding:11px 12px; cursor:pointer; font-size:13px; display:flex; align-items:center; gap:10px; border-radius:10px; transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease; }
-      .tp-user-actions a i, .tp-user-actions button i { width:16px; text-align:center; color:#aeb5c2; transition: color .18s ease, transform .18s ease; }
-      .tp-user-actions a:hover, .tp-user-actions button:hover { background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border-color: rgba(251,191,36,.34); color:#fff; transform: translateX(2px); }
-      .tp-user-actions a:hover i, .tp-user-actions button:hover i { color:#fbbf24; transform: scale(1.05); }
-      .tp-user-logout { margin-top:4px; color:#ffd3d3 !important; border-top:1px solid rgba(255,255,255,.08) !important; border-radius:10px !important; }
-      .tp-user-logout:hover { color:#fff4f4 !important; border-color: rgba(248,113,113,.44) !important; background: linear-gradient(180deg, rgba(248,113,113,.14), rgba(248,113,113,.06)) !important; }
+      .tp-user-profile { position:relative; z-index:1; padding:16px 16px 14px; border-bottom:1px solid rgba(148,163,184,.2); background: linear-gradient(180deg, rgba(30,41,59,.42), rgba(15,23,42,.2)); }
+      .tp-user-profile .tp-user-name { font-size:18px; font-weight:800; line-height:1.15; letter-spacing:-.01em; color:#f8fbff; }
+      .tp-user-profile .tp-user-email { color:#b7c7df; font-size:14px; margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .tp-user-profile .tp-user-group { margin-top:10px; font-size:30px; color:#facc15; font-weight:900; letter-spacing:-.01em; line-height:1.1; }
+      .tp-user-pages { margin-top:10px; color:#b7c7df; font-size:12px; }
+      .tp-user-actions { position:relative; z-index:1; padding:10px; display:grid; gap:6px; }
+      .tp-user-actions a, .tp-user-actions button { width:100%; border:1px solid rgba(148,163,184,.16); background:rgba(15,23,42,.34); color:#e7eefc; text-decoration:none; text-align:left; padding:12px 12px; cursor:pointer; font-size:15px; font-weight:600; display:flex; align-items:center; gap:10px; border-radius:12px; transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease, box-shadow .18s ease; }
+      .tp-user-actions a i, .tp-user-actions button i { width:18px; text-align:center; color:#b4c5e0; transition: color .18s ease, transform .18s ease; }
+      .tp-user-actions a:hover, .tp-user-actions button:hover { background:linear-gradient(180deg, rgba(30,41,59,.76), rgba(15,23,42,.62)); border-color: rgba(74,222,128,.45); color:#ffffff; transform: translateX(2px); box-shadow: 0 8px 16px rgba(2,6,23,.34); }
+      .tp-user-actions a:hover i, .tp-user-actions button:hover i { color:#86efac; transform: scale(1.06); }
+      .tp-user-logout { margin-top:6px; color:#ecfdf5 !important; border-color: rgba(74,222,128,.45) !important; background: linear-gradient(135deg, rgba(34,197,94,.92), rgba(22,163,74,.92)) !important; box-shadow: 0 8px 18px rgba(22,163,74,.32); }
+      .tp-user-logout i { color:#ecfdf5 !important; }
+      .tp-user-logout:hover { color:#fff !important; border-color: rgba(167,243,208,.78) !important; background: linear-gradient(135deg, rgba(74,222,128,.96), rgba(22,163,74,.96)) !important; box-shadow: 0 12px 22px rgba(22,163,74,.4); }
       @media (max-width: 960px) {
         .tp-user-menu {
           top: 10px;
           right: 10px;
           left: auto;
           width: auto;
-          max-width: calc(100vw - 108px);
+          max-width: calc(100vw - 100px);
         }
         .tp-user-menu-btn {
           min-width: 0;
           width: auto;
-          max-width: min(68vw, 280px);
+          max-width: min(72vw, 300px);
           padding: 6px 8px;
           gap: 8px;
           border-radius: 12px;
@@ -951,7 +952,7 @@
           font-size: 10px;
         }
         .tp-user-dropdown {
-          width: min(90vw, 310px);
+          width: min(94vw, 388px);
           right: 0;
         }
       }
