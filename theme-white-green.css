@@ -1,0 +1,249 @@
+﻿:root {
+  --bg: #f7fcf8 !important;
+  --panel: #ffffff !important;
+  --panel-2: #f4faf6 !important;
+  --panel-soft: #f8fdfa !important;
+  --card: #ffffff !important;
+  --line: rgba(21, 128, 61, 0.14) !important;
+  --text: #102417 !important;
+  --muted: #5a6f60 !important;
+  --accent: #15803d !important;
+  --accent-strong: #166534 !important;
+  --ok: #16a34a !important;
+  --success: #16a34a !important;
+  --danger: #dc2626 !important;
+  --warn: #d97706 !important;
+
+  --black-900: #f7fcf8 !important;
+  --black-800: #f4faf6 !important;
+  --black-700: #eef7f1 !important;
+  --black-600: #e6f2ea !important;
+  --black-500: #dcecdf !important;
+  --black-400: #b4d3bf !important;
+  --black-300: #8fbe9e !important;
+  --white: #102417 !important;
+  --white-800: #355644 !important;
+  --white-600: #5a6f60 !important;
+
+  --accent-gold: #15803d !important;
+  --accent-gold-light: #22c55e !important;
+  --accent-gold-dark: #166534 !important;
+  --accent-purple: #16a34a !important;
+  --accent-blue: #15803d !important;
+  --accent-cyan: #16a34a !important;
+  --accent-emerald: #16a34a !important;
+  --accent-rose: #15803d !important;
+  --accent-orange: #22c55e !important;
+
+  --gradient-gold: linear-gradient(135deg, #22c55e 0%, #15803d 100%) !important;
+  --gradient-purple: linear-gradient(135deg, #22c55e 0%, #15803d 100%) !important;
+  --gradient-dark: linear-gradient(180deg, #f7fcf8 0%, #edf7f1 100%) !important;
+  --glow-gold: 0 0 18px rgba(21, 128, 61, 0.18) !important;
+}
+
+* {
+  scrollbar-color: rgba(21, 128, 61, 0.5) #eaf4ee;
+}
+
+html,
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% 5%, rgba(34, 197, 94, 0.09), transparent 36%),
+    radial-gradient(circle at 88% 0%, rgba(34, 197, 94, 0.07), transparent 32%),
+    linear-gradient(180deg, #fbfefc 0%, #f1f8f4 100%) !important;
+  color: var(--text) !important;
+}
+
+header,
+main,
+.card,
+.stat-card,
+.modal,
+.modal-content,
+.container,
+.sidebar,
+.panel,
+.dashboard-grid > * {
+  color: var(--text);
+}
+
+.card,
+.stat-card,
+.panel,
+.modal-content,
+.table-wrap,
+.status-box,
+input,
+select,
+textarea,
+button,
+.btn,
+.chip,
+.pill,
+.badge {
+  border-color: var(--line) !important;
+}
+
+.card,
+.stat-card,
+.panel,
+.modal-content,
+.status-box,
+.table-wrap,
+.recover-panel {
+  background: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(16, 36, 23, 0.06) !important;
+  border-radius: 14px !important;
+}
+
+th {
+  background: #eef7f1 !important;
+  color: #264635 !important;
+}
+
+td {
+  background: rgba(255, 255, 255, 0.98) !important;
+}
+
+input,
+select,
+textarea,
+.show-btn,
+.recover-btn,
+.forgot-link-btn {
+  background: #ffffff !important;
+  color: var(--text) !important;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid rgba(21, 128, 61, 0.16) !important;
+}
+
+label,
+.stat-label,
+.muted,
+.status-info,
+.subtitle,
+p {
+  color: var(--muted) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(22, 163, 74, 0.62) !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.14) !important;
+}
+
+button,
+.btn,
+.btn-primary,
+button[type="submit"],
+.signup-callout .cta-btn {
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(21, 128, 61, 0.2) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+}
+
+button:hover,
+.btn:hover,
+.btn-primary:hover,
+button[type="submit"]:hover,
+.signup-callout .cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(21, 128, 61, 0.24) !important;
+  filter: saturate(1.02);
+}
+
+.btn-dark,
+.btn-outline,
+.btn-secondary,
+.show-btn,
+.recover-btn,
+.forgot-link-btn {
+  background: #ffffff !important;
+  color: #166534 !important;
+  border: 1px solid rgba(22, 163, 74, 0.24) !important;
+  box-shadow: none !important;
+}
+
+.btn-dark:hover,
+.btn-outline:hover,
+.btn-secondary:hover,
+.show-btn:hover,
+.recover-btn:hover,
+.forgot-link-btn:hover {
+  background: #f3fbf6 !important;
+}
+
+.status-dot,
+.badge.ativo,
+.status-pill.ativo,
+.servidor-status-badge.ativo,
+.revendedor-status-badge.ativo {
+  background: #22c55e !important;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.45) !important;
+}
+
+.status-dot.offline,
+.badge.inativo,
+.status-pill.inativo,
+.servidor-status-badge.inativo,
+.revendedor-status-badge.inativo {
+  background: #dc2626 !important;
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.35) !important;
+}
+
+a,
+.forgot-link-btn {
+  color: #166534 !important;
+}
+
+a:hover,
+.forgot-link-btn:hover {
+  color: #14532d !important;
+}
+
+.page-title span,
+.title span,
+.brand-name,
+.highlight {
+  background: linear-gradient(135deg, #16a34a 0%, #166534 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.signup-callout,
+.recover-panel,
+.status.flow {
+  border-color: rgba(22, 163, 74, 0.22) !important;
+  background: #f3fbf6 !important;
+  color: #1f5a38 !important;
+}
+
+.status.flow.done::before {
+  color: #15803d !important;
+  border-color: rgba(22, 163, 74, 0.5) !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #eaf4ee !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(21, 128, 61, 0.5) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(21, 128, 61, 0.68) !important;
+}

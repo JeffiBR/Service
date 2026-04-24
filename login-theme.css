@@ -1,0 +1,298 @@
+﻿:root {
+  --sp-bg: #020617;
+  --sp-bg-soft: #0f172a;
+  --sp-panel: rgba(15, 23, 42, 0.78);
+  --sp-panel-soft: rgba(15, 23, 42, 0.62);
+  --sp-line: rgba(148, 163, 184, 0.24);
+  --sp-text: #f8fafc;
+  --sp-muted: #94a3b8;
+  --sp-brand-400: #4ade80;
+  --sp-brand-500: #22c55e;
+  --sp-brand-600: #16a34a;
+
+  --accent-gold: var(--sp-brand-500);
+  --accent-gold-light: var(--sp-brand-400);
+  --accent-gold-dark: var(--sp-brand-600);
+  --gradient-gold: linear-gradient(135deg, var(--sp-brand-400) 0%, var(--sp-brand-600) 100%);
+  --glow-gold: 0 0 38px rgba(34, 197, 94, 0.32);
+  --success: var(--sp-brand-500);
+
+  --bg: var(--sp-bg);
+  --panel: var(--sp-panel);
+  --panel-soft: var(--sp-panel-soft);
+  --line: var(--sp-line);
+  --text: var(--sp-text);
+  --muted: var(--sp-muted);
+  --accent: var(--sp-brand-500);
+  --ok: var(--sp-brand-500);
+  --sp-logo-url: url("https://i.ibb.co/FLzsWB16/Chat-GPT-Image-23-de-abr-de-2026-21-19-37.png");
+}
+
+html,
+body {
+  background: var(--sp-bg) url("onepay-bg.svg") center center / cover no-repeat fixed !important;
+  color: var(--sp-text) !important;
+}
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at center, rgba(2, 6, 23, 0) 45%, rgba(2, 6, 23, 0.42) 100%);
+  background-color: transparent !important;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 22%, rgba(34, 197, 94, 0.14) 0%, rgba(34, 197, 94, 0) 120px);
+  background-color: transparent !important;
+}
+
+.app,
+.main,
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.title,
+h1 {
+  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2rem) !important;
+  letter-spacing: -0.02em;
+}
+
+.sidebar,
+.card,
+.panel,
+.section,
+.server-status,
+.topbar,
+.status-box,
+.table-wrap,
+.modal,
+.modal-content {
+  border-color: var(--sp-line) !important;
+  background: var(--sp-panel) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 12px !important;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.34) !important;
+}
+
+.card-head,
+.sidebar-header,
+.sidebar-footer {
+  border-color: var(--sp-line) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.brand-icon,
+.loading-logo {
+  background: linear-gradient(135deg, var(--sp-brand-400) 0%, var(--sp-brand-600) 100%) !important;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35) !important;
+}
+
+.brand-icon {
+  width: 180px !important;
+  height: 66px !important;
+  border-radius: 10px !important;
+  border: 0 !important;
+  position: relative;
+  background: var(--sp-logo-url) center/contain no-repeat !important;
+  box-shadow: none !important;
+}
+
+.brand-icon--hero {
+  width: 640px !important;
+  height: 220px !important;
+  background-size: 112% auto !important;
+}
+
+.brand-icon--recover {
+  width: 360px !important;
+  height: 124px !important;
+  background-size: 108% auto !important;
+}
+
+.login-brand {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: 136px !important;
+  margin-bottom: 0 !important;
+}
+
+.login-brand--compact {
+  margin-top: 28px !important;
+  margin-bottom: -2px !important;
+}
+
+#loginTitle {
+  margin-top: 8px !important;
+}
+
+@media (max-width: 768px) {
+  .brand-icon--hero {
+    width: min(90vw, 500px) !important;
+    height: min(30vw, 170px) !important;
+  }
+
+  .brand-icon--recover {
+    width: min(82vw, 320px) !important;
+    height: min(28vw, 112px) !important;
+  }
+
+  .login-brand {
+    margin-top: 74px !important;
+  }
+
+  .login-brand--compact {
+    margin-top: 18px !important;
+  }
+}
+
+.brand-icon::before {
+  display: none !important;
+}
+
+.brand-icon i,
+.brand-icon svg {
+  display: none !important;
+}
+
+.brand {
+  gap: 0 !important;
+}
+
+.brand-name,
+.brand-tag {
+  display: none !important;
+}
+
+.brand-name,
+.title {
+  background: linear-gradient(135deg, var(--sp-brand-400) 0%, var(--sp-brand-600) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.brand-tag,
+.subtitle,
+.status-info {
+  color: var(--sp-muted) !important;
+}
+
+.brand-tag {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.sidebar {
+  background: rgba(2, 6, 23, 0.88) !important;
+}
+
+.sidebar .nav-item.active,
+.sidebar-nav .nav-item.active,
+.catalog-tab.active,
+.tab.active,
+.btn-primary,
+button.btn-primary,
+button.primary,
+.btn-success {
+  background: linear-gradient(180deg, var(--sp-brand-500) 0%, var(--sp-brand-600) 100%) !important;
+  border-color: transparent !important;
+  color: #f8fafc !important;
+  box-shadow: 0 10px 22px rgba(22, 163, 74, 0.32) !important;
+}
+
+.sidebar .nav-item:hover,
+.sidebar-nav .nav-item:hover,
+.btn:hover,
+button:hover {
+  border-color: rgba(74, 222, 128, 0.4) !important;
+}
+
+input,
+select,
+textarea,
+.form-control,
+.field {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(148, 163, 184, 0.34) !important;
+  color: var(--sp-text) !important;
+}
+
+label,
+.label {
+  color: #e2e8f0 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.field:focus {
+  border-color: rgba(34, 197, 94, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+  outline: none;
+}
+
+::placeholder {
+  color: #94a3b8 !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th,
+td {
+  border-color: var(--sp-line) !important;
+}
+
+thead th {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #e2e8f0 !important;
+}
+
+tbody tr {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+tbody tr:hover {
+  background: rgba(74, 222, 128, 0.08) !important;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b1221;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}

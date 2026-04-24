@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recarga de Celular - Preço Certo</title>
+  <title>Recarga de Celular - One Pay</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -873,7 +873,9 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="pix-recarga.js"></script>
-  <link rel="stylesheet" href="theme-unified.css">
+  <link rel="stylesheet" href="theme-white-green.css">
+  <link rel="stylesheet" href="login-theme.css">
+  <link rel="icon" type="image/png" href="onepay-icon.png">
 </head>
 <body>
   <div class="app">
@@ -882,8 +884,8 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">Preço Certo</div>
-            <div class="brand-tag">PREÇO CERTO</div>
+            <div class="brand-name">One Pay</div>
+            <div class="brand-tag">ONE PAY</div>
           </div>
         </div>
       </div>
@@ -1138,7 +1140,7 @@
       const pixCodeField = document.getElementById('pixCodeField');
       const pixCopyBtn = document.getElementById('pixCopyBtn');
       let configOperadoras = {};
-      let pixConfig = { pix_key: '', pix_merchant_name: 'PRECO CERTO', pix_city: 'ARAPIRACA' };
+      let pixConfig = { pix_key: '', pix_merchant_name: 'ONE PAY', pix_city: 'ARAPIRACA' };
       let pixUi = null;
       let checkoutBusy = false;
 
@@ -1386,7 +1388,7 @@
         const cfg = await fetchJson(API_PIX_CONFIG);
         pixConfig = {
           pix_key: String(cfg && cfg.pix_key ? cfg.pix_key : '').trim(),
-          pix_merchant_name: String(cfg && cfg.pix_merchant_name ? cfg.pix_merchant_name : 'PRECO CERTO').trim(),
+          pix_merchant_name: String(cfg && cfg.pix_merchant_name ? cfg.pix_merchant_name : 'ONE PAY').trim(),
           pix_city: String(cfg && cfg.pix_city ? cfg.pix_city : 'ARAPIRACA').trim()
         };
       }
@@ -1642,6 +1644,10 @@
   </script>
 </body>
 </html>
+
+
+
+
 
 
 

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="bgBase" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0A2E42"/>
+      <stop offset="0.45" stop-color="#021329"/>
+      <stop offset="1" stop-color="#001022"/>
+    </linearGradient>
+    <radialGradient id="leftGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(360 320) rotate(14) scale(640 520)">
+      <stop stop-color="#22C55E" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rightGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1540 760) rotate(-12) scale(560 460)">
+      <stop stop-color="#22C55E" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" x="0" y="0" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" stroke="#94A3B8" stroke-opacity="0.1"/>
+      <path d="M36 0V72M0 36H72" stroke="#94A3B8" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#bgBase)"/>
+  <rect width="1920" height="1080" fill="url(#leftGlow)"/>
+  <rect width="1920" height="1080" fill="url(#rightGlow)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+</svg>

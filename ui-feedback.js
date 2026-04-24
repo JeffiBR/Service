@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   if (window.tpFeedback && window.tpFeedback.__ready) return;
 
   function isLoggedInSafe() {
@@ -118,7 +118,7 @@
     if (!text) return null;
 
     const wrap = ensureWrap();
-    const t = String(type || 'info').toLowerCase();
+    const t = (String(type || 'info').toLowerCase());
     const kind = (t === 'sucesso' ? 'success' : (t === 'erro' ? 'error' : (t === 'aviso' ? 'warning' : t)));
     const toast = document.createElement('div');
     toast.className = `tp-toast ${kind}`;
@@ -152,12 +152,12 @@
   function detectActionLabel(url, method) {
     const u = String(url || '').toLowerCase();
     const m = String(method || 'GET').toUpperCase();
-    if (m === 'DELETE') return 'Exclusao concluida com sucesso.';
-    if (u.includes('marketplace') && m === 'POST') return 'Acao do marketplace realizada com sucesso.';
+    if (m === 'DELETE') return 'Exclusão concluída com sucesso.';
+    if (u.includes('marketplace') && m === 'POST') return 'Ação do marketplace realizada com sucesso.';
     if (u.includes('recarga') && m === 'POST') return 'Recarga registrada com sucesso.';
-    if (m === 'POST') return 'Cadastro/acao realizada com sucesso.';
-    if (m === 'PUT' || m === 'PATCH') return 'Alteracoes salvas com sucesso.';
-    return 'Acao concluida com sucesso.';
+    if (m === 'POST') return 'Cadastro/ação realizada com sucesso.';
+    if (m === 'PUT' || m === 'PATCH') return 'Alterações salvas com sucesso.';
+    return 'Ação concluída com sucesso.';
   }
 
   function installAutoFetchFeedback() {
@@ -177,13 +177,13 @@
           const ignore = urlLc.includes('/auth/ping') || urlLc.includes('/auth/login') || urlLc.includes('/auth/logout');
           if (!ignore) {
             if (response.ok) show('success', detectActionLabel(requestUrl, method), { onlyLogged: true, durationMs: 2600 });
-            else show('error', 'Nao foi possivel concluir esta acao.', { onlyLogged: true, durationMs: 3400 });
+            else show('error', 'Não foi possível concluir esta ação.', { onlyLogged: true, durationMs: 3400 });
           }
         }
         return response;
       } catch (err) {
         if (isMutating && isLoggedInSafe()) {
-          show('error', 'Falha de conexao ao executar a acao.', { onlyLogged: true, durationMs: 3400 });
+          show('error', 'Falha de conexão ao executar a ação.', { onlyLogged: true, durationMs: 3400 });
         }
         throw err;
       }

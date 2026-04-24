@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configurações PIX (Dev) - Preço Certo</title>
+  <title>Configurações PIX (Dev) - One Pay</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -170,7 +170,9 @@
   </style>
   <script src="config.js"></script>
   <script src="auth.js"></script>
-  <link rel="stylesheet" href="theme-unified.css">
+  <link rel="stylesheet" href="theme-white-green.css">
+  <link rel="stylesheet" href="login-theme.css">
+  <link rel="icon" type="image/png" href="onepay-icon.png">
 </head>
 <body>
   <div class="app">
@@ -179,8 +181,8 @@
         <div class="brand">
           <div class="brand-icon"><i class="fas fa-bolt"></i></div>
           <div>
-            <div class="brand-name">Preço Certo</div>
-            <div class="brand-tag">PRECO CERTO</div>
+            <div class="brand-name">One Pay</div>
+            <div class="brand-tag">ONE PAY</div>
           </div>
         </div>
       </div>
@@ -221,7 +223,7 @@
               </div>
               <div class="field">
                 <label for="merchantName">Nome do recebedor (max 25)</label>
-                <input id="merchantName" type="text" placeholder="Ex.: PRECO CERTO">
+                <input id="merchantName" type="text" placeholder="Ex.: ONE PAY">
               </div>
               <div class="field">
                 <label for="merchantCity">Cidade (max 15)</label>
@@ -282,7 +284,7 @@
         const cfg = await fetchJson(API);
         pixKeyTypeEl.value = cfg.pix_key_type || 'telefone';
         pixKeyEl.value = cfg.pix_key || '';
-        merchantNameEl.value = cfg.pix_merchant_name || 'PRECO CERTO';
+        merchantNameEl.value = cfg.pix_merchant_name || 'ONE PAY';
         merchantCityEl.value = cfg.pix_city || 'ARAPIRACA';
         updatePixPlaceholder();
       }
@@ -344,5 +346,9 @@
   </script>
 </body>
 </html>
+
+
+
+
 
 

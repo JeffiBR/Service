@@ -32,7 +32,7 @@
   function buildPixCode(params) {
     const key = String(params.pix_key || '').trim();
     if (!key) return '';
-    const merchantName = normalizeAscii(params.pix_merchant_name || 'PRECO CERTO').slice(0, 25) || 'PRECO CERTO';
+    const merchantName = normalizeAscii(params.pix_merchant_name || 'ONE PAY').slice(0, 25) || 'ONE PAY';
     const merchantCity = normalizeAscii(params.pix_city || 'ARAPIRACA').slice(0, 15) || 'ARAPIRACA';
     const desc = normalizeAscii(params.description || '').slice(0, 99);
     const amount = Number(params.amount || 0).toFixed(2);
