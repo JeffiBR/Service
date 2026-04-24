@@ -202,11 +202,204 @@ h1 {
 }
 
 .sidebar {
-  background: rgba(2, 6, 23, 0.88) !important;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.96) 0%, rgba(2, 6, 23, 0.9) 100%) !important;
+  border-right: 1px solid rgba(148, 163, 184, 0.18) !important;
+  box-shadow: 20px 0 48px rgba(2, 6, 23, 0.42), inset -1px 0 0 rgba(255, 255, 255, 0.03) !important;
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(560px 280px at -8% 8%, rgba(34, 197, 94, 0.16), rgba(34, 197, 94, 0)),
+    radial-gradient(420px 240px at 120% 75%, rgba(45, 212, 191, 0.12), rgba(45, 212, 191, 0));
+}
+
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 88%);
+}
+
+.sidebar-header {
+  padding: 22px 18px 18px !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16) !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.62), rgba(15, 23, 42, 0.2)) !important;
+}
+
+.sidebar-nav {
+  padding: 16px 12px 12px !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.45) !important;
+  border-radius: 999px !important;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7) !important;
+}
+
+.nav-section-title {
+  margin: 8px 10px 12px !important;
+  color: #8ea3c7 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.nav-section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.45), rgba(148, 163, 184, 0));
+}
+
+.sidebar .nav-item,
+.sidebar-nav .nav-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 52px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 8px !important;
+  border-radius: 15px !important;
+  border: 1px solid rgba(148, 163, 184, 0.08) !important;
+  color: #cbd5e1 !important;
+  text-decoration: none !important;
+  font-size: 0.98rem !important;
+  font-weight: 650 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.48)) !important;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, color 0.22s ease, background 0.22s ease !important;
+}
+
+.sidebar .nav-item::before,
+.sidebar-nav .nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.08) 45%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.45s ease, opacity 0.35s ease;
+}
+
+.sidebar .nav-item::after,
+.sidebar-nav .nav-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #4ade80, #22c55e);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+  transition: width 0.2s ease;
+  z-index: 1;
+}
+
+.sidebar .nav-item i,
+.sidebar-nav .nav-item i {
+  text-align: center !important;
+  color: #9db0d2 !important;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 9px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-item span,
+.sidebar-nav .nav-item span {
+  position: relative;
+  z-index: 2;
+}
+
+.sidebar .nav-item:hover,
+.sidebar-nav .nav-item:hover {
+  transform: translateX(3px) !important;
+  color: #f8fafc !important;
+  border-color: rgba(74, 222, 128, 0.38) !important;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.84), rgba(15, 23, 42, 0.62)) !important;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.36) !important;
+}
+
+.sidebar .nav-item:hover::before,
+.sidebar-nav .nav-item:hover::before {
+  opacity: 1;
+  transform: translateX(120%);
 }
 
 .sidebar .nav-item.active,
-.sidebar-nav .nav-item.active,
+.sidebar-nav .nav-item.active {
+  color: #f8fafc !important;
+  border-color: rgba(74, 222, 128, 0.58) !important;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.2), rgba(15, 23, 42, 0.68)) !important;
+  box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.2), 0 14px 30px rgba(16, 185, 129, 0.22) !important;
+}
+
+.sidebar .nav-item.active::after,
+.sidebar-nav .nav-item.active::after {
+  width: 3px;
+}
+
+.sidebar .nav-item.active i,
+.sidebar-nav .nav-item.active i {
+  color: #86efac !important;
+  border-color: rgba(74, 222, 128, 0.45);
+  background: rgba(16, 185, 129, 0.16);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
+}
+
+.sidebar-footer {
+  padding: 14px 14px 16px !important;
+  border-top: 1px solid rgba(148, 163, 184, 0.15) !important;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.52), rgba(2, 6, 23, 0.7)) !important;
+}
+
+.server-status {
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.56)) !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 20px rgba(2, 6, 23, 0.28) !important;
+}
+
 .catalog-tab.active,
 .tab.active,
 .btn-primary,
@@ -219,8 +412,6 @@ button.primary,
   box-shadow: 0 10px 22px rgba(22, 163, 74, 0.32) !important;
 }
 
-.sidebar .nav-item:hover,
-.sidebar-nav .nav-item:hover,
 .btn:hover,
 button:hover {
   border-color: rgba(74, 222, 128, 0.4) !important;
